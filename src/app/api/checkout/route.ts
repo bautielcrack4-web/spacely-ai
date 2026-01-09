@@ -1,10 +1,10 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { lemonSqueezyApiInstance, createCheckout } from "@lemonsqueezy/lemonsqueezy.js";
+import { lemonSqueezySetup, createCheckout } from "@lemonsqueezy/lemonsqueezy.js";
 
 // Initialize Lemon Squeezy
-lemonSqueezyApiInstance({
+lemonSqueezySetup({
     apiKey: process.env.LEMON_SQUEEZY_API_KEY || "",
     onError: (error) => console.error("Lemon Squeezy Error:", error),
 });
