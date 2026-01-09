@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
 
@@ -31,10 +32,12 @@ export function Hero() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Button size="lg" variant="accent" className="w-full sm:w-auto text-black">
-                            Generate Now
-                            <ArrowRight className="ml-2 w-4 h-4" />
-                        </Button>
+                        <Link href="#design-tool" className="w-full sm:w-auto">
+                            <Button size="lg" variant="accent" className="w-full text-black">
+                                Generate Now
+                                <ArrowRight className="ml-2 w-4 h-4" />
+                            </Button>
+                        </Link>
                         <Button size="lg" variant="outline" className="w-full sm:w-auto">
                             View Examples
                         </Button>

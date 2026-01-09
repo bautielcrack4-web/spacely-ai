@@ -58,36 +58,48 @@ export function DesignTool() {
             reader.onloadend = async () => {
                 const base64data = reader.result;
 
-                const res = await fetch("/api/generate", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        imageUrl: base64data,
-                        prompt: prompt
-                    }),
-                });
+                try {
+                    const res = await fetch("/api/generate", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            imageUrl: base64data,
+                            prompt: prompt
+                        }),
+                    });
 
-                if (res.status === 403) {
-                    setShowPaywall(true);
+                    if (res.status === 403) {
+                        setShowPaywall(true);
+                        setLoading(false);
+                        return;
+                    }
+
+                    if (!res.ok) {
+                        const errorData = await res.json();
+                        throw new Error(errorData.error || "Failed to generate image");
+                    }
+
+                    const data = await res.json();
+                    if (data.result) {
+                        const outputUrl = Array.isArray(data.result) ? data.result[0] : data.result;
+                        setGeneratedImage(outputUrl);
+                        checkCredits();
+                    } else {
+                        throw new Error("No result from API");
+                    }
+                } catch (innerError) {
+                    console.error("API Call failed:", innerError);
+                    alert(`Error generating image: ${innerError}`);
+                } finally {
                     setLoading(false);
-                    return;
                 }
-
-                const data = await res.json();
-                if (data.result) {
-                    // Replicate usually returns an array of output URLs or a single object depending on model
-                    // Adapting based on standard Pruna output
-                    const outputUrl = Array.isArray(data.result) ? data.result[0] : data.result;
-                    setGeneratedImage(outputUrl);
-                    checkCredits();
-                }
-                setLoading(false);
             };
 
             reader.readAsDataURL(blob);
 
         } catch (error) {
-            console.error(error);
+            console.error("Processing failed:", error);
+            alert("Error processing image file.");
             setLoading(false);
         }
     };
