@@ -13,7 +13,7 @@ lemonSqueezyApiInstance({
 const PLANS = {
     weekly: "1205274",   // Spacely AI - Weekly Unlimited
     monthly: "1205283", // Spacely AI - Monthly Unlimited
-    yearly: "VARIANT_ID_YEARLY",   // Replace with actual ID
+    yearly: "1205302",   // Spacely AI - Yearly Unlimited
 };
 
 export async function POST(request: Request) {
