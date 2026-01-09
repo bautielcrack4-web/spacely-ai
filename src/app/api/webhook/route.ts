@@ -14,8 +14,9 @@ export async function POST(request: Request) {
             hmac.update(body).digest("hex"),
             "utf8"
         );
+        const headerList = await headers();
         const signature = Buffer.from(
-            headers().get("x-signature") || "",
+            headerList.get("x-signature") || "",
             "utf8"
         );
 
