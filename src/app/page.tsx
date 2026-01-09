@@ -1,4 +1,5 @@
 import { Hero } from "@/components/Hero";
+import { Sparkles } from "lucide-react";
 
 export default function Home() {
   return (
