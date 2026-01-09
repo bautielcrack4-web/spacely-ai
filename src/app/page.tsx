@@ -1,10 +1,12 @@
 import { Hero } from "@/components/Hero";
 import { Sparkles } from "lucide-react";
+import { DesignTool } from "@/components/DesignTool";
 
 export default function Home() {
   return (
     <div className="flex flex-col gap-20 pb-20">
       <Hero />
+      <DesignTool />
 
       {/* Features Preview Placeholder */}
       <section id="features" className="max-w-7xl mx-auto px-4 w-full">
