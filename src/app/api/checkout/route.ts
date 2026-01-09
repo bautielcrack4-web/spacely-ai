@@ -11,8 +11,8 @@ lemonSqueezyApiInstance({
 
 // Configure these with your actual Variant IDs from Lemon Squeezy
 const PLANS = {
-    weekly: "VARIANT_ID_WEEKLY",   // Replace with actual ID
-    monthly: "VARIANT_ID_MONTHLY", // Replace with actual ID
+    weekly: "1205274",   // Spacely AI - Weekly Unlimited
+    monthly: "1205283", // Spacely AI - Monthly Unlimited
     yearly: "VARIANT_ID_YEARLY",   // Replace with actual ID
 };
 
