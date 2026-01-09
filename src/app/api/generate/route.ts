@@ -1,3 +1,5 @@
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import Replicate from "replicate";
 
@@ -8,6 +10,42 @@ const replicate = new Replicate({
 export async function POST(request: Request) {
     try {
         const { imageUrl, prompt } = await request.json();
+        const cookieStore = await cookies();
+
+        const supabase = createServerClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                cookies: {
+                    get(name: string) {
+                        return cookieStore.get(name)?.value
+                    },
+                    set(name: string, value: string, options: CookieOptions) {
+                        cookieStore.set({ name, value, ...options })
+                    },
+                    remove(name: string, options: CookieOptions) {
+                        cookieStore.set({ name, value: '', ...options })
+                    },
+                },
+            }
+        )
+
+        // 1. Check User Session
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        // 2. Check Credits
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('credits')
+            .eq('id', session.user.id)
+            .single();
+
+        if (!profile || profile.credits < 1) {
+            return NextResponse.json({ error: "Insufficient credits" }, { status: 403 });
+        }
 
         if (!imageUrl || !prompt) {
             return NextResponse.json(
@@ -31,7 +69,12 @@ export async function POST(request: Request) {
 
         console.log("Replicate Output:", output);
 
-        return NextResponse.json({ result: output });
+        // 3. Deduct Credit
+        if (output) {
+            await supabase.rpc('decrement_credits', { user_id: session.user.id });
+        }
+
+        return NextResponse.json({ result: output, remainingCredits: profile.credits - 1 });
     } catch (error) {
         console.error("Error processing request:", error);
         return NextResponse.json(
