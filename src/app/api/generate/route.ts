@@ -83,7 +83,7 @@ export async function POST(request: Request) {
             "prunaai/p-image-edit",
             {
                 input: {
-                    image: imageUrl,
+                    images: [imageUrl],
                     prompt: prompt,
                     // aspect_ratio: "16:9", // Optional based on requirements
                 },
