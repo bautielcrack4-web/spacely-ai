@@ -79,23 +79,68 @@ export async function POST(request: Request) {
 
         // Using Pruna AI's model via Replicate
         // Model: prunaai/p-image-edit
+        // This model returns a ReadableStream of the image file
         const output = await replicate.run(
             "prunaai/p-image-edit",
             {
                 input: {
                     images: [imageUrl],
                     prompt: prompt,
-                    // aspect_ratio: "16:9", // Optional based on requirements
                 },
             }
         );
 
-        console.log("Replicate Output:", output);
+        console.log("Replicate Output Type:", typeof output);
+
+        let finalImageUrl = "";
+
+        if (output instanceof ReadableStream) {
+            // Convert ReadableStream to Buffer
+            const reader = output.getReader();
+            const chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+            }
+            // Concatenate chunks (Uint8Array)
+            const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+            const buffer = new Uint8Array(totalLength);
+            let offset = 0;
+            for (const chunk of chunks) {
+                buffer.set(chunk, offset);
+                offset += chunk.length;
+            }
+
+            // Upload to Supabase Storage
+            const fileName = `${session.user.id}/${Date.now()}-generated.png`;
+            const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('generations')
+                .upload(fileName, buffer, {
+                    contentType: 'image/png',
+                    upsert: false
+                });
+
+            if (uploadError) {
+                console.error("Storage Upload Error:", uploadError);
+                throw new Error("Failed to save generated image");
+            }
+
+            // Get Public URL
+            const { data: publicUrlData } = supabase.storage
+                .from('generations')
+                .getPublicUrl(fileName);
+
+            finalImageUrl = publicUrlData.publicUrl;
+
+        } else if (typeof output === 'string') {
+            finalImageUrl = output;
+        } else if (Array.isArray(output) && output.length > 0) {
+            finalImageUrl = output[0];
+        }
 
         // 3. Deduct Credit and Save to Gallery
-        if (output) {
-            const outputUrl = Array.isArray(output) ? output[0] : output;
-
+        if (finalImageUrl) {
             // Transaction-like operations (sequential for now)
             if (!isPro) {
                 await supabase.rpc('decrement_credits', { user_id: session.user.id });
@@ -105,9 +150,8 @@ export async function POST(request: Request) {
                 .from('generations')
                 .insert({
                     user_id: session.user.id,
-                    image_url: outputUrl,
+                    image_url: finalImageUrl,
                     prompt: prompt,
-                    // We could pass roomType/style if we sent them in the body, defaulting for now
                     room_type: 'residential',
                     style: 'modern'
                 });
@@ -116,7 +160,7 @@ export async function POST(request: Request) {
         }
 
         return NextResponse.json({
-            result: output,
+            result: finalImageUrl, // Send back the URL
             remainingCredits: isPro ? 999999 : (profile?.credits || 0) - 1
         });
     } catch (error) {
