@@ -36,7 +36,7 @@ drop policy if exists "Users can view own generations" on public.generations;
 create policy "Users can view own generations" on public.generations for select using (auth.uid() = user_id);
 
 drop policy if exists "Users can insert own generations" on public.generations;
-create policy "Users can insert own generations" on public.generations for insert using (auth.uid() = user_id);
+create policy "Users can insert own generations" on public.generations for insert with check (auth.uid() = user_id);
 
 -- 4. STORAGE BUCKET (Handle conflict)
 insert into storage.buckets (id, name, public) 
