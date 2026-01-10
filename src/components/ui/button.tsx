@@ -9,17 +9,17 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+                    "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:-translate-y-0.5 transition-all duration-300 border-none font-bold tracking-tight",
                 destructive:
-                    "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+                    "bg-red-500 text-white shadow-lg shadow-red-500/20 hover:bg-red-600 hover:shadow-red-500/40 transition-all",
                 outline:
-                    "border border-border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+                    "border-2 border-slate-200 bg-transparent hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 text-slate-700 font-semibold transition-all shadow-sm",
                 secondary:
-                    "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-                ghost: "hover:bg-accent hover:text-accent-foreground",
-                link: "text-primary underline-offset-4 hover:underline",
+                    "bg-white text-slate-900 border border-slate-100 shadow-sm hover:bg-slate-50/80 hover:shadow-md transition-all font-semibold",
+                ghost: "hover:bg-slate-100/50 hover:text-slate-900 font-medium",
+                link: "text-purple-600 underline-offset-4 hover:underline font-bold",
                 brand: "bg-brand text-slate-900 hover:bg-brand/90",
-                accent: "bg-accent text-slate-900 hover:bg-accent/90 font-bold shadow-[0_0_20px_rgba(178,240,66,0.3)]",
+                premium: "bg-black text-white shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 border border-white/10 relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/10 after:to-transparent after:-translate-x-full hover:after:animate-shimmer",
             },
             size: {
                 default: "h-10 px-4 py-2",

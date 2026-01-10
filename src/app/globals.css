@@ -23,6 +23,17 @@
   --color-border: var(--border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --animate-shimmer: shimmer 2s linear infinite;
+
+  @keyframes shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+
+    to {
+      transform: translateX(100%);
+    }
+  }
 }
 
 body {
@@ -170,4 +181,23 @@ body {
   100% {
     transform: translate(0, 0) rotate(0deg);
   }
+}
+
+@keyframes shine {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.btn-shine {
+  background: linear-gradient(110deg,
+      #9333ea 45%,
+      #a855f7 50%,
+      #9333ea 55%);
+  background-size: 200% 100%;
+  animation: shine 3s linear infinite;
 }
