@@ -106,7 +106,7 @@ export function ExampleGallery() {
                     {CATEGORIES(t).map((cat: any) => (
                         <Button
                             key={cat.id}
-                            variant={filter === cat.id ? "accent" : "outline"}
+                            variant={filter === cat.id ? "default" : "outline"}
                             onClick={() => setFilter(cat.id)}
                             className={`rounded-full px-6 transition-all border-none ${filter === cat.id
                                 ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white"
