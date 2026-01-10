@@ -1,14 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #080808;
-  --foreground: #ffffff;
-  --brand: #B2F042;
-  --brand-muted: rgba(178, 240, 66, 0.1);
-  --brand-glow: 0 0 20px rgba(178, 240, 66, 0.4);
-  --accent: #B2F042;
-  --surface: #101010;
-  --border: rgba(255, 255, 255, 0.08);
+  --background: #0A0A0A;
+  --foreground: #FAFAFA;
+  --brand: #A78BFA;
+  --brand-muted: rgba(167, 139, 250, 0.1);
+  --brand-glow: 0 0 20px rgba(167, 139, 250, 0.3);
+  --accent: #A78BFA;
+  --surface: #0F0F0F;
+  --border: #27272A;
+  --text-muted: #A1A1AA;
 }
 
 @theme inline {
@@ -33,7 +34,7 @@ body {
   background: rgba(10, 10, 10, 0.6);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border);
 }
 
 .text-gradient {
@@ -92,8 +93,8 @@ body {
   right: -10%;
   width: 60vw;
   height: 60vh;
-  background: radial-gradient(circle, rgba(178, 240, 66, 0.08) 0%, transparent 70%);
-  /* Brand color hint */
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.06) 0%, transparent 70%);
+  /* Lavender hint */
   animation-delay: -5s;
 }
 
@@ -132,14 +133,14 @@ body {
   left: 0;
   width: 100%;
   height: 4px;
-  background: #B2F042;
-  box-shadow: 0 0 15px #B2F042, 0 0 30px #B2F042;
+  background: #A78BFA;
+  box-shadow: 0 0 15px #A78BFA, 0 0 30px #A78BFA;
   animation: scan 2s linear infinite;
   z-index: 20;
 }
 
 .scan-overlay {
-  background: linear-gradient(to bottom, rgba(178, 240, 66, 0.1), transparent 20%);
+  background: linear-gradient(to bottom, rgba(167, 139, 250, 0.1), transparent 20%);
   position: absolute;
   left: 0;
   width: 100%;

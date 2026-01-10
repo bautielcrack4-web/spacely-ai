@@ -52,16 +52,16 @@ export function RenderControls({
                     />
                     <div className={cn(
                         "h-32 border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-center p-2 transition-colors",
-                        file ? "border-[#B2F042]/50 bg-[#B2F042]/5" : "border-[#3F3F3F] hover:border-[#B2F042]/30"
+                        file ? "border-[#A78BFA]/50 bg-[#A78BFA]/5" : "border-[#3F3F3F] hover:border-[#A78BFA]/30"
                     )}>
                         {file ? (
                             <>
-                                <p className="text-[#B2F042] text-sm font-medium truncate max-w-[200px]">{file.name}</p>
+                                <p className="text-[#A78BFA] text-sm font-medium truncate max-w-[200px]">{file.name}</p>
                                 <p className="text-gray-500 text-xs">Ready to render</p>
                             </>
                         ) : (
                             <>
-                                <span className="text-[#B2F042] text-sm font-medium mb-1">Upload a file</span>
+                                <span className="text-[#A78BFA] text-sm font-medium mb-1">Upload a file</span>
                                 <p className="text-[10px] text-gray-500 leading-tight">
                                     Click to select or drag & drop.<br />JPG, PNG up to 10MB
                                 </p>
@@ -90,7 +90,7 @@ export function RenderControls({
                             onClick={() => setRoomType("residential")}
                             className={cn(
                                 "text-xs font-medium py-2 rounded-md transition-colors",
-                                roomType === "residential" ? "bg-[#B2F042] text-black" : "text-gray-500 hover:text-white"
+                                roomType === "residential" ? "bg-[#A78BFA] text-white shadow-lg shadow-[#A78BFA]/20" : "text-gray-500 hover:text-white"
                             )}
                         >
                             Residential
@@ -106,7 +106,7 @@ export function RenderControls({
                             onClick={() => setSceneType("interior")}
                             className={cn(
                                 "text-xs font-bold py-2 rounded-lg transition-all duration-300",
-                                sceneType === "interior" ? "bg-[#B2F042] text-black shadow-lg shadow-[#B2F042]/20" : "text-gray-500 hover:text-gray-300"
+                                sceneType === "interior" ? "bg-[#A78BFA] text-white shadow-lg shadow-[#A78BFA]/20" : "text-gray-500 hover:text-gray-300"
                             )}
                         >
                             Interior
@@ -115,7 +115,7 @@ export function RenderControls({
                             onClick={() => setSceneType("exterior")}
                             className={cn(
                                 "text-xs font-bold py-2 rounded-lg transition-all duration-300",
-                                sceneType === "exterior" ? "bg-[#B2F042] text-black shadow-lg shadow-[#B2F042]/20" : "text-gray-500 hover:text-gray-300"
+                                sceneType === "exterior" ? "bg-[#A78BFA] text-white shadow-lg shadow-[#A78BFA]/20" : "text-gray-500 hover:text-gray-300"
                             )}
                         >
                             Exterior
@@ -131,7 +131,7 @@ export function RenderControls({
 
                     <div className="relative">
                         <select
-                            className="w-full bg-[#1F1F1F] border border-[#2F2F2F] rounded-lg p-3 text-sm text-white appearance-none focus:outline-none focus:border-[#B2F042]"
+                            className="w-full bg-[#1F1F1F] border border-[#2F2F2F] rounded-lg p-3 text-sm text-white appearance-none focus:outline-none focus:border-[#A78BFA]"
                             onChange={(e) => setPrompt(`${e.target.value}, ${prompt}`)} // Appending style for now
                         >
                             <option value="Modern Minimalist">Modern Minimalist</option>
@@ -155,24 +155,24 @@ export function RenderControls({
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
                         placeholder="Write your prompt here..."
-                        className="w-full h-24 bg-[#1F1F1F] border border-[#2F2F2F] rounded-lg p-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#B2F042] resize-none"
+                        className="w-full h-24 bg-[#1F1F1F] border border-[#2F2F2F] rounded-lg p-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#A78BFA] resize-none"
                     />
                 </div>
 
                 {/* Render Button */}
                 <Button
-                    className="w-full bg-[#B2F042] hover:bg-[#a2da3a] text-black font-bold py-6 rounded-xl text-md shadow-[0_0_20px_rgba(178,240,66,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-[#A78BFA] hover:bg-[#9775FA] text-white font-bold py-6 rounded-xl text-md shadow-[0_0_20px_rgba(167,139,250,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={() => onGenerate({ roomType, sceneType, quality })}
                     disabled={loading || !file}
                 >
                     {loading ? (
                         <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                             <span>Rendering...</span>
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">
-                            <Zap className="w-4 h-4 fill-black" />
+                            <Zap className="w-4 h-4 fill-white" />
                             <span>Render Interior</span>
                         </div>
                     )}
