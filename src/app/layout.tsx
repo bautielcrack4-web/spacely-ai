@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import localFont from "next/font/local";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { SpotlightEffect } from "@/components/ui/spotlight-effect";
 
-const geistSans = localFont({
+const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
