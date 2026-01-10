@@ -11,30 +11,27 @@ export function Testimonials() {
             role: t("testimonials.t1.role"),
             location: t("testimonials.t1.location"),
             flag: "🇺🇸",
-            avatar: "SM",
+            image: "/testimonials/user-2.jpg",
             content: t("testimonials.t1.content"),
             rating: 5,
-            gradient: "from-purple-500 to-pink-500"
         },
         {
             name: t("testimonials.t2.name"),
             role: t("testimonials.t2.role"),
             location: t("testimonials.t2.location"),
             flag: "🇬🇧",
-            avatar: "JT",
+            image: "/testimonials/user-1.jpg",
             content: t("testimonials.t2.content"),
             rating: 5,
-            gradient: "from-blue-500 to-cyan-500"
         },
         {
             name: t("testimonials.t3.name"),
             role: t("testimonials.t3.role"),
             location: t("testimonials.t3.location"),
             flag: "🇦🇷",
-            avatar: "CR",
+            image: "/testimonials/user-3.jpg",
             content: t("testimonials.t3.content"),
             rating: 5,
-            gradient: "from-amber-500 to-orange-500"
         }
     ];
 
@@ -63,17 +60,19 @@ export function Testimonials() {
                         </div>
 
                         {/* Testimonial Content */}
-                        <p className="text-lg leading-relaxed text-gray-600 mb-8 font-medium">
+                        <p className="text-lg leading-relaxed text-gray-600 mb-8 font-medium italic">
                             "{testimonial.content}"
                         </p>
 
                         {/* Author Info */}
                         <div className="flex items-center gap-4">
                             {/* Avatar */}
-                            <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${testimonial.gradient} flex items-center justify-center flex-shrink-0 shadow-lg`}>
-                                <span className="text-white font-bold text-lg">
-                                    {testimonial.avatar}
-                                </span>
+                            <div className="relative w-16 h-16 rounded-full overflow-hidden shadow-md border-2 border-purple-100">
+                                <img
+                                    src={testimonial.image}
+                                    alt={testimonial.name}
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
 
                             {/* Name & Role */}
