@@ -69,9 +69,25 @@ export async function POST(request: Request) {
 
         console.log("Replicate Output:", output);
 
-        // 3. Deduct Credit
+        // 3. Deduct Credit and Save to Gallery
         if (output) {
+            const outputUrl = Array.isArray(output) ? output[0] : output;
+
+            // Transaction-like operations (sequential for now)
             await supabase.rpc('decrement_credits', { user_id: session.user.id });
+
+            const { error: dbError } = await supabase
+                .from('generations')
+                .insert({
+                    user_id: session.user.id,
+                    image_url: outputUrl,
+                    prompt: prompt,
+                    // We could pass roomType/style if we sent them in the body, defaulting for now
+                    room_type: 'residential',
+                    style: 'modern'
+                });
+
+            if (dbError) console.error("Failed to save generation:", dbError);
         }
 
         return NextResponse.json({ result: output, remainingCredits: profile.credits - 1 });

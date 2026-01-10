@@ -14,6 +14,7 @@ export default function DashboardPage() {
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [showPaywall, setShowPaywall] = useState(false);
+    const [refreshGallery, setRefreshGallery] = useState(0);
 
     // Auth Check on mount
     useEffect(() => {
@@ -74,6 +75,8 @@ export default function DashboardPage() {
                     if (data.result) {
                         const outputUrl = Array.isArray(data.result) ? data.result[0] : data.result;
                         setGeneratedImage(outputUrl);
+                        // Trigger gallery refresh after successful generation
+                        setRefreshGallery(prev => prev + 1);
                     }
                 } catch (err: any) {
                     console.error("API Error", err);
@@ -107,7 +110,10 @@ export default function DashboardPage() {
                 loading={loading}
             />
 
-            <RecentGallery />
+            <RecentGallery
+                onSelectImage={setGeneratedImage}
+                refreshTrigger={refreshGallery}
+            />
 
             <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} />
         </div>
