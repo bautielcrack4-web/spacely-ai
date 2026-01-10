@@ -10,9 +10,9 @@ import { ComparisonSlider } from "@/components/ui/comparison-slider";
 export function Hero() {
     const { t } = useLanguage();
 
-    // Industrial Black Example for Hero
-    const beforeUrl = "/examples/assets/what-in-the-world-to-do-with-this-50s-pink-burgundy-tile-v0-3ni6qfjcclka1.webp";
-    const afterUrl = "/examples/assets/replicate-prediction-r7aescnddhrmw0cvmqmb698qmw.jpeg";
+    // Empty House to Furnished Example for Hero
+    const beforeUrl = "/sequence/first frame.jpg";
+    const afterUrl = "/sequence/last frame.png";
 
     return (
         <section className="relative pt-32 pb-24 md:pt-40 md:pb-24 overflow-hidden bg-transparent">
