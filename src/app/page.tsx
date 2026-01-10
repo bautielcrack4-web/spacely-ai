@@ -234,7 +234,7 @@ export default function Home() {
               <ul className="space-y-3">
                 {['Features', 'Pricing', 'FAQ', 'Changelog'].map((item) => (
                   <li key={item}>
-                    <a href={`#${item.toLowerCase()}`} className="text-sm transition-colors" style={{ color: 'var(--text-muted)' }} onMouseOver={(e) => e.currentTarget.style.color = '#FAFAFA'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
+                    <a href={`#${item.toLowerCase()}`} className="text-sm text-zinc-400 hover:text-white transition-colors">
                       {item}
                     </a>
                   </li>
@@ -248,13 +248,13 @@ export default function Home() {
               <ul className="space-y-3">
                 {['About', 'Blog', 'Careers'].map((item) => (
                   <li key={item}>
-                    <a href={`#${item.toLowerCase()}`} className="text-sm transition-colors" style={{ color: 'var(--text-muted)' }} onMouseOver={(e) => e.currentTarget.style.color = '#FAFAFA'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
+                    <a href={`#${item.toLowerCase()}`} className="text-sm text-zinc-400 hover:text-white transition-colors">
                       {item}
                     </a>
                   </li>
                 ))}
                 <li>
-                  <a href="mailto:bagasystudio@gmail.com" className="text-sm transition-colors" style={{ color: 'var(--text-muted)' }} onMouseOver={(e) => e.currentTarget.style.color = '#FAFAFA'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
+                  <a href="mailto:bagasystudio@gmail.com" className="text-sm text-zinc-400 hover:text-white transition-colors">
                     Contact
                   </a>
                 </li>
@@ -267,7 +267,7 @@ export default function Home() {
               <ul className="space-y-3">
                 {['Privacy', 'Terms', 'Cookies'].map((item) => (
                   <li key={item}>
-                    <a href={`#${item.toLowerCase()}`} className="text-sm transition-colors" style={{ color: 'var(--text-muted)' }} onMouseOver={(e) => e.currentTarget.style.color = '#FAFAFA'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
+                    <a href={`#${item.toLowerCase()}`} className="text-sm text-zinc-400 hover:text-white transition-colors">
                       {item}
                     </a>
                   </li>
@@ -281,7 +281,7 @@ export default function Home() {
               <ul className="space-y-3">
                 {['Twitter', 'Instagram', 'LinkedIn'].map((item) => (
                   <li key={item}>
-                    <a href={`#${item.toLowerCase()}`} className="text-sm transition-colors" style={{ color: 'var(--text-muted)' }} onMouseOver={(e) => e.currentTarget.style.color = '#FAFAFA'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
+                    <a href={`#${item.toLowerCase()}`} className="text-sm text-zinc-400 hover:text-white transition-colors">
                       {item}
                     </a>
                   </li>
@@ -297,7 +297,7 @@ export default function Home() {
               </div>
               <span className="text-sm font-semibold text-white">Spacely AI</span>
             </div>
-            <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-sm text-zinc-400">
               © 2024 Bagasy Studio. All rights reserved.
             </p>
           </div>
