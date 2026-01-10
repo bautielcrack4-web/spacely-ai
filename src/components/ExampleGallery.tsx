@@ -33,8 +33,8 @@ const FALLBACK_EXAMPLES: Example[] = [
         id: '1',
         room_type: 'living',
         style_name: 'Modern Minimalist',
-        before_url: '/examples/assets/sala-estar-vacia-muebles-puerta_305343-47672.avif',
-        after_url: '/examples/assets/replicate-prediction-1sgrm7zxr9rmr0cvmqcstqdv04.jpeg',
+        before_url: '/sequence/first frame.jpg',
+        after_url: '/sequence/last frame.png',
         title: 'De Vacío a Minimalista Moderno',
         description: 'Una sala vacía transformada en un espacio elegante con líneas limpias y luz natural.',
         badge: 'WOW FACTOR'

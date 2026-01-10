@@ -32,10 +32,10 @@ export function Navbar() {
     return (
         <nav
             className={cn(
-                "fixed top-0 inset-x-0 z-50 transition-all duration-300",
+                "fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-white/90 backdrop-blur-xl border-b shadow-sm",
                 scrolled
-                    ? "bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm"
-                    : "bg-transparent"
+                    ? "border-gray-200"
+                    : "border-gray-100"
             )}
         >
             <div className="max-w-7xl mx-auto px-6 py-4">
