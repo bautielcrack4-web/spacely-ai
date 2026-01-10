@@ -107,6 +107,7 @@ export default function DashboardPage() {
 
             <PreviewArea
                 image={generatedImage}
+                original={preview}
                 loading={loading}
             />
 

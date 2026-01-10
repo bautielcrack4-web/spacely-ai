@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
+import { SpotlightEffect } from "@/components/ui/spotlight-effect";
 
-const geistSans = Geist({
+const geistSans = localFont({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
@@ -25,13 +27,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
-      >
-        <Navbar />
-        <main className="min-h-screen pt-16">
-          {children}
-        </main>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0A0A0A]`}>
+        <div className="aurora-container" aria-hidden="true">
+          <div className="aurora-blob-1" />
+          <div className="aurora-blob-2" />
+          <div className="aurora-blob-3" />
+        </div>
+        <SpotlightEffect />
+        <div className="relative z-0">
+          <Navbar />
+          <main className="min-h-screen pt-16">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

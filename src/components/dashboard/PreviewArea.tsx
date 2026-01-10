@@ -2,13 +2,15 @@
 
 import { Home, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
+import { ComparisonSlider } from "@/components/ui/comparison-slider";
 
 interface PreviewAreaProps {
     image: string | null;
+    original?: string | null;
     loading: boolean;
 }
 
-export function PreviewArea({ image, loading }: PreviewAreaProps) {
+export function PreviewArea({ image, original, loading }: PreviewAreaProps) {
     return (
         <div className="flex-1 bg-[#050505] rounded-2xl border border-[#1F1F1F] flex items-center justify-center overflow-hidden relative min-h-[600px]">
             {/* Background Grid Pattern */}
@@ -22,6 +24,14 @@ export function PreviewArea({ image, loading }: PreviewAreaProps) {
                         <Home className="w-10 h-10 text-[#B2F042] animate-bounce" />
                     </div>
                     <p className="text-gray-400 font-medium">AI is redesigning your space...</p>
+                </div>
+            ) : image && original ? (
+                <div className="relative w-full h-full p-4">
+                    <ComparisonSlider
+                        original={original}
+                        modified={image}
+                        className="rounded-lg shadow-2xl"
+                    />
                 </div>
             ) : image ? (
                 <div className="relative w-full h-full p-4">
