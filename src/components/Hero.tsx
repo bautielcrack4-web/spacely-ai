@@ -20,8 +20,8 @@ export function Hero() {
     }, []);
 
     // Empty House to Furnished Example for Hero
-    const beforeUrl = "/sequence/first frame.jpg";
-    const afterUrl = "/sequence/last frame.png";
+    const beforeUrl = "/hero/before.jpg";
+    const afterUrl = "/hero/after.png";
 
     return (
         <section className="relative pt-32 pb-24 md:pt-40 md:pb-24 overflow-hidden bg-transparent">

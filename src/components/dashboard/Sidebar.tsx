@@ -34,8 +34,6 @@ export function Sidebar() {
 
     const navItems = [
         { icon: ImageIcon, label: t("nav.render"), href: "/dashboard", active: pathname === "/dashboard" },
-        { icon: Brush, label: t("nav.inpaint"), href: "/dashboard/inpaint", active: pathname === "/dashboard/inpaint" },
-        { icon: Maximize2, label: t("nav.upscale"), href: "/dashboard/upscale", active: pathname === "/dashboard/upscale" },
     ];
 
     return (
