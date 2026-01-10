@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 export function Navbar() {
     return (
@@ -10,11 +11,11 @@ export function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center">
-                            <div className="w-4 h-4 border-2 border-slate-900 rounded-sm" />
+                        <div className="w-8 h-8 relative">
+                            <Image src="/logo.png" alt="Logo" fill className="object-contain invert" />
                         </div>
                         <span className="text-xl font-bold text-white tracking-tight">
-                            Spacely <span className="text-brand">AI</span>
+                            Design Sense <span className="text-brand">AI</span>
                         </span>
                     </div>
 

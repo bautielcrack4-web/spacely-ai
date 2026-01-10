@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export function Sidebar() {
     const pathname = usePathname();
@@ -38,7 +39,9 @@ export function Sidebar() {
             {/* Logo */}
             <div className="p-6">
                 <div className="flex items-center gap-2 text-white font-bold text-xl">
-                    <Zap className="w-6 h-6 text-[#B2F042]" />
+                    <div className="w-8 h-8 relative">
+                        <Image src="/logo.png" alt="Logo" fill className="object-contain" />
+                    </div>
                     <span>Design Sense</span>
                 </div>
             </div>
