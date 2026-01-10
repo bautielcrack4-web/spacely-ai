@@ -39,10 +39,10 @@ export function Sidebar() {
     ];
 
     return (
-        <div className="hidden md:flex w-64 flex-col fixed inset-y-0 z-50 bg-[#0A0A0A] border-r border-[#1F1F1F]">
+        <div className="hidden md:flex w-64 flex-col fixed inset-y-0 z-50 bg-white border-r border-gray-100 shadow-xl shadow-purple-50/20">
             {/* Logo */}
-            <div className="h-16 flex items-center px-6 border-b border-[#1F1F1F]">
-                <div className="flex items-center gap-2 text-white font-bold text-xl">
+            <div className="h-16 flex items-center px-6 border-b border-gray-50">
+                <div className="flex items-center gap-2 text-gray-900 font-bold text-xl uppercase tracking-tighter">
                     <div className="w-8 h-8 relative">
                         <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain" />
                     </div>
@@ -50,54 +50,60 @@ export function Sidebar() {
                 </div>
             </div>
 
-            {/* Main Nav */}
-            <div className="flex-1 px-4 py-8 space-y-2">
+            <div className="flex-1 px-4 py-8 space-y-4">
                 {navItems.map((item) => (
                     <Link
                         key={item.label}
                         href={item.href}
                         className={cn(
-                            "flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 group border border-transparent",
+                            "flex items-center gap-3 p-3.5 rounded-2xl transition-all duration-300 group border border-transparent font-semibold text-sm",
                             item.active
-                                ? "bg-[#1F1F1F] text-[#A78BFA] border-[#A78BFA]/20"
-                                : "text-gray-400 hover:text-white hover:bg-[#1F1F1F]/50"
+                                ? "bg-gradient-to-r from-purple-50 to-pink-50 text-purple-600 border-purple-100/50 shadow-sm"
+                                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50/80"
                         )}
                     >
-                        <item.icon className="w-6 h-6 mb-2" />
-                        <span className="text-xs font-medium">{item.label}</span>
+                        <item.icon className={cn(
+                            "w-5 h-5 transition-colors",
+                            item.active ? "text-purple-600" : "text-gray-400 group-hover:text-gray-900"
+                        )} />
+                        <span>{item.label}</span>
+                        {item.active && (
+                            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+                        )}
                     </Link>
                 ))}
             </div>
 
             {/* Bottom Actions */}
-            <div className="px-4 py-6 space-y-4 border-t border-[#1F1F1F]">
+            <div className="px-4 py-6 space-y-6 border-t border-gray-50">
                 <Button
                     onClick={openPaywall}
-                    className="w-full bg-[#A78BFA] hover:bg-[#9775FA] text-white font-bold py-6 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(167,139,250,0.15)]"
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-95 text-white font-bold h-12 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-purple-200"
                 >
-                    <Crown className="w-5 h-5 fill-white" />
+                    <Crown className="w-4 h-4 fill-white" />
                     {t("nav.upgrade")}
                 </Button>
 
-                <div className="flex items-center justify-between px-2 text-gray-400">
+                <div className="flex items-center justify-between px-2">
                     <div className="flex gap-4">
-                        <Link href="#" className="hover:text-white"><CreditCard className="w-5 h-5" /></Link>
-                        <Link href="#" className="hover:text-white"><HelpCircle className="w-5 h-5" /></Link>
+                        <Link href="#" className="text-gray-400 hover:text-purple-600 transition-colors"><CreditCard className="w-5 h-5" /></Link>
+                        <Link href="#" className="text-gray-400 hover:text-purple-600 transition-colors"><HelpCircle className="w-5 h-5" /></Link>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 items-center">
                         <select
                             value={language}
                             onChange={(e) => setLanguage(e.target.value as any)}
-                            className="bg-transparent text-xs hover:text-white border-none focus:ring-0 cursor-pointer"
+                            className="bg-transparent text-xs font-bold text-gray-500 hover:text-gray-900 border-none focus:ring-0 cursor-pointer appearance-none px-2"
                         >
-                            <option value="en">🇺🇸 EN</option>
-                            <option value="es">🇪🇸 ES</option>
-                            <option value="zh">🇨🇳 ZH</option>
-                            <option value="hi">🇮🇳 HI</option>
-                            <option value="ar">🇸🇦 AR</option>
+                            <option value="en">EN</option>
+                            <option value="es">ES</option>
+                            <option value="zh">ZH</option>
+                            <option value="hi">HI</option>
+                            <option value="ar">AR</option>
                         </select>
-                        <button onClick={handleLogout} className="hover:text-red-500">
-                            <LogOut className="w-5 h-5" />
+                        <div className="w-[1px] h-4 bg-gray-100 mx-1" />
+                        <button onClick={handleLogout} className="text-gray-400 hover:text-red-500 transition-colors bg-gray-50 p-2 rounded-xl">
+                            <LogOut className="w-4 h-4" />
                         </button>
                     </div>
                 </div>

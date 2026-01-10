@@ -39,10 +39,10 @@ export function RenderControls({
     return (
         <div className="w-80 flex-shrink-0 flex flex-col gap-6 h-full overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-surface-200">
             {/* Upload Section */}
-            <div className="bg-[#121212] rounded-2xl p-4 border border-[#1F1F1F]">
-                <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{t("controls.upload.title")}</h3>
-                    <span className="text-[10px] text-gray-500 bg-[#2F2F2F] px-1.5 py-0.5 rounded">{t("controls.upload.tips")}</span>
+            <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm shadow-purple-50/50">
+                <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t("controls.upload.title")}</h3>
+                    <span className="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full uppercase">{t("controls.upload.tips")}</span>
                 </div>
 
                 <div className="relative group cursor-pointer">
@@ -53,18 +53,21 @@ export function RenderControls({
                         className="absolute inset-0 w-full h-full opacity-0 z-10 cursor-pointer"
                     />
                     <div className={cn(
-                        "h-32 border-2 border-dashed rounded-lg flex flex-col items-center justify-center text-center p-2 transition-colors",
-                        file ? "border-[#A78BFA]/50 bg-[#A78BFA]/5" : "border-[#3F3F3F] hover:border-[#A78BFA]/30"
+                        "h-32 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center text-center p-4 transition-all duration-300",
+                        file ? "border-purple-500/50 bg-purple-50/30" : "border-gray-200 bg-gray-50 group-hover:bg-purple-50/20 group-hover:border-purple-300/50"
                     )}>
                         {file ? (
                             <>
-                                <p className="text-[#A78BFA] text-sm font-medium truncate max-w-[200px]">{file.name}</p>
-                                <p className="text-gray-500 text-xs">{t("controls.upload.ready")}</p>
+                                <p className="text-purple-600 text-sm font-bold truncate max-w-[200px]">{file.name}</p>
+                                <p className="text-gray-500 text-[10px] mt-1 font-medium">{t("controls.upload.ready")}</p>
                             </>
                         ) : (
                             <>
-                                <span className="text-[#A78BFA] text-sm font-medium mb-1">{t("controls.upload.button")}</span>
-                                <p className="text-[10px] text-gray-500 leading-tight">
+                                <div className="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
+                                    <Layout className="w-5 h-5" />
+                                </div>
+                                <span className="text-gray-900 text-sm font-bold">{t("controls.upload.button")}</span>
+                                <p className="text-[10px] text-gray-500 font-medium leading-tight mt-1">
                                     {t("controls.upload.desc")}
                                 </p>
                             </>
@@ -75,15 +78,14 @@ export function RenderControls({
 
             {/* Settings Sections */}
             <div className="space-y-6">
-                {/* Room Type */}
                 <div>
-                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3 block">{t("controls.settings.roomType")}</label>
-                    <div className="grid grid-cols-2 gap-2 bg-[#0F0F0F] p-1 rounded-xl border border-[#1F1F1F]">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">{t("controls.settings.roomType")}</label>
+                    <div className="grid grid-cols-2 gap-1.5 bg-gray-100/50 p-1 rounded-2xl border border-gray-100">
                         <button
                             onClick={() => setRoomType("commercial")}
                             className={cn(
-                                "text-xs font-medium py-2 rounded-md transition-colors",
-                                roomType === "commercial" ? "bg-[#2F2F2F] text-white" : "text-gray-500 hover:text-white"
+                                "text-xs font-bold py-2.5 rounded-xl transition-all duration-300",
+                                roomType === "commercial" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
                             )}
                         >
                             {t("controls.settings.commercial")}
@@ -91,8 +93,8 @@ export function RenderControls({
                         <button
                             onClick={() => setRoomType("residential")}
                             className={cn(
-                                "text-xs font-medium py-2 rounded-md transition-colors",
-                                roomType === "residential" ? "bg-[#A78BFA] text-white shadow-lg shadow-[#A78BFA]/20" : "text-gray-500 hover:text-white"
+                                "text-xs font-bold py-2.5 rounded-xl transition-all duration-300",
+                                roomType === "residential" ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md shadow-purple-200" : "text-gray-500 hover:text-gray-700"
                             )}
                         >
                             {t("controls.settings.residential")}
@@ -102,13 +104,13 @@ export function RenderControls({
 
                 {/* Interior/Exterior */}
                 <div>
-                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-3 block">{t("controls.settings.perspective")}</label>
-                    <div className="grid grid-cols-2 gap-2 bg-[#0F0F0F] p-1 rounded-xl border border-[#1F1F1F]">
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">{t("controls.settings.perspective")}</label>
+                    <div className="grid grid-cols-2 gap-1.5 bg-gray-100/50 p-1 rounded-2xl border border-gray-100">
                         <button
                             onClick={() => setSceneType("interior")}
                             className={cn(
-                                "text-xs font-bold py-2 rounded-lg transition-all duration-300",
-                                sceneType === "interior" ? "bg-[#A78BFA] text-white shadow-lg shadow-[#A78BFA]/20" : "text-gray-500 hover:text-gray-300"
+                                "text-xs font-bold py-2.5 rounded-xl transition-all duration-300",
+                                sceneType === "interior" ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md shadow-purple-200" : "text-gray-500 hover:text-gray-700"
                             )}
                         >
                             {t("controls.settings.interior")}
@@ -116,8 +118,8 @@ export function RenderControls({
                         <button
                             onClick={() => setSceneType("exterior")}
                             className={cn(
-                                "text-xs font-bold py-2 rounded-lg transition-all duration-300",
-                                sceneType === "exterior" ? "bg-[#A78BFA] text-white shadow-lg shadow-[#A78BFA]/20" : "text-gray-500 hover:text-gray-300"
+                                "text-xs font-bold py-2.5 rounded-xl transition-all duration-300",
+                                sceneType === "exterior" ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md shadow-purple-200" : "text-gray-500 hover:text-gray-700"
                             )}
                         >
                             {t("controls.settings.exterior")}
@@ -125,15 +127,14 @@ export function RenderControls({
                     </div>
                 </div>
 
-                {/* Style Selector */}
                 <div>
                     <div className="flex justify-between mb-3">
-                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] block">Design Aesthetic</label>
+                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">{t("controls.settings.aesthetic")}</label>
                     </div>
 
-                    <div className="relative">
+                    <div className="relative group">
                         <select
-                            className="w-full bg-[#1F1F1F] border border-[#2F2F2F] rounded-lg p-3 text-sm text-white appearance-none focus:outline-none focus:border-[#A78BFA]"
+                            className="w-full bg-white border border-gray-100 rounded-2xl p-4 text-sm text-gray-900 appearance-none focus:outline-none focus:ring-2 focus:ring-purple-500/10 focus:border-purple-500/50 transition-all font-medium shadow-sm group-hover:bg-gray-50"
                             onChange={(e) => setPrompt(`${e.target.value}, ${prompt}`)} // Appending style for now
                         >
                             <option value="Modern Minimalist">{t("styles.modern")}</option>
@@ -152,29 +153,29 @@ export function RenderControls({
 
                 {/* Prompt Input */}
                 <div>
-                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">{t("controls.settings.promptLabel")}</label>
+                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 block">{t("controls.settings.promptLabel")}</label>
                     <textarea
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
                         placeholder={t("controls.settings.promptPlaceholder")}
-                        className="w-full h-24 bg-[#1F1F1F] border border-[#2F2F2F] rounded-lg p-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#A78BFA] resize-none"
+                        className="w-full h-24 bg-white border border-gray-100 rounded-2xl p-4 text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500/10 focus:border-purple-500/50 transition-all resize-none shadow-sm font-medium"
                     />
                 </div>
 
                 {/* Render Button */}
                 <Button
-                    className="w-full bg-[#A78BFA] hover:bg-[#9775FA] text-white font-bold py-6 rounded-xl text-md shadow-[0_0_20px_rgba(167,139,250,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-95 text-white font-bold h-16 rounded-2xl text-lg shadow-xl shadow-purple-200 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed border-none outline-none ring-0"
                     onClick={() => onGenerate({ roomType, sceneType, quality })}
                     disabled={loading || !file}
                 >
                     {loading ? (
                         <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            <div className="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin" />
                             <span>{t("controls.btn.rendering")}</span>
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">
-                            <Zap className="w-4 h-4 fill-white" />
+                            <Zap className="w-5 h-5 fill-white" />
                             <span>{t("controls.btn.render")}</span>
                         </div>
                     )}

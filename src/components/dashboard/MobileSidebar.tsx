@@ -30,14 +30,14 @@ export function MobileSidebar() {
     return (
         <div className="md:hidden flex flex-col">
             {/* Mobile Header */}
-            <div className="h-16 flex items-center justify-between px-4 border-b border-[#1F1F1F] bg-[#0A0A0A] fixed top-0 w-full z-40">
+            <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100 bg-white fixed top-0 w-full z-40 shadow-sm">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 relative">
-                        <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain invert" />
+                        <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span className="font-bold text-white">Spacely AI</span>
+                    <span className="font-bold text-gray-900 uppercase tracking-tighter">Spacely AI</span>
                 </div>
-                <button onClick={() => setIsOpen(true)} className="p-2 text-gray-400 hover:text-white">
+                <button onClick={() => setIsOpen(true)} className="p-2 text-gray-400 hover:text-purple-600 transition-colors">
                     <Menu className="w-6 h-6" />
                 </button>
             </div>
@@ -50,46 +50,49 @@ export function MobileSidebar() {
                 <div className="fixed inset-0 z-50 flex">
                     {/* Backdrop */}
                     <div
-                        className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                        className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm"
                         onClick={() => setIsOpen(false)}
                     />
 
                     {/* Sidebar Content */}
-                    <div className="relative w-64 bg-[#0A0A0A] border-r border-[#1F1F1F] h-full flex flex-col p-4 animate-in slide-in-from-left duration-200">
-                        <div className="flex items-center justify-between mb-8 px-2">
-                            <span className="font-bold text-white text-lg">Menu</span>
-                            <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white">
+                    <div className="relative w-72 bg-white h-full flex flex-col p-6 shadow-2xl animate-in slide-in-from-left duration-300">
+                        <div className="flex items-center justify-between mb-10">
+                            <span className="font-bold text-gray-900 text-xl tracking-tight uppercase">Menu</span>
+                            <button onClick={() => setIsOpen(false)} className="bg-gray-50 p-2 rounded-xl text-gray-400 hover:text-red-500 transition-colors">
                                 <X className="w-6 h-6" />
                             </button>
                         </div>
 
-                        <div className="space-y-2 flex-1">
+                        <div className="space-y-4 flex-1">
                             {navItems.map((item) => (
                                 <Link
                                     key={item.label}
                                     href={item.href}
                                     onClick={() => setIsOpen(false)}
                                     className={cn(
-                                        "flex items-center gap-3 p-3 rounded-xl transition-all duration-200",
+                                        "flex items-center gap-3 p-4 rounded-2xl transition-all duration-300 font-semibold text-sm border border-transparent",
                                         item.active
-                                            ? "bg-[#1F1F1F] text-[#A78BFA] border border-[#A78BFA]/20"
-                                            : "text-gray-400 hover:text-white hover:bg-[#1F1F1F]/50"
+                                            ? "bg-gradient-to-r from-purple-50 to-pink-50 text-purple-600 border-purple-100 shadow-sm"
+                                            : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
                                     )}
                                 >
-                                    <item.icon className="w-5 h-5" />
-                                    <span className="font-medium">{item.label}</span>
+                                    <item.icon className={cn(
+                                        "w-5 h-5",
+                                        item.active ? "text-purple-600" : "text-gray-400"
+                                    )} />
+                                    <span>{item.label}</span>
                                 </Link>
                             ))}
                         </div>
 
-                        <div className="pt-4 border-t border-[#1F1F1F]">
-                            <div className="p-4 rounded-xl bg-gradient-to-br from-[#1F1F1F] to-black border border-[#2F2F2F]">
-                                <div className="flex items-center gap-2 mb-2 text-[#A78BFA]">
+                        <div className="pt-6 border-t border-gray-100">
+                            <div className="p-6 rounded-3xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100/50 shadow-inner">
+                                <div className="flex items-center gap-2 mb-2 text-purple-600">
                                     <Sparkles className="w-4 h-4" />
-                                    <span className="text-xs font-bold uppercase tracking-wider">PRO</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest">PRO MEMBER</span>
                                 </div>
-                                <p className="text-xs text-gray-400 mb-3">{t("nav.upgrade")}</p>
-                                <Button size="sm" variant="accent" className="w-full text-white font-bold h-8 text-xs">
+                                <p className="text-xs text-gray-500 font-medium mb-4 leading-relaxed">{t("nav.upgrade")}</p>
+                                <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold h-10 rounded-xl shadow-lg shadow-purple-200">
                                     {t("nav.upgrade")}
                                 </Button>
                             </div>

@@ -50,12 +50,12 @@ export function FAQ() {
     ];
 
     return (
-        <section id="faq" className="max-w-4xl mx-auto px-4 w-full py-24">
+        <section id="faq" className="max-w-4xl mx-auto px-4 w-full py-24 bg-white">
             <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
                     {t("faq.title")}
                 </h2>
-                <p className="text-lg" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-xl text-gray-600">
                     {t("faq.subtitle")}
                 </p>
             </div>
@@ -64,25 +64,25 @@ export function FAQ() {
                 {faqs.map((faq, index) => (
                     <div
                         key={index}
-                        className="border border-[#27272A] rounded-2xl overflow-hidden hover:border-brand/40 transition-colors"
+                        className="border border-gray-100 rounded-2xl overflow-hidden hover:border-purple-200 hover:shadow-lg hover:shadow-purple-50 transition-all duration-300"
                     >
                         <button
                             onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                            className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
+                            className="w-full px-8 py-6 flex items-center justify-between text-left hover:bg-purple-50/30 transition-colors"
                         >
-                            <span className="text-base font-semibold text-white pr-8">
+                            <span className="text-lg font-bold text-gray-900 pr-8">
                                 {faq.question}
                             </span>
                             <ChevronDown
                                 className={cn(
-                                    "w-5 h-5 text-brand flex-shrink-0 transition-transform duration-200",
+                                    "w-5 h-5 text-purple-600 flex-shrink-0 transition-transform duration-300",
                                     openIndex === index && "rotate-180"
                                 )}
                             />
                         </button>
                         {openIndex === index && (
-                            <div className="px-6 pb-5 pt-2">
-                                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                            <div className="px-8 pb-6 pt-0 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <p className="text-gray-600 leading-relaxed">
                                     {faq.answer}
                                 </p>
                             </div>
@@ -93,12 +93,12 @@ export function FAQ() {
 
             {/* Still have questions CTA */}
             <div className="mt-16 text-center">
-                <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
+                <p className="text-gray-600 font-medium mb-4">
                     {t("faq.cta.text")}
                 </p>
                 <a
                     href="mailto:bagasystudio@gmail.com"
-                    className="inline-flex items-center gap-2 text-brand font-semibold text-sm hover:underline"
+                    className="inline-flex items-center gap-2 text-purple-600 font-bold hover:text-pink-600 transition-colors"
                 >
                     {t("faq.cta.btn")} →
                 </a>

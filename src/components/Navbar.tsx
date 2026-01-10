@@ -32,10 +32,10 @@ export function Navbar() {
     return (
         <nav
             className={cn(
-                "sticky top-0 z-50 transition-all duration-300",
+                "fixed top-0 inset-x-0 z-50 transition-all duration-300",
                 scrolled
-                    ? "bg-black/80 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/30"
-                    : "bg-black/50"
+                    ? "bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm"
+                    : "bg-transparent"
             )}
         >
             <div className="max-w-7xl mx-auto px-6 py-4">
@@ -45,7 +45,7 @@ export function Navbar() {
                         <div className="w-8 h-8 relative">
                             <Image src="/logo-pixel.png" alt="Spacely AI" fill className="object-contain" />
                         </div>
-                        <span className="font-semibold text-white text-base">Spacely AI</span>
+                        <span className="font-bold text-gray-900 text-lg">Spacely AI</span>
                     </Link>
 
                     {/* Center Nav Links - Desktop */}
@@ -55,10 +55,10 @@ export function Navbar() {
                                 key={link.href}
                                 href={link.href}
                                 className={cn(
-                                    "flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200",
+                                    "flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200",
                                     pathname === link.href
-                                        ? "text-white bg-brand/10"
-                                        : "text-zinc-400 hover:text-white hover:bg-white/10"
+                                        ? "text-purple-600 bg-purple-50"
+                                        : "text-gray-600 hover:text-purple-600 hover:bg-purple-50"
                                 )}
                             >
                                 {link.icon}
@@ -68,40 +68,36 @@ export function Navbar() {
                     </div>
 
                     {/* Right Side */}
-                    <div className="hidden md:flex items-center gap-3">
+                    <div className="hidden md:flex items-center gap-4">
                         {/* Language Selector */}
-                        <select
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value as any)}
-                            className="flex items-center gap-2 px-3 py-2 rounded-md border border-zinc-800 bg-black text-zinc-400 text-sm hover:border-brand transition-colors cursor-pointer focus:outline-none focus:border-brand"
-                        >
-                            <option value="en">🇬🇧 EN</option>
-                            <option value="es">🇪🇸 ES</option>
-                            <option value="zh">🇨🇳 中文</option>
-                            <option value="hi">🇮🇳 हिन्दी</option>
-                            <option value="ar">🇸🇦 العربية</option>
-                        </select>
+                        <div className="relative group">
+                            <select
+                                value={language}
+                                onChange={(e) => setLanguage(e.target.value as any)}
+                                className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 pl-4 pr-10 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all cursor-pointer"
+                            >
+                                <option value="en">🇺🇸 EN</option>
+                                <option value="es">🇪🇸 ES</option>
+                                <option value="zh">🇨🇳 ZH</option>
+                                <option value="hi">🇮🇳 HI</option>
+                                <option value="ar">🇸🇦 AR</option>
+                            </select>
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none group-hover:text-purple-500 transition-colors" />
+                        </div>
 
                         {/* PRO Button */}
                         <Link href="/pricing">
-                            <Button className="bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] hover:from-[#9775FA] hover:to-[#7C3AED] text-white font-semibold px-5 py-2 rounded-lg shadow-lg shadow-brand/20 hover:scale-[1.02] hover:shadow-xl hover:shadow-brand/30 transition-all duration-200 flex items-center gap-2">
+                            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white font-bold px-6 py-2 rounded-xl shadow-lg shadow-purple-200 hover:scale-[1.02] transition-all duration-200 flex items-center gap-2 border-none h-11">
                                 <Crown className="w-4 h-4 fill-white" />
                                 {t("nav.upgrade")}
                             </Button>
                         </Link>
-
-                        {/* User Avatar */}
-                        <button className="w-8 h-8 rounded-full border-2 border-zinc-800 hover:border-brand transition-colors overflow-hidden">
-                            <div className="w-full h-full bg-gradient-to-br from-brand to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                                U
-                            </div>
-                        </button>
                     </div>
 
                     {/* Mobile Menu Button */}
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="md:hidden p-2 text-zinc-400 hover:text-white"
+                        className="md:hidden p-2 text-gray-600 hover:text-purple-600"
                     >
                         {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </button>
@@ -110,7 +106,7 @@ export function Navbar() {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-                <div className="md:hidden bg-black/95 backdrop-blur-xl border-t border-white/10">
+                <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-xl">
                     <div className="px-4 py-4 space-y-2">
                         {navLinks.map((link) => (
                             <Link
@@ -118,19 +114,19 @@ export function Navbar() {
                                 href={link.href}
                                 onClick={() => setMobileMenuOpen(false)}
                                 className={cn(
-                                    "flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all",
+                                    "flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold transition-all",
                                     pathname === link.href
-                                        ? "text-white bg-brand/10"
-                                        : "text-zinc-400 hover:text-white hover:bg-white/10"
+                                        ? "text-purple-600 bg-purple-50"
+                                        : "text-gray-600 hover:text-purple-600 hover:bg-purple-50"
                                 )}
                             >
                                 {link.icon}
                                 {link.label}
                             </Link>
                         ))}
-                        <div className="pt-4 border-t border-zinc-800">
+                        <div className="pt-4 border-t border-gray-100">
                             <Link href="/pricing" onClick={() => setMobileMenuOpen(false)}>
-                                <Button className="w-full bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] text-white font-semibold">
+                                <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-6 rounded-xl border-none">
                                     <Crown className="w-4 h-4 fill-white mr-2" />
                                     {t("nav.upgrade")}
                                 </Button>

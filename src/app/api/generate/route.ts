@@ -36,34 +36,38 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // 2. Check Credits
+        // 2. Check Credits & Subscription Status
         const { data: profile } = await supabase
             .from('profiles')
-            .select('credits')
+            .select('credits, subscription_status')
             .eq('id', session.user.id)
             .single();
 
-        if (!profile || profile.credits < 1) {
+        const isPro = profile?.subscription_status === 'active';
+
+        if (!isPro && (!profile || profile.credits < 1)) {
             return NextResponse.json({ error: "Insufficient credits" }, { status: 403 });
         }
 
-        // 3. Check Daily Limit (50 generations per day)
-        const startOfDay = new Date();
-        startOfDay.setUTCHours(0, 0, 0, 0);
+        // 3. Check Daily Limit (50 generations per day) - Bypass for PRO
+        if (!isPro) {
+            const startOfDay = new Date();
+            startOfDay.setUTCHours(0, 0, 0, 0);
 
-        const { count, error: countError } = await supabase
-            .from('generations')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', session.user.id)
-            .gte('created_at', startOfDay.toISOString());
+            const { count, error: countError } = await supabase
+                .from('generations')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', session.user.id)
+                .gte('created_at', startOfDay.toISOString());
 
-        if (countError) {
-            console.error("Error checking daily limit:", countError);
-        } else if (count !== null && count >= 50) {
-            return NextResponse.json(
-                { error: "Daily limit reached (50/50). Please try again tomorrow or upgrade to PRO for unlimited." },
-                { status: 429 }
-            );
+            if (countError) {
+                console.error("Error checking daily limit:", countError);
+            } else if (count !== null && count >= 50) {
+                return NextResponse.json(
+                    { error: "Daily limit reached (50/50). Please try again tomorrow or upgrade to PRO for unlimited." },
+                    { status: 429 }
+                );
+            }
         }
 
         if (!imageUrl || !prompt) {
@@ -93,7 +97,9 @@ export async function POST(request: Request) {
             const outputUrl = Array.isArray(output) ? output[0] : output;
 
             // Transaction-like operations (sequential for now)
-            await supabase.rpc('decrement_credits', { user_id: session.user.id });
+            if (!isPro) {
+                await supabase.rpc('decrement_credits', { user_id: session.user.id });
+            }
 
             const { error: dbError } = await supabase
                 .from('generations')
@@ -109,7 +115,10 @@ export async function POST(request: Request) {
             if (dbError) console.error("Failed to save generation:", dbError);
         }
 
-        return NextResponse.json({ result: output, remainingCredits: profile.credits - 1 });
+        return NextResponse.json({
+            result: output,
+            remainingCredits: isPro ? 999999 : (profile?.credits || 0) - 1
+        });
     } catch (error) {
         console.error("Error processing request:", error);
         return NextResponse.json(
