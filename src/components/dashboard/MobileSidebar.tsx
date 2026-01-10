@@ -33,7 +33,7 @@ export function MobileSidebar() {
                     <div className="w-8 h-8 relative">
                         <Image src="/logo.png" alt="Logo" fill className="object-contain invert" />
                     </div>
-                    <span className="font-bold text-white">Design Sense</span>
+                    <span className="font-bold text-white">Spacely AI</span>
                 </div>
                 <button onClick={() => setIsOpen(true)} className="p-2 text-gray-400 hover:text-white">
                     <Menu className="w-6 h-6" />

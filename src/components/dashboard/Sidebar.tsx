@@ -42,7 +42,7 @@ export function Sidebar() {
                     <div className="w-8 h-8 relative">
                         <Image src="/logo.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span>Design Sense</span>
+                    <span>Spacely AI</span>
                 </div>
             </div>
 

@@ -32,7 +32,7 @@ export function Hero() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Link href="#design-tool" className="w-full sm:w-auto">
+                        <Link href="/login" className="w-full sm:w-auto">
                             <Button size="lg" variant="accent" className="w-full text-black">
                                 Generate Now
                                 <ArrowRight className="ml-2 w-4 h-4" />
