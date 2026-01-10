@@ -1,5 +1,7 @@
 import { Hero } from "@/components/Hero";
 import { FAQ } from "@/components/FAQ";
+import { StyleSelector } from "@/components/StyleSelector";
+import { Testimonials } from "@/components/Testimonials";
 import { Sparkles, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +28,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Visual Style Selector */}
+      <StyleSelector />
 
       {/* Real Transformations Gallery */}
       <section id="gallery" className="max-w-7xl mx-auto px-4 w-full py-12">
@@ -82,6 +87,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials */}
+      <Testimonials />
 
       {/* Pricing Section */}
       <section id="pricing" className="max-w-7xl mx-auto px-4 w-full py-12">
