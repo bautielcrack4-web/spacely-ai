@@ -7,24 +7,30 @@ export function Testimonials() {
         {
             name: "Sarah Mitchell",
             role: "Interior Designer",
+            location: "New York, USA",
+            flag: "🇺🇸",
             avatar: "SM",
             content: "This tool has completely transformed how I present concepts to clients. The AI generates stunning visuals in seconds that would take me hours to create manually.",
             rating: 5,
             gradient: "from-purple-500 to-pink-500"
         },
         {
-            name: "Michael Chen",
+            name: "James Thompson",
             role: "Real Estate Agent",
-            avatar: "MC",
+            location: "London, UK",
+            flag: "🇬🇧",
+            avatar: "JT",
             content: "Game changer for staging virtual tours. My listings now showcase potential transformations instantly. Clients love seeing what spaces could become.",
             rating: 5,
             gradient: "from-blue-500 to-cyan-500"
         },
         {
-            name: "Emma Rodriguez",
-            role: "Homeowner",
-            avatar: "ER",
-            content: "I was skeptical at first, but the results blew me away. Helped me visualize my renovation before spending a dime. Worth every penny!",
+            name: "Carlos Rodríguez",
+            role: "Arquitecto",
+            location: "Buenos Aires, Argentina",
+            flag: "🇦🇷",
+            avatar: "CR",
+            content: "Increíble herramienta para visualizar proyectos. Mis clientes quedan impresionados con la calidad y velocidad de los renders. ¡Totalmente recomendado!",
             rating: 5,
             gradient: "from-amber-500 to-orange-500"
         }
@@ -69,12 +75,16 @@ export function Testimonials() {
                             </div>
 
                             {/* Name & Role */}
-                            <div>
-                                <p className="text-sm font-semibold text-white">
+                            <div className="flex-1">
+                                <p className="text-sm font-semibold text-white flex items-center gap-2">
                                     {testimonial.name}
+                                    <span className="text-base">{testimonial.flag}</span>
                                 </p>
                                 <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
                                     {testimonial.role}
+                                </p>
+                                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                                    {testimonial.location}
                                 </p>
                             </div>
                         </div>

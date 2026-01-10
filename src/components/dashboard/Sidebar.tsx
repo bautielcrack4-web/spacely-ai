@@ -40,7 +40,7 @@ export function Sidebar() {
             <div className="h-16 flex items-center px-6 border-b border-[#1F1F1F]">
                 <div className="flex items-center gap-2 text-white font-bold text-xl">
                     <div className="w-8 h-8 relative">
-                        <Image src="/spacely-logo.png" alt="Logo" fill className="object-contain" />
+                        <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain" />
                     </div>
                     <span>Spacely AI</span>
                 </div>
@@ -55,7 +55,7 @@ export function Sidebar() {
                         className={cn(
                             "flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 group border border-transparent",
                             item.active
-                                ? "bg-[#1F1F1F] text-[#B2F042] border-[#B2F042]/20"
+                                ? "bg-[#1F1F1F] text-[#A78BFA] border-[#A78BFA]/20"
                                 : "text-gray-400 hover:text-white hover:bg-[#1F1F1F]/50"
                         )}
                     >

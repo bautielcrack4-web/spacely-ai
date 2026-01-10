@@ -23,9 +23,6 @@ export function Navbar() {
 
     const navLinks = [
         { href: "/dashboard", label: "Render", icon: <Sparkles className="w-3.5 h-3.5" /> },
-        { href: "/latest", label: "Latest Renders" },
-        { href: "/my-renders", label: "My Renders" },
-        { href: "/team", label: "My Team" },
         { href: "#pricing", label: "Pricing" },
         { href: "#faq", label: "FAQ" },
     ];
@@ -39,8 +36,8 @@ export function Navbar() {
                     : "bg-black/50"
             )}
         >
-            <div className="max-w-7xl mx-auto px-6">
-                <div className="flex items-center justify-between h-16">
+            <div className="max-w-7xl mx-auto px-6 py-4">
+                <div className="flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                         <div className="w-8 h-8 relative">
@@ -71,11 +68,13 @@ export function Navbar() {
                     {/* Right Side */}
                     <div className="hidden md:flex items-center gap-3">
                         {/* Language Selector */}
-                        <button className="flex items-center gap-2 px-3 py-2 rounded-md border border-zinc-800 text-zinc-400 text-sm hover:border-brand transition-colors">
-                            <span>🇬🇧</span>
-                            <span>EN</span>
-                            <ChevronDown className="w-3 h-3" />
-                        </button>
+                        <select className="flex items-center gap-2 px-3 py-2 rounded-md border border-zinc-800 bg-transparent text-zinc-400 text-sm hover:border-brand transition-colors cursor-pointer">
+                            <option value="en">🇬🇧 EN</option>
+                            <option value="es">🇪🇸 ES</option>
+                            <option value="zh">🇨🇳 中文</option>
+                            <option value="hi">🇮🇳 हिन्दी</option>
+                            <option value="ar">🇸🇦 العربية</option>
+                        </select>
 
                         {/* PRO Button */}
                         <Link href="/pricing">

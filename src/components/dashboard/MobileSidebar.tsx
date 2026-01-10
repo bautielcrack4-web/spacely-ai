@@ -31,7 +31,7 @@ export function MobileSidebar() {
             <div className="h-16 flex items-center justify-between px-4 border-b border-[#1F1F1F] bg-[#0A0A0A] fixed top-0 w-full z-40">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 relative">
-                        <Image src="/spacely-logo.png" alt="Logo" fill className="object-contain invert" />
+                        <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain invert" />
                     </div>
                     <span className="font-bold text-white">Spacely AI</span>
                 </div>
@@ -70,7 +70,7 @@ export function MobileSidebar() {
                                     className={cn(
                                         "flex items-center gap-3 p-3 rounded-xl transition-all duration-200",
                                         item.active
-                                            ? "bg-[#1F1F1F] text-[#B2F042] border border-[#B2F042]/20"
+                                            ? "bg-[#1F1F1F] text-[#A78BFA] border border-[#A78BFA]/20"
                                             : "text-gray-400 hover:text-white hover:bg-[#1F1F1F]/50"
                                     )}
                                 >
@@ -82,12 +82,12 @@ export function MobileSidebar() {
 
                         <div className="pt-4 border-t border-[#1F1F1F]">
                             <div className="p-4 rounded-xl bg-gradient-to-br from-[#1F1F1F] to-black border border-[#2F2F2F]">
-                                <div className="flex items-center gap-2 mb-2 text-[#B2F042]">
+                                <div className="flex items-center gap-2 mb-2 text-[#A78BFA]">
                                     <Sparkles className="w-4 h-4" />
                                     <span className="text-xs font-bold uppercase tracking-wider">Pro Plan</span>
                                 </div>
                                 <p className="text-xs text-gray-400 mb-3">Get unlimited renders & higher quality.</p>
-                                <Button size="sm" variant="brand" className="w-full text-black font-bold h-8 text-xs">
+                                <Button size="sm" variant="accent" className="w-full text-white font-bold h-8 text-xs">
                                     Upgrade
                                 </Button>
                             </div>
