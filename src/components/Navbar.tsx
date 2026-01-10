@@ -25,8 +25,8 @@ export function Navbar() {
 
     const navLinks = [
         { href: "/dashboard", label: t("nav.render"), icon: <Sparkles className="w-3.5 h-3.5" /> },
-        { href: "#pricing", label: t("nav.pricing") },
-        { href: "#faq", label: t("nav.faq") },
+        { href: "/#pricing", label: t("nav.pricing") },
+        { href: "/#faq", label: t("nav.faq") },
     ];
 
     return (

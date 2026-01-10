@@ -1,22 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { RenderControls } from "@/components/dashboard/RenderControls";
-import { PreviewArea } from "@/components/dashboard/PreviewArea";
-import { RecentGallery } from "@/components/dashboard/RecentGallery";
+import { DesignTool } from "@/components/DesignTool";
 import { PaywallModal } from "@/components/PaywallModal";
 import { supabase } from "@/lib/supabase";
 
 export default function DashboardPage() {
-    const [file, setFile] = useState<File | null>(null);
-    const [preview, setPreview] = useState<string | null>(null);
-    const [prompt, setPrompt] = useState("");
-    const [generatedImage, setGeneratedImage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [generatedImage, setGeneratedImage] = useState<string | null>(null);
     const [showPaywall, setShowPaywall] = useState(false);
-    const [refreshGallery, setRefreshGallery] = useState(0);
 
-    // Auth Check on mount
+    // Auth Check
     useEffect(() => {
         const checkAuth = async () => {
             const { data: { session } } = await supabase.auth.getSession();
@@ -27,28 +21,22 @@ export default function DashboardPage() {
         checkAuth();
     }, []);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const selectedFile = e.target.files[0];
-            setFile(selectedFile);
-            setPreview(URL.createObjectURL(selectedFile));
-        }
-    };
-
-    const handleGenerate = async (settings: any) => {
-        if (!preview) return; // Prompt can be empty as we might auto-generate it or use styles
+    const handleGenerate = async (file: File, prompt: string, style: string) => {
+        if (!file) return;
         setLoading(true);
         setGeneratedImage(null);
 
         try {
-            // Converting blob URL to base64 for Replicate API
-            const response = await fetch(preview);
-            const blob = await response.blob();
+            // Convert to base64
             const reader = new FileReader();
+            reader.readAsDataURL(file);
 
             reader.onloadend = async () => {
                 const base64data = reader.result;
-                const fullPrompt = `${settings.roomType} ${settings.sceneType}, ${prompt}`; // Simple prompt construction
+                // Construct prompt: Style + User Prompt
+                const finalPrompt = prompt.trim()
+                    ? `${style} style interior, high quality, photorealistic. ${prompt}`
+                    : `${style} style interior, high quality, photorealistic, transformation`;
 
                 try {
                     const res = await fetch("/api/generate", {
@@ -56,7 +44,7 @@ export default function DashboardPage() {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             imageUrl: base64data,
-                            prompt: fullPrompt
+                            prompt: finalPrompt
                         }),
                     });
 
@@ -75,8 +63,6 @@ export default function DashboardPage() {
                     if (data.result) {
                         const outputUrl = Array.isArray(data.result) ? data.result[0] : data.result;
                         setGeneratedImage(outputUrl);
-                        // Trigger gallery refresh after successful generation
-                        setRefreshGallery(prev => prev + 1);
                     }
                 } catch (err: any) {
                     console.error("API Error", err);
@@ -85,9 +71,6 @@ export default function DashboardPage() {
                     setLoading(false);
                 }
             };
-
-            reader.readAsDataURL(blob);
-
         } catch (error) {
             console.error("Processing Error", error);
             setLoading(false);
@@ -95,25 +78,14 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="flex h-[calc(100vh-theme(spacing.12))] gap-6">
-            <RenderControls
+        <div className="min-h-screen bg-[#FAFBFC] relative">
+            {/* Background Gradients */}
+            <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-purple-50/50 to-transparent pointer-events-none" />
+
+            <DesignTool
                 onGenerate={handleGenerate}
                 loading={loading}
-                file={file}
-                onFileChange={handleFileChange}
-                prompt={prompt}
-                setPrompt={setPrompt}
-            />
-
-            <PreviewArea
-                image={generatedImage}
-                original={preview}
-                loading={loading}
-            />
-
-            <RecentGallery
-                onSelectImage={setGeneratedImage}
-                refreshTrigger={refreshGallery}
+                generatedImage={generatedImage}
             />
 
             <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} />
