@@ -56,7 +56,7 @@ export function FAQ() {
                     {t("faq.title")}
                 </h2>
                 <p className="text-lg" style={{ color: 'var(--text-muted)' }}>
-                    Everything you need to know about Spacely AI
+                    {t("faq.subtitle")}
                 </p>
             </div>
 
@@ -94,13 +94,13 @@ export function FAQ() {
             {/* Still have questions CTA */}
             <div className="mt-16 text-center">
                 <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
-                    Still have questions?
+                    {t("faq.cta.text")}
                 </p>
                 <a
                     href="mailto:bagasystudio@gmail.com"
                     className="inline-flex items-center gap-2 text-brand font-semibold text-sm hover:underline"
                 >
-                    Contact our support team →
+                    {t("faq.cta.btn")} →
                 </a>
             </div>
         </section>

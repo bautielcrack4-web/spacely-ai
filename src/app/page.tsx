@@ -82,7 +82,7 @@ export default function Home() {
                   {item.style}
                 </span>
                 <button className="text-brand text-sm font-semibold hover:underline">
-                  Try this style →
+                  {t("gallery.cta")} →
                 </button>
               </div>
             </div>
@@ -120,30 +120,30 @@ export default function Home() {
               name: t("pricing.weekly"),
               price: '$5.99',
               period: '/week',
-              trial: '7-DAY FREE TRIAL',
-              description: 'Perfect for trying out',
-              features: ['Unlimited generations', '4K quality exports', 'All room types', 'Email support'],
+              trial: t("pricing.trial"), // Need to handle trial duration if different, but let's use a generic trial key or specific
+              description: t("pricing.desc.weekly"),
+              features: [t("pricing.f.unlimited"), t("pricing.f.4k"), t("pricing.f.allRooms"), t("pricing.f.emailSupport")],
               highlighted: false
             },
             {
               name: t("pricing.monthly"),
               price: '$14.99',
               period: '/month',
-              trial: '3-DAY FREE TRIAL',
-              description: 'Most popular choice',
-              features: ['Everything in Weekly', 'Priority processing', '32+ design styles', 'Priority support', 'Team collaboration'],
+              trial: t("pricing.trial"),
+              description: t("pricing.desc.monthly"),
+              features: [t("pricing.f.everythingWeekly"), t("pricing.f.priority"), t("pricing.f.styles"), t("pricing.f.prioritySupport"), t("pricing.f.team")],
               highlighted: true,
               badge: t("pricing.mostPopular"),
-              savings: 'SAVE 60%'
+              savings: t("pricing.savings")
             },
             {
               name: t("pricing.yearly"),
               price: '$119.99',
               period: '/year',
-              trial: '3-DAY FREE TRIAL',
-              description: 'Best value',
-              savings: 'SAVE 60%',
-              features: ['Everything in Monthly', 'Custom AI training', 'API access', 'Dedicated support', 'White-label option'],
+              trial: t("pricing.trial"),
+              description: t("pricing.desc.yearly"),
+              savings: t("pricing.savings"),
+              features: [t("pricing.f.everythingMonthly"), t("pricing.f.customAi"), t("pricing.f.api"), t("pricing.f.dedicatedSupport"), t("pricing.f.whiteLabel")],
               highlighted: false
             },
           ].map((plan, i) => (
@@ -188,7 +188,7 @@ export default function Home() {
                 <span className="text-xs font-semibold text-brand">{plan.trial}</span>
               </div>
 
-              <ul className="space-y-3 mb-8">
+              <ul className="space-y-3 mb-8 text-start">
                 {plan.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <svg className="w-5 h-5 text-brand flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -219,9 +219,9 @@ export default function Home() {
         <div className="mt-16 max-w-3xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             {[
-              { q: "Can I cancel anytime?", a: "Yes, cancel with one click" },
-              { q: "What happens after trial?", a: "Nothing. We'll notify you first" },
-              { q: "Do you offer refunds?", a: "Full refund within 3 days" },
+              { q: t("pricing.faq.q1"), a: t("pricing.faq.a1") },
+              { q: t("pricing.faq.q2"), a: t("pricing.faq.a2") },
+              { q: t("pricing.faq.q3"), a: t("pricing.faq.a3") },
             ].map((faq, i) => (
               <div key={i}>
                 <p className="text-sm font-semibold text-white mb-1">{faq.q}</p>

@@ -32,15 +32,15 @@ export function Hero() {
                     {/* Trust Signals */}
                     <div className="flex items-center justify-center gap-8 mb-12 text-sm" style={{ color: 'var(--text-muted)' }}>
                         <div className="flex items-center gap-2">
-                            <span className="text-brand font-semibold">500K+</span> users
+                            <span className="text-brand font-semibold">500K+</span> {t("hero.trust.users")}
                         </div>
                         <div className="w-1 h-1 rounded-full bg-zinc-700" />
                         <div className="flex items-center gap-2">
-                            <span className="text-brand font-semibold">2M+</span> rooms redesigned
+                            <span className="text-brand font-semibold">2M+</span> {t("hero.trust.rooms")}
                         </div>
                         <div className="w-1 h-1 rounded-full bg-zinc-700" />
                         <div className="flex items-center gap-1">
-                            <span className="text-brand font-semibold">4.8★</span> rating
+                            <span className="text-brand font-semibold">4.8★</span> {t("hero.trust.rating")}
                         </div>
                     </div>
 
@@ -51,9 +51,11 @@ export function Hero() {
                                 <ArrowRight className="ml-2 w-4 h-4" />
                             </Button>
                         </Link>
-                        <Button size="lg" variant="outline" className="w-full sm:w-auto px-8 py-4 border-zinc-700 hover:border-brand/50 transition-all duration-300">
-                            View Examples
-                        </Button>
+                        <Link href="#gallery" className="w-full sm:w-auto">
+                            <Button size="lg" variant="outline" className="w-full sm:w-auto px-8 py-4 border-zinc-700 hover:border-brand/50 transition-all duration-300">
+                                {t("hero.viewExamples")}
+                            </Button>
+                        </Link>
                     </div>
                 </motion.div>
 
@@ -69,7 +71,7 @@ export function Hero() {
                             <div className="w-16 h-16 rounded-full bg-brand/10 flex items-center justify-center text-brand">
                                 <Sparkles className="w-8 h-8" />
                             </div>
-                            <p className="text-gray-500 font-medium">Renderizando tu futuro hogar...</p>
+                            <p className="text-gray-500 font-medium">{t("hero.rendering")}</p>
                         </div>
                     </div>
                 </motion.div>
