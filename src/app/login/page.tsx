@@ -39,12 +39,12 @@ export default function LoginPage() {
             {/* Left Side - Visual / Branding */}
             <div className="hidden md:flex w-1/2 bg-[#121212] relative flex-col items-center justify-center p-12 overflow-hidden border-r border-[#1F1F1F]">
                 <div className="absolute inset-0 z-0 opacity-20">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#B2F042] rounded-full blur-[150px]" />
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#A78BFA] rounded-full blur-[150px]" />
                 </div>
 
                 <div className="relative z-10 text-center space-y-6 max-w-lg">
                     <div className="w-24 h-24 mx-auto relative mb-8">
-                        <Image src="/spacely-logo.png" alt="Logo" fill className="object-contain" />
+                        <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain" />
                     </div>
                     <h2 className="text-4xl font-bold text-white tracking-tight">
                         Design your dream space
@@ -55,7 +55,7 @@ export default function LoginPage() {
                 </div>
 
                 <div className="absolute bottom-8 left-8 right-8 flex justify-between text-xs text-gray-600">
-                    <span>© 2024 Design Sense AI</span>
+                    <span>© 2024 Bagasy Studio</span>
                     <span>Privacy Policy</span>
                 </div>
             </div>
@@ -81,14 +81,14 @@ export default function LoginPage() {
                                 variables: {
                                     default: {
                                         colors: {
-                                            brand: '#B2F042',
-                                            brandAccent: '#9ED33B',
-                                            brandButtonText: '#000000',
+                                            brand: '#A78BFA',
+                                            brandAccent: '#9775FA',
+                                            brandButtonText: '#FFFFFF',
                                             defaultButtonBackground: '#1F1F1F',
                                             defaultButtonBackgroundHover: '#2F2F2F',
                                             inputBackground: '#121212',
                                             inputBorder: '#2F2F2F',
-                                            inputBorderHover: '#B2F042',
+                                            inputBorderHover: '#A78BFA',
                                             inputPlaceholder: '#666666',
                                             inputText: 'white',
                                         },
@@ -109,7 +109,7 @@ export default function LoginPage() {
                                 },
                                 className: {
                                     button: 'font-bold transition-all duration-200',
-                                    input: 'transition-all duration-200 focus:ring-1 focus:ring-[#B2F042]/50',
+                                    input: 'transition-all duration-200 focus:ring-1 focus:ring-[#A78BFA]/50',
                                 }
                             }}
                             theme="dark"
