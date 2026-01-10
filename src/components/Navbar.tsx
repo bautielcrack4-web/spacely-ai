@@ -35,7 +35,7 @@ export function Navbar() {
                         <Link href="/login" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
                             Login
                         </Link>
-                        <Button size="sm" className="bg-accent text-slate-900 hover:bg-accent/90 font-bold">
+                        <Button size="sm" variant="brand" className="font-bold text-black">
                             Start Now
                         </Button>
                     </div>
