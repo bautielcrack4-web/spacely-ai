@@ -3,6 +3,7 @@
 import { Home, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { ComparisonSlider } from "@/components/ui/comparison-slider";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PreviewAreaProps {
     image: string | null;
@@ -11,6 +12,7 @@ interface PreviewAreaProps {
 }
 
 export function PreviewArea({ image, original, loading }: PreviewAreaProps) {
+    const { t } = useLanguage();
     return (
         <div className="flex-1 bg-[#050505] rounded-2xl border border-[#1F1F1F] flex items-center justify-center overflow-hidden relative min-h-[600px]">
             {/* Background Grid Pattern */}
@@ -25,7 +27,7 @@ export function PreviewArea({ image, original, loading }: PreviewAreaProps) {
                         <div className="absolute inset-4 overflow-hidden rounded-lg border border-[#A78BFA]/30">
                             <img
                                 src={original}
-                                alt="Scanning..."
+                                alt={t("preview.scanning")}
                                 className="w-full h-full object-contain opacity-50 blur-[2px]"
                             />
                             {/* The Scanline */}
@@ -40,8 +42,8 @@ export function PreviewArea({ image, original, loading }: PreviewAreaProps) {
                             <div className="w-10 h-10 rounded-full bg-[#A78BFA] animate-pulse" />
                         </div>
                         <div className="text-center space-y-1">
-                            <p className="text-white font-bold text-lg tracking-wide">AI PROCESSING</p>
-                            <p className="text-[#A78BFA] text-xs font-mono animate-pulse">Scanning geometry...</p>
+                            <p className="text-white font-bold text-lg tracking-wide">{t("preview.processing")}</p>
+                            <p className="text-[#A78BFA] text-xs font-mono animate-pulse">{t("preview.geometry")}</p>
                         </div>
                     </div>
                 </div>
@@ -57,7 +59,7 @@ export function PreviewArea({ image, original, loading }: PreviewAreaProps) {
                 <div className="relative w-full h-full p-4">
                     <img
                         src={image}
-                        alt="Generated Render"
+                        alt={t("controls.upload.ready")}
                         className="w-full h-full object-contain rounded-lg shadow-2xl"
                     />
                 </div>
@@ -68,9 +70,9 @@ export function PreviewArea({ image, original, loading }: PreviewAreaProps) {
                             <ImageIcon className="w-8 h-8 text-[#A78BFA]" />
                         </div>
                     </div>
-                    <h2 className="text-white text-xl font-bold">No Results Yet</h2>
+                    <h2 className="text-white text-xl font-bold">{t("preview.noResults")}</h2>
                     <p className="text-gray-500 text-sm">
-                        Fill in the form on the left by uploading an image and selecting a style to generate your first interior.
+                        {t("preview.desc")}
                     </p>
                     <div className="w-full h-full absolute inset-0 bg-[#A78BFA] opacity-[0.02] blur-[100px] pointer-events-none rounded-full" />
                 </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { LayoutGrid, Image as ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Generation {
     id: string;
@@ -17,6 +18,7 @@ interface RecentGalleryProps {
 }
 
 export function RecentGallery({ onSelectImage, refreshTrigger }: RecentGalleryProps) {
+    const { t } = useLanguage();
     const [generations, setGenerations] = useState<Generation[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -41,7 +43,7 @@ export function RecentGallery({ onSelectImage, refreshTrigger }: RecentGalleryPr
     return (
         <div className="w-72 flex-shrink-0 border-l border-[#1F1F1F] pl-6 flex flex-col h-full bg-[#0A0A0A]">
             <div className="flex items-center justify-between mb-6">
-                <h3 className="text-sm font-semibold text-gray-400">Renders Gallery</h3>
+                <h3 className="text-sm font-semibold text-gray-400">{t("gallery.dashboard.title")}</h3>
                 <LayoutGrid className="w-4 h-4 text-gray-600" />
             </div>
 
@@ -69,7 +71,7 @@ export function RecentGallery({ onSelectImage, refreshTrigger }: RecentGalleryPr
                                 />
                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                     <span className="text-xs text-white font-medium bg-black/50 px-2 py-1 rounded backdrop-blur-sm">
-                                        View
+                                        {t("gallery.view")}
                                     </span>
                                 </div>
                             </button>
@@ -81,7 +83,7 @@ export function RecentGallery({ onSelectImage, refreshTrigger }: RecentGalleryPr
                             <ImageIcon className="w-6 h-6 text-gray-600" />
                         </div>
                         <p className="text-xs text-gray-500 max-w-[150px]">
-                            No renders yet. Create your first design to see it here!
+                            {t("gallery.empty")}
                         </p>
                     </div>
                 )}
