@@ -21,11 +21,14 @@ export default function Home() {
             <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
               {t("features.title")}
             </h2>
+            <p className="text-lg" style={{ color: 'var(--text-muted)' }}>
+              {t("features.subtitle")}
+            </p>
           </div>
           {[
-            { title: "Every Space. Every Style.", desc: "From living rooms to gardens. Modern to vintage. Your vision, instantly visualized." },
-            { title: "Professional Quality", desc: "Export in stunning 4K resolution. Ready for presentations or social media." },
-            { title: "Real-Time Preview", desc: "Watch your space transform before your eyes. No waiting, no guessing." }
+            { title: t("features.f1.title"), desc: t("features.f1.desc") },
+            { title: t("features.f2.title"), desc: t("features.f2.desc") },
+            { title: t("features.f3.title"), desc: t("features.f3.desc") }
           ].map((f, i) => (
             <div key={i} className="p-8 rounded-2xl bg-[#0A0A0A] border border-[#27272A] hover:border-brand/40 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/10 transition-all duration-300 group">
               <div className="w-12 h-12 rounded-xl bg-brand/10 text-brand flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
@@ -45,21 +48,21 @@ export default function Home() {
       <section id="gallery" className="max-w-7xl mx-auto px-4 w-full py-12">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
-            Real Transformations
+            {t("gallery.title")}
           </h2>
           <p className="text-lg" style={{ color: 'var(--text-muted)' }}>
-            See what others have created in seconds
+            {t("gallery.desc")}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { style: "Modern Minimalist" },
-            { style: "Scandinavian" },
-            { style: "Industrial" },
-            { style: "Mid-Century Modern" },
-            { style: "Bohemian" },
-            { style: "Coastal" },
+            { style: t("styles.modern") },
+            { style: t("styles.scandinavian") },
+            { style: t("styles.industrial") },
+            { style: t("styles.midcentury") },
+            { style: t("styles.bohemian") },
+            { style: t("styles.coastal") },
           ].map((item, i) => (
             <div
               key={i}
@@ -91,7 +94,7 @@ export default function Home() {
           <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#0F0F0F] border border-[#27272A]">
             <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
-              <span className="text-brand font-semibold">123</span> designs generated in the last hour
+              <span className="text-brand font-semibold">123</span> {t("gallery.indicator")}
             </span>
           </div>
         </div>

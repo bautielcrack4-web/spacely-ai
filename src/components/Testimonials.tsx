@@ -7,32 +7,32 @@ export function Testimonials() {
     const { t } = useLanguage();
     const testimonials = [
         {
-            name: "Sarah Mitchell",
-            role: "Interior Designer",
-            location: "New York, USA",
+            name: t("testimonials.t1.name"),
+            role: t("testimonials.t1.role"),
+            location: t("testimonials.t1.location"),
             flag: "🇺🇸",
             avatar: "SM",
-            content: "This tool has completely transformed how I present concepts to clients. The AI generates stunning visuals in seconds that would take me hours to create manually.",
+            content: t("testimonials.t1.content"),
             rating: 5,
             gradient: "from-purple-500 to-pink-500"
         },
         {
-            name: "James Thompson",
-            role: "Real Estate Agent",
-            location: "London, UK",
+            name: t("testimonials.t2.name"),
+            role: t("testimonials.t2.role"),
+            location: t("testimonials.t2.location"),
             flag: "🇬🇧",
             avatar: "JT",
-            content: "Game changer for staging virtual tours. My listings now showcase potential transformations instantly. Clients love seeing what spaces could become.",
+            content: t("testimonials.t2.content"),
             rating: 5,
             gradient: "from-blue-500 to-cyan-500"
         },
         {
-            name: "Carlos Rodríguez",
-            role: "Arquitecto",
-            location: "Buenos Aires, Argentina",
+            name: t("testimonials.t3.name"),
+            role: t("testimonials.t3.role"),
+            location: t("testimonials.t3.location"),
             flag: "🇦🇷",
             avatar: "CR",
-            content: "Increíble herramienta para visualizar proyectos. Mis clientes quedan impresionados con la calidad y velocidad de los renders. ¡Totalmente recomendado!",
+            content: t("testimonials.t3.content"),
             rating: 5,
             gradient: "from-amber-500 to-orange-500"
         }
@@ -45,7 +45,7 @@ export function Testimonials() {
                     {t("testimonials.title")}
                 </h2>
                 <p className="text-lg" style={{ color: 'var(--text-muted)' }}>
-                    See what our community has to say
+                    {t("testimonials.subtitle")}
                 </p>
             </div>
 

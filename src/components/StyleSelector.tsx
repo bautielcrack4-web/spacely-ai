@@ -10,18 +10,18 @@ export function StyleSelector() {
     const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
 
     const styles = [
-        { name: "Modern Minimalist", emoji: "🏢", color: "from-slate-500 to-slate-700" },
-        { name: "Scandinavian", emoji: "❄️", color: "from-blue-400 to-cyan-500" },
-        { name: "Industrial", emoji: "🏭", color: "from-zinc-600 to-zinc-800" },
-        { name: "Mid-Century Modern", emoji: "🪑", color: "from-orange-500 to-amber-600" },
-        { name: "Bohemian", emoji: "🌺", color: "from-purple-500 to-pink-500" },
-        { name: "Coastal", emoji: "🌊", color: "from-blue-300 to-teal-400" },
-        { name: "Farmhouse", emoji: "🌾", color: "from-green-600 to-emerald-700" },
-        { name: "Art Deco", emoji: "💎", color: "from-yellow-500 to-amber-500" },
-        { name: "Japanese Zen", emoji: "🎋", color: "from-green-700 to-teal-800" },
-        { name: "Mediterranean", emoji: "🏖️", color: "from-cyan-500 to-blue-600" },
-        { name: "Rustic", emoji: "🪵", color: "from-amber-700 to-orange-800" },
-        { name: "Contemporary", emoji: "✨", color: "from-indigo-500 to-purple-600" },
+        { name: t("styles.modern"), emoji: "🏢", color: "from-slate-500 to-slate-700" },
+        { name: t("styles.scandinavian"), emoji: "❄️", color: "from-blue-400 to-cyan-500" },
+        { name: t("styles.industrial"), emoji: "🏭", color: "from-zinc-600 to-zinc-800" },
+        { name: t("styles.midcentury"), emoji: "🪑", color: "from-orange-500 to-amber-600" },
+        { name: t("styles.bohemian"), emoji: "🌺", color: "from-purple-500 to-pink-500" },
+        { name: t("styles.coastal"), emoji: "🌊", color: "from-blue-300 to-teal-400" },
+        { name: t("styles.farmhouse"), emoji: "🌾", color: "from-green-600 to-emerald-700" },
+        { name: t("styles.artdeco"), emoji: "💎", color: "from-yellow-500 to-amber-500" },
+        { name: t("styles.japanese"), emoji: "🎋", color: "from-green-700 to-teal-800" },
+        { name: t("styles.mediterranean"), emoji: "🏖️", color: "from-cyan-500 to-blue-600" },
+        { name: t("styles.rustic"), emoji: "🪵", color: "from-amber-700 to-orange-800" },
+        { name: t("styles.contemporary"), emoji: "✨", color: "from-indigo-500 to-purple-600" },
     ];
 
     return (

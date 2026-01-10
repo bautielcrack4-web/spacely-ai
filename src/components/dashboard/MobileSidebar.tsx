@@ -14,15 +14,17 @@ import { cn } from "@/lib/utils";
 import { LayoutGrid, Brush, Maximize2, Image as ImageIcon, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function MobileSidebar() {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
+    const { t } = useLanguage();
 
     const navItems = [
-        { icon: ImageIcon, label: "Render", href: "/dashboard", active: pathname === "/dashboard" },
-        { icon: Brush, label: "Inpaint", href: "/dashboard/inpaint", active: pathname === "/dashboard/inpaint" },
-        { icon: Maximize2, label: "Upscale", href: "/dashboard/upscale", active: pathname === "/dashboard/upscale" },
+        { icon: ImageIcon, label: t("nav.render"), href: "/dashboard", active: pathname === "/dashboard" },
+        { icon: Brush, label: t("nav.inpaint"), href: "/dashboard/inpaint", active: pathname === "/dashboard/inpaint" },
+        { icon: Maximize2, label: t("nav.upscale"), href: "/dashboard/upscale", active: pathname === "/dashboard/upscale" },
     ];
 
     return (
@@ -84,11 +86,11 @@ export function MobileSidebar() {
                             <div className="p-4 rounded-xl bg-gradient-to-br from-[#1F1F1F] to-black border border-[#2F2F2F]">
                                 <div className="flex items-center gap-2 mb-2 text-[#A78BFA]">
                                     <Sparkles className="w-4 h-4" />
-                                    <span className="text-xs font-bold uppercase tracking-wider">Pro Plan</span>
+                                    <span className="text-xs font-bold uppercase tracking-wider">PRO</span>
                                 </div>
-                                <p className="text-xs text-gray-400 mb-3">Get unlimited renders & higher quality.</p>
+                                <p className="text-xs text-gray-400 mb-3">{t("nav.upgrade")}</p>
                                 <Button size="sm" variant="accent" className="w-full text-white font-bold h-8 text-xs">
-                                    Upgrade
+                                    {t("nav.upgrade")}
                                 </Button>
                             </div>
                         </div>

@@ -18,12 +18,14 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { usePaywall } from "@/contexts/PaywallContext";
 
 export function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
     const { openPaywall } = usePaywall();
+    const { t, language, setLanguage } = useLanguage();
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -31,9 +33,9 @@ export function Sidebar() {
     };
 
     const navItems = [
-        { icon: ImageIcon, label: "Render", href: "/dashboard", active: pathname === "/dashboard" },
-        { icon: Brush, label: "Inpaint", href: "/dashboard/inpaint", active: pathname === "/dashboard/inpaint" },
-        { icon: Maximize2, label: "Upscale", href: "/dashboard/upscale", active: pathname === "/dashboard/upscale" },
+        { icon: ImageIcon, label: t("nav.render"), href: "/dashboard", active: pathname === "/dashboard" },
+        { icon: Brush, label: t("nav.inpaint"), href: "/dashboard/inpaint", active: pathname === "/dashboard/inpaint" },
+        { icon: Maximize2, label: t("nav.upscale"), href: "/dashboard/upscale", active: pathname === "/dashboard/upscale" },
     ];
 
     return (
@@ -49,7 +51,7 @@ export function Sidebar() {
             </div>
 
             {/* Main Nav */}
-            <div className="flex-1 px-4 space-y-2">
+            <div className="flex-1 px-4 py-8 space-y-2">
                 {navItems.map((item) => (
                     <Link
                         key={item.label}
@@ -74,7 +76,7 @@ export function Sidebar() {
                     className="w-full bg-[#A78BFA] hover:bg-[#9775FA] text-white font-bold py-6 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(167,139,250,0.15)]"
                 >
                     <Crown className="w-5 h-5 fill-white" />
-                    Upgrade to PRO
+                    {t("nav.upgrade")}
                 </Button>
 
                 <div className="flex items-center justify-between px-2 text-gray-400">
@@ -82,10 +84,18 @@ export function Sidebar() {
                         <Link href="#" className="hover:text-white"><CreditCard className="w-5 h-5" /></Link>
                         <Link href="#" className="hover:text-white"><HelpCircle className="w-5 h-5" /></Link>
                     </div>
-                    <div className="flex gap-4">
-                        <Link href="#" className="hover:text-white flex items-center gap-1 text-xs">
-                            <Globe className="w-4 h-4" /> EN
-                        </Link>
+                    <div className="flex gap-2">
+                        <select
+                            value={language}
+                            onChange={(e) => setLanguage(e.target.value as any)}
+                            className="bg-transparent text-xs hover:text-white border-none focus:ring-0 cursor-pointer"
+                        >
+                            <option value="en">🇺🇸 EN</option>
+                            <option value="es">🇪🇸 ES</option>
+                            <option value="zh">🇨🇳 ZH</option>
+                            <option value="hi">🇮🇳 HI</option>
+                            <option value="ar">🇸🇦 AR</option>
+                        </select>
                         <button onClick={handleLogout} className="hover:text-red-500">
                             <LogOut className="w-5 h-5" />
                         </button>
