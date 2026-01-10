@@ -11,7 +11,7 @@ export function Testimonials() {
             role: t("testimonials.t1.role"),
             location: t("testimonials.t1.location"),
             flag: "🇺🇸",
-            image: "/testimonials/user-2.jpg",
+            image: "/testimonials/user-3.jpg",
             content: t("testimonials.t1.content"),
             rating: 5,
         },
@@ -29,7 +29,7 @@ export function Testimonials() {
             role: t("testimonials.t3.role"),
             location: t("testimonials.t3.location"),
             flag: "🇦🇷",
-            image: "/testimonials/user-3.jpg",
+            image: "/testimonials/user-2.jpg",
             content: t("testimonials.t3.content"),
             rating: 5,
         }

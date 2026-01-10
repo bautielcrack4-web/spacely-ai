@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { StyleSelector } from "./StyleSelector";
 import { Button } from "./ui/button";
 import { Upload, Sparkles, Image as ImageIcon, Zap, Wand2 } from "lucide-react";
@@ -9,17 +9,26 @@ import { ComparisonSlider } from "./ui/comparison-slider";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface DesignToolProps {
-    onGenerate: (image: File, prompt: string, style: string) => Promise<void>;
+    onGenerate: (image: File | null, prompt: string, style: string, currentPreview?: string) => Promise<void>;
     loading: boolean;
     generatedImage: string | null;
+    initialState?: { preview: string, prompt: string, style: string } | null;
 }
 
-export function DesignTool({ onGenerate, loading, generatedImage }: DesignToolProps) {
+export function DesignTool({ onGenerate, loading, generatedImage, initialState }: DesignToolProps) {
     const [file, setFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [prompt, setPrompt] = useState("");
     const [style, setStyle] = useState("Modern Minimalist");
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (initialState) {
+            setPreview(initialState.preview);
+            setPrompt(initialState.prompt);
+            setStyle(initialState.style);
+        }
+    }, [initialState]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -118,8 +127,8 @@ export function DesignTool({ onGenerate, loading, generatedImage }: DesignToolPr
                     {/* Generate Action */}
                     <div className="mt-auto">
                         <Button
-                            onClick={() => file && onGenerate(file, prompt, style)}
-                            disabled={!file || loading}
+                            onClick={() => (file || preview) && onGenerate(file, prompt, style, preview || undefined)}
+                            disabled={(!file && !preview) || loading}
                             className={cn(
                                 "w-full h-16 rounded-2xl text-lg font-bold shadow-xl transition-all border-none relative overflow-hidden group",
                                 loading ? "bg-gray-100 text-gray-400" : "bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-[1.02] shadow-purple-200"

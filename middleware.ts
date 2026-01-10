@@ -63,9 +63,10 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/dashboard', request.url))
     }
 
-    if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
-        return NextResponse.redirect(new URL('/login', request.url))
-    }
+    // Allow access to dashboard for try-before-login flow
+    // if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
+    //     return NextResponse.redirect(new URL('/login', request.url))
+    // }
 
     return response
 }

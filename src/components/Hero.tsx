@@ -6,9 +6,18 @@ import { motion } from "framer-motion";
 import { Check, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ComparisonSlider } from "@/components/ui/comparison-slider";
+import { useState, useEffect } from "react";
 
 export function Hero() {
     const { t } = useLanguage();
+    const [count, setCount] = useState(1243);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCount(prev => prev + 1);
+        }, 15000); // 15 seconds
+        return () => clearInterval(interval);
+    }, []);
 
     // Empty House to Furnished Example for Hero
     const beforeUrl = "/sequence/first frame.jpg";
@@ -24,6 +33,17 @@ export function Hero() {
                         transition={{ duration: 0.6 }}
                         className="text-left"
                     >
+                        {/* Live Counter Badge */}
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 border border-purple-100 mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                            </span>
+                            <span className="text-xs font-bold text-purple-700">
+                                <span className="tabular-nums">{count.toLocaleString()}</span> gen in the last hour
+                            </span>
+                        </div>
+
                         <h1 className="text-5xl md:text-6xl lg:text-[72px] font-bold tracking-tight text-gray-900 leading-[1.05] mb-6">
                             {t("hero.new_title_1")} <br />
                             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -51,7 +71,7 @@ export function Hero() {
                         </div>
 
                         <div className="flex flex-col sm:flex-row items-center gap-4">
-                            <Link href="/login" className="w-full sm:w-auto">
+                            <Link href="/dashboard" className="w-full sm:w-auto">
                                 <Button size="lg" className="w-full h-14 px-8 text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white rounded-xl shadow-lg shadow-purple-200 transition-all border-none">
                                     {t("hero.cta_main")}
                                     <ArrowRight className="ml-2 w-5 h-5" />
@@ -66,7 +86,8 @@ export function Hero() {
                         transition={{ delay: 0.2, duration: 0.8 }}
                         className="relative"
                     >
-                        <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+                        {/* Improved Container: Less white border, better shadow */}
+                        <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl ring-1 ring-gray-900/10">
                             <ComparisonSlider
                                 original={beforeUrl}
                                 modified={afterUrl}
