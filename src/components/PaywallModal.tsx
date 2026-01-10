@@ -73,7 +73,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                         </ul>
 
                         <Button
-                            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-6 rounded-xl"
+                            className="w-full bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] hover:from-[#9775FA] hover:to-[#7C3AED] text-white font-semibold py-6 rounded-xl"
                             onClick={() => handleCheckout('weekly')}
                             disabled={loading === 'weekly'}
                         >
@@ -82,8 +82,8 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                     </div>
 
                     {/* Monthly Plan - Highlighted */}
-                    <div className="border-2 border-blue-500 rounded-xl p-6 shadow-xl relative bg-white flex flex-col transform md:-translate-y-4">
-                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-yellow-400 text-slate-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                    <div className="border-2 border-brand rounded-xl p-6 shadow-xl relative bg-white flex flex-col transform md:-translate-y-4">
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
                             ⭐ Most Popular
                         </div>
 
@@ -105,7 +105,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                         </ul>
 
                         <Button
-                            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-6 rounded-xl shadow-lg shadow-blue-500/30"
+                            className="w-full bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] hover:from-[#9775FA] hover:to-[#7C3AED] text-white font-semibold py-6 rounded-xl shadow-lg shadow-brand/30"
                             onClick={() => handleCheckout('monthly')}
                             disabled={loading === 'monthly'}
                         >
@@ -133,7 +133,7 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                         </ul>
 
                         <Button
-                            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-6 rounded-xl"
+                            className="w-full bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] hover:from-[#9775FA] hover:to-[#7C3AED] text-white font-semibold py-6 rounded-xl"
                             onClick={() => handleCheckout('yearly')}
                             disabled={loading === 'yearly'}
                         >

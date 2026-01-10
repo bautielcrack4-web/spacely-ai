@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function StyleSelector() {
+    const { t } = useLanguage();
     const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
 
     const styles = [
@@ -26,7 +28,7 @@ export function StyleSelector() {
         <section className="max-w-7xl mx-auto px-4 w-full py-24">
             <div className="text-center mb-12">
                 <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
-                    Choose Your Style
+                    {t("styles.title")}
                 </h2>
                 <p className="text-lg" style={{ color: 'var(--text-muted)' }}>
                     32+ design styles to transform any space

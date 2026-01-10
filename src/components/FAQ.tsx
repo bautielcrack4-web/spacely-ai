@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FAQItemProps {
     question: string;
@@ -10,40 +11,41 @@ interface FAQItemProps {
 }
 
 export function FAQ() {
+    const { t } = useLanguage();
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     const faqs: FAQItemProps[] = [
         {
-            question: "How does it work?",
-            answer: "Simply upload a photo of your room, select your preferred design style, and our AI will generate a professionally redesigned version in seconds. You can then download the result in high quality."
+            question: t("faq.q1"),
+            answer: t("faq.a1")
         },
         {
-            question: "What image formats do you support?",
-            answer: "We support JPG, PNG, and WebP formats. Images up to 10MB are accepted for best results."
+            question: t("faq.q2"),
+            answer: t("faq.a2")
         },
         {
-            question: "Can I use this commercially?",
-            answer: "Yes! All generated images are yours to use for both personal and commercial purposes, including client presentations, marketing materials, and social media."
+            question: t("faq.q3"),
+            answer: t("faq.a3")
         },
         {
-            question: "How long does generation take?",
-            answer: "Most transformations complete in 5-15 seconds. During peak times, it may take up to 30 seconds. You'll see real-time progress as your design generates."
+            question: t("faq.q4"),
+            answer: t("faq.a4")
         },
         {
-            question: "Do you store my images?",
-            answer: "Your uploaded images are processed securely and deleted from our servers after 24 hours. Generated results are saved to your account gallery for easy access."
+            question: t("faq.q5"),
+            answer: t("faq.a5")
         },
         {
-            question: "What's included in the free trial?",
-            answer: "The 3-day free trial includes unlimited generations, access to all 32+ design styles, 4K quality exports, and full access to all features. No credit card required to start."
+            question: t("faq.q6"),
+            answer: t("faq.a6")
         },
         {
-            question: "Can I cancel my subscription anytime?",
-            answer: "Absolutely. You can cancel your subscription at any time with a single click from your account settings. No questions asked, and you'll retain access until the end of your billing period."
+            question: t("faq.q7"),
+            answer: t("faq.a7")
         },
         {
-            question: "What if I'm not satisfied with the results?",
-            answer: "We offer a 3-day money-back guarantee. If you're not completely satisfied, contact us within 3 days of purchase for a full refund."
+            question: t("faq.q8"),
+            answer: t("faq.a8")
         }
     ];
 
@@ -51,7 +53,7 @@ export function FAQ() {
         <section id="faq" className="max-w-4xl mx-auto px-4 w-full py-24">
             <div className="text-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
-                    Frequently Asked Questions
+                    {t("faq.title")}
                 </h2>
                 <p className="text-lg" style={{ color: 'var(--text-muted)' }}>
                     Everything you need to know about Spacely AI

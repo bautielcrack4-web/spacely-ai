@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { SpotlightEffect } from "@/components/ui/spotlight-effect";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,10 +35,12 @@ export default function RootLayout({
         </div>
         <SpotlightEffect />
         <div className="relative z-0">
-          <Navbar />
-          <main className="min-h-screen pt-16">
-            {children}
-          </main>
+          <LanguageProvider>
+            <Navbar />
+            <main className="min-h-screen pt-16">
+              {children}
+            </main>
+          </LanguageProvider>
         </div>
       </body>
     </html>

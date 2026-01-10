@@ -18,10 +18,12 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { usePaywall } from "@/contexts/PaywallContext";
 
 export function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
+    const { openPaywall } = usePaywall();
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -68,6 +70,7 @@ export function Sidebar() {
             {/* Bottom Actions */}
             <div className="px-4 py-6 space-y-4 border-t border-[#1F1F1F]">
                 <Button
+                    onClick={openPaywall}
                     className="w-full bg-[#A78BFA] hover:bg-[#9775FA] text-white font-bold py-6 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(167,139,250,0.15)]"
                 >
                     <Crown className="w-5 h-5 fill-white" />

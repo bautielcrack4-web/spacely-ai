@@ -47,6 +47,25 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Insufficient credits" }, { status: 403 });
         }
 
+        // 3. Check Daily Limit (50 generations per day)
+        const startOfDay = new Date();
+        startOfDay.setUTCHours(0, 0, 0, 0);
+
+        const { count, error: countError } = await supabase
+            .from('generations')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', session.user.id)
+            .gte('created_at', startOfDay.toISOString());
+
+        if (countError) {
+            console.error("Error checking daily limit:", countError);
+        } else if (count !== null && count >= 50) {
+            return NextResponse.json(
+                { error: "Daily limit reached (50/50). Please try again tomorrow or upgrade to PRO for unlimited." },
+                { status: 429 }
+            );
+        }
+
         if (!imageUrl || !prompt) {
             return NextResponse.json(
                 { error: "Image URL and prompt are required" },

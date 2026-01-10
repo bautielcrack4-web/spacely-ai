@@ -7,11 +7,13 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Sparkles, Crown, ChevronDown, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const pathname = usePathname();
+    const { language, setLanguage, t } = useLanguage();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -22,9 +24,9 @@ export function Navbar() {
     }, []);
 
     const navLinks = [
-        { href: "/dashboard", label: "Render", icon: <Sparkles className="w-3.5 h-3.5" /> },
-        { href: "#pricing", label: "Pricing" },
-        { href: "#faq", label: "FAQ" },
+        { href: "/dashboard", label: t("nav.render"), icon: <Sparkles className="w-3.5 h-3.5" /> },
+        { href: "#pricing", label: t("nav.pricing") },
+        { href: "#faq", label: t("nav.faq") },
     ];
 
     return (
@@ -68,7 +70,11 @@ export function Navbar() {
                     {/* Right Side */}
                     <div className="hidden md:flex items-center gap-3">
                         {/* Language Selector */}
-                        <select className="flex items-center gap-2 px-3 py-2 rounded-md border border-zinc-800 bg-transparent text-zinc-400 text-sm hover:border-brand transition-colors cursor-pointer">
+                        <select
+                            value={language}
+                            onChange={(e) => setLanguage(e.target.value as any)}
+                            className="flex items-center gap-2 px-3 py-2 rounded-md border border-zinc-800 bg-black text-zinc-400 text-sm hover:border-brand transition-colors cursor-pointer focus:outline-none focus:border-brand"
+                        >
                             <option value="en">🇬🇧 EN</option>
                             <option value="es">🇪🇸 ES</option>
                             <option value="zh">🇨🇳 中文</option>
@@ -80,7 +86,7 @@ export function Navbar() {
                         <Link href="/pricing">
                             <Button className="bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] hover:from-[#9775FA] hover:to-[#7C3AED] text-white font-semibold px-5 py-2 rounded-lg shadow-lg shadow-brand/20 hover:scale-[1.02] hover:shadow-xl hover:shadow-brand/30 transition-all duration-200 flex items-center gap-2">
                                 <Crown className="w-4 h-4 fill-white" />
-                                Upgrade to PRO
+                                {t("nav.upgrade")}
                             </Button>
                         </Link>
 
@@ -126,7 +132,7 @@ export function Navbar() {
                             <Link href="/pricing" onClick={() => setMobileMenuOpen(false)}>
                                 <Button className="w-full bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] text-white font-semibold">
                                     <Crown className="w-4 h-4 fill-white mr-2" />
-                                    Upgrade to PRO
+                                    {t("nav.upgrade")}
                                 </Button>
                             </Link>
                         </div>

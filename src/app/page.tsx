@@ -4,8 +4,10 @@ import { StyleSelector } from "@/components/StyleSelector";
 import { Testimonials } from "@/components/Testimonials";
 import { Sparkles, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col gap-24 pb-24">
       <Hero />
@@ -13,6 +15,11 @@ export default function Home() {
       {/* Features Section */}
       <section id="features" className="max-w-7xl mx-auto px-4 w-full">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="text-center mb-12 md:col-span-3">
+            <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
+              {t("features.title")}
+            </h2>
+          </div>
           {[
             { title: "Every Space. Every Style.", desc: "From living rooms to gardens. Modern to vintage. Your vision, instantly visualized." },
             { title: "Professional Quality", desc: "Export in stunning 4K resolution. Ready for presentations or social media." },
@@ -95,42 +102,42 @@ export default function Home() {
       <section id="pricing" className="max-w-7xl mx-auto px-4 w-full py-12">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
-            Simple, Transparent Pricing
+            {t("pricing.title")}
           </h2>
           <p className="text-lg" style={{ color: 'var(--text-muted)' }}>
-            All plans include a <span className="text-brand font-semibold">3-day free trial</span>. Cancel anytime.
+            {t("pricing.desc")}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {[
             {
-              name: 'Weekly',
-              price: '$9',
+              name: t("pricing.weekly"),
+              price: '$5.99',
               period: '/week',
-              trial: '3-DAY FREE TRIAL',
+              trial: '7-DAY FREE TRIAL',
               description: 'Perfect for trying out',
               features: ['Unlimited generations', '4K quality exports', 'All room types', 'Email support'],
               highlighted: false
             },
             {
-              name: 'Monthly',
-              price: '$29',
+              name: t("pricing.monthly"),
+              price: '$14.99',
               period: '/month',
               trial: '3-DAY FREE TRIAL',
               description: 'Most popular choice',
               features: ['Everything in Weekly', 'Priority processing', '32+ design styles', 'Priority support', 'Team collaboration'],
               highlighted: true,
-              badge: 'MOST POPULAR',
+              badge: t("pricing.mostPopular"),
               savings: 'SAVE 60%'
             },
             {
-              name: 'Yearly',
-              price: '$290',
+              name: t("pricing.yearly"),
+              price: '$119.99',
               period: '/year',
               trial: '3-DAY FREE TRIAL',
               description: 'Best value',
-              savings: 'SAVE 70%',
+              savings: 'SAVE 60%',
               features: ['Everything in Monthly', 'Custom AI training', 'API access', 'Dedicated support', 'White-label option'],
               highlighted: false
             },
@@ -197,7 +204,7 @@ export default function Home() {
                     : "bg-transparent border-2 border-zinc-700 text-white hover:border-brand/50 hover:bg-brand/5"
                 )}
               >
-                Start Free Trial
+                {t("btn.startTrial")}
               </button>
             </div>
           ))}
@@ -230,7 +237,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             {/* Product */}
             <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Product</h4>
+              <h4 className="text-white font-semibold mb-4 text-sm">{t("footer.product")}</h4>
               <ul className="space-y-3">
                 {['Features', 'Pricing', 'FAQ', 'Changelog'].map((item) => (
                   <li key={item}>
@@ -244,7 +251,7 @@ export default function Home() {
 
             {/* Company */}
             <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Company</h4>
+              <h4 className="text-white font-semibold mb-4 text-sm">{t("footer.company")}</h4>
               <ul className="space-y-3">
                 {['About', 'Blog', 'Careers'].map((item) => (
                   <li key={item}>
@@ -263,7 +270,7 @@ export default function Home() {
 
             {/* Legal */}
             <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Legal</h4>
+              <h4 className="text-white font-semibold mb-4 text-sm">{t("footer.legal")}</h4>
               <ul className="space-y-3">
                 {['Privacy', 'Terms', 'Cookies'].map((item) => (
                   <li key={item}>
@@ -277,7 +284,7 @@ export default function Home() {
 
             {/* Social */}
             <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Connect</h4>
+              <h4 className="text-white font-semibold mb-4 text-sm">{t("footer.connect")}</h4>
               <ul className="space-y-3">
                 {['Twitter', 'Instagram', 'LinkedIn'].map((item) => (
                   <li key={item}>

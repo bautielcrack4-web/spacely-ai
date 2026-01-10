@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Hero() {
+    const { t } = useLanguage();
     return (
         <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 overflow-hidden">
             {/* Background Glow */}
@@ -19,12 +21,12 @@ export function Hero() {
                 >
 
                     <h1 className="text-5xl md:text-[80px] font-medium tracking-[-0.02em] mb-6 leading-[1.1]">
-                        <span className="text-white">Your Dream Room</span> <br />
-                        <span className="text-gradient">in Seconds</span>
+                        <span className="text-white">{t("hero.title").split(" ")[0]} {t("hero.title").split(" ").slice(1, -2).join(" ")}</span> <br />
+                        <span className="text-gradient">{t("hero.title").split(" ").slice(-2).join(" ")}</span>
                     </h1>
 
                     <p className="max-w-2xl mx-auto text-lg md:text-xl mb-8" style={{ color: 'var(--text-muted)' }}>
-                        Upload a photo. Choose a style. Watch AI transform your space in real-time.
+                        {t("hero.subtitle")}
                     </p>
 
                     {/* Trust Signals */}
@@ -45,7 +47,7 @@ export function Hero() {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <Link href="/login" className="w-full sm:w-auto">
                             <Button size="lg" variant="accent" className="w-full text-white px-8 py-4 hover:scale-[1.02] transition-transform duration-300">
-                                Transform My Room →
+                                {t("hero.upload")} →
                                 <ArrowRight className="ml-2 w-4 h-4" />
                             </Button>
                         </Link>

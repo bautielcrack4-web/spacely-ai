@@ -1,8 +1,10 @@
 "use client";
 
 import { Star } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Testimonials() {
+    const { t } = useLanguage();
     const testimonials = [
         {
             name: "Sarah Mitchell",
@@ -40,7 +42,7 @@ export function Testimonials() {
         <section className="max-w-7xl mx-auto px-4 w-full py-24">
             <div className="text-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white mb-4">
-                    Loved by Designers & Homeowners
+                    {t("testimonials.title")}
                 </h2>
                 <p className="text-lg" style={{ color: 'var(--text-muted)' }}>
                     See what our community has to say
