@@ -17,24 +17,35 @@ export function Hero() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-brand/30 text-brand text-xs font-medium mb-8 bg-transparent">
-                        <Sparkles className="w-3 h-3" />
-                        <span>Nueva Versión 2.0 disponible</span>
-                    </div>
 
                     <h1 className="text-5xl md:text-[80px] font-medium tracking-[-0.02em] mb-6 leading-[1.1]">
-                        <span className="text-white">Transform Any Space</span> <br />
+                        <span className="text-white">Your Dream Room</span> <br />
                         <span className="text-gradient">in Seconds</span>
                     </h1>
 
-                    <p className="max-w-2xl mx-auto text-lg md:text-xl mb-12" style={{ color: 'var(--text-muted)' }}>
-                        Upload a photo. Choose a style. Get stunning AI-powered redesigns instantly.
+                    <p className="max-w-2xl mx-auto text-lg md:text-xl mb-8" style={{ color: 'var(--text-muted)' }}>
+                        Upload a photo. Choose a style. Watch AI transform your space in real-time.
                     </p>
+
+                    {/* Trust Signals */}
+                    <div className="flex items-center justify-center gap-8 mb-12 text-sm" style={{ color: 'var(--text-muted)' }}>
+                        <div className="flex items-center gap-2">
+                            <span className="text-brand font-semibold">500K+</span> users
+                        </div>
+                        <div className="w-1 h-1 rounded-full bg-zinc-700" />
+                        <div className="flex items-center gap-2">
+                            <span className="text-brand font-semibold">2M+</span> rooms redesigned
+                        </div>
+                        <div className="w-1 h-1 rounded-full bg-zinc-700" />
+                        <div className="flex items-center gap-1">
+                            <span className="text-brand font-semibold">4.8★</span> rating
+                        </div>
+                    </div>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <Link href="/login" className="w-full sm:w-auto">
-                            <Button size="lg" variant="accent" className="w-full text-black px-8 py-4 hover:scale-[1.02] transition-transform duration-300">
-                                Generate Now
+                            <Button size="lg" variant="accent" className="w-full text-white px-8 py-4 hover:scale-[1.02] transition-transform duration-300">
+                                Transform My Room →
                                 <ArrowRight className="ml-2 w-4 h-4" />
                             </Button>
                         </Link>
