@@ -1,3 +1,5 @@
+"use client";
+
 import { Hero } from "@/components/Hero";
 import { FAQ } from "@/components/FAQ";
 import { StyleSelector } from "@/components/StyleSelector";
