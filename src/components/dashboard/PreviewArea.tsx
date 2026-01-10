@@ -19,11 +19,31 @@ export function PreviewArea({ image, original, loading }: PreviewAreaProps) {
             />
 
             {loading ? (
-                <div className="flex flex-col items-center gap-4 z-10 animate-pulse">
-                    <div className="w-24 h-24 rounded-full bg-[#B2F042]/10 flex items-center justify-center">
-                        <Home className="w-10 h-10 text-[#B2F042] animate-bounce" />
+                <div className="relative w-full h-full flex flex-col items-center justify-center p-4">
+                    {/* If we have the original, show it as base for scanning */}
+                    {original && (
+                        <div className="absolute inset-4 overflow-hidden rounded-lg border border-[#B2F042]/30">
+                            <img
+                                src={original}
+                                alt="Scanning..."
+                                className="w-full h-full object-contain opacity-50 blur-[2px]"
+                            />
+                            {/* The Scanline */}
+                            <div className="scanline"></div>
+                            {/* Grid Overlay for "Tech" feel */}
+                            <div className="absolute inset-0 bg-[url('/grid.png')] opacity-20 bg-repeat" />
+                        </div>
+                    )}
+
+                    <div className="z-30 flex flex-col items-center gap-4 bg-black/60 p-6 rounded-2xl backdrop-blur-md border border-[#B2F042]/20">
+                        <div className="w-16 h-16 rounded-full border-2 border-[#B2F042] border-t-transparent animate-spin flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-full bg-[#B2F042] animate-pulse" />
+                        </div>
+                        <div className="text-center space-y-1">
+                            <p className="text-white font-bold text-lg tracking-wide">AI PROCESSING</p>
+                            <p className="text-[#B2F042] text-xs font-mono animate-pulse">Scanning geometry...</p>
+                        </div>
                     </div>
-                    <p className="text-gray-400 font-medium">AI is redesigning your space...</p>
                 </div>
             ) : image && original ? (
                 <div className="relative w-full h-full p-4">
