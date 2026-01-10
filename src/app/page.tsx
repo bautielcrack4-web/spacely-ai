@@ -1,6 +1,6 @@
 "use client";
 
-import { RoomTransformScroll } from "@/components/RoomTransformScroll";
+import { Hero } from "@/components/Hero";
 import { FAQ } from "@/components/FAQ";
 import { ExampleGallery } from "@/components/ExampleGallery";
 import { MultipleStyles } from "@/components/MultipleStyles";
@@ -15,9 +15,14 @@ export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <div className="flex flex-col bg-[#FAFBFC] min-h-screen relative overflow-x-hidden">
-      {/* Scroll-linked Room Transformation Experience */}
-      <RoomTransformScroll />
+    <div className="flex flex-col bg-[#F9FAFB] min-h-screen relative overflow-hidden">
+      {/* Modern Background Accents */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1000px] pointer-events-none -z-10">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-100/40 rounded-full blur-[120px]" />
+        <div className="absolute top-[10%] right-[-5%] w-[35%] h-[35%] bg-pink-100/40 rounded-full blur-[120px]" />
+      </div>
+
+      <Hero />
 
       {/* Galería de Transformaciones */}
       <ExampleGallery />
