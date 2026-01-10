@@ -1,4 +1,5 @@
 import { Hero } from "@/components/Hero";
+import { FAQ } from "@/components/FAQ";
 import { Sparkles, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -210,6 +211,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+
+      {/* FAQ Section */}
+      <FAQ />
 
       {/* Footer */}
       <footer className="border-t border-[#27272A] mt-24 pt-16 pb-8">
