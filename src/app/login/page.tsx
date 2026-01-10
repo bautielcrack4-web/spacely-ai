@@ -113,7 +113,7 @@ export default function LoginPage() {
                                 }
                             }}
                             theme="dark"
-                            providers={['google', 'github']}
+                            providers={[]}
                             redirectTo={`${typeof window !== 'undefined' ? window.location.origin : ''}/auth/callback`}
                         />
                     </div>

@@ -37,7 +37,7 @@ export function RenderControls({
     return (
         <div className="w-80 flex-shrink-0 flex flex-col gap-6 h-full overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-surface-200">
             {/* Upload Section */}
-            <div className="bg-[#1F1F1F] rounded-xl p-4 border border-[#2F2F2F]">
+            <div className="bg-[#121212] rounded-2xl p-4 border border-[#1F1F1F]">
                 <div className="flex justify-between items-center mb-2">
                     <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Upload a photo</h3>
                     <span className="text-[10px] text-gray-500 bg-[#2F2F2F] px-1.5 py-0.5 rounded">Tips 💡</span>
@@ -75,8 +75,8 @@ export function RenderControls({
             <div className="space-y-6">
                 {/* Room Type */}
                 <div>
-                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Select room type</label>
-                    <div className="grid grid-cols-2 gap-2 bg-[#1F1F1F] p-1 rounded-lg">
+                    <label className="text-xs font-semibold text-gray-500 uppercase tracking-widest mb-3 block">Select room type</label>
+                    <div className="grid grid-cols-2 gap-2 bg-[#0F0F0F] p-1 rounded-xl border border-[#1F1F1F]">
                         <button
                             onClick={() => setRoomType("commercial")}
                             className={cn(
@@ -100,13 +100,13 @@ export function RenderControls({
 
                 {/* Interior/Exterior */}
                 <div>
-                    <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Interior or exterior</label>
-                    <div className="grid grid-cols-2 gap-2 bg-[#1F1F1F] p-1 rounded-lg">
+                    <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-3 block">Perspective</label>
+                    <div className="grid grid-cols-2 gap-2 bg-[#0F0F0F] p-1 rounded-xl border border-[#1F1F1F]">
                         <button
                             onClick={() => setSceneType("interior")}
                             className={cn(
-                                "text-xs font-medium py-2 rounded-md transition-colors",
-                                sceneType === "interior" ? "bg-[#B2F042] text-black" : "text-gray-500 hover:text-white"
+                                "text-xs font-bold py-2 rounded-lg transition-all duration-300",
+                                sceneType === "interior" ? "bg-[#B2F042] text-black shadow-lg shadow-[#B2F042]/20" : "text-gray-500 hover:text-gray-300"
                             )}
                         >
                             Interior
@@ -114,8 +114,8 @@ export function RenderControls({
                         <button
                             onClick={() => setSceneType("exterior")}
                             className={cn(
-                                "text-xs font-medium py-2 rounded-md transition-colors",
-                                sceneType === "exterior" ? "bg-[#2F2F2F] text-white" : "text-gray-500 hover:text-white"
+                                "text-xs font-bold py-2 rounded-lg transition-all duration-300",
+                                sceneType === "exterior" ? "bg-[#B2F042] text-black shadow-lg shadow-[#B2F042]/20" : "text-gray-500 hover:text-gray-300"
                             )}
                         >
                             Exterior
@@ -123,10 +123,10 @@ export function RenderControls({
                     </div>
                 </div>
 
-                {/* Style Selector (Simplified Dropdown for v1) */}
+                {/* Style Selector */}
                 <div>
-                    <div className="flex justify-between mb-2">
-                        <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider block">Select Render Style</label>
+                    <div className="flex justify-between mb-3">
+                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] block">Design Aesthetic</label>
                     </div>
 
                     <div className="relative">

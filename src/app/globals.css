@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #080808;
+  --foreground: #ffffff;
   --brand: #B2F042;
-  --brand-foreground: #000000;
+  --brand-muted: rgba(178, 240, 66, 0.1);
+  --brand-glow: 0 0 20px rgba(178, 240, 66, 0.4);
   --accent: #B2F042;
-  --surface: #121212;
-  --border: #2F2F2F;
+  --surface: #101010;
+  --border: rgba(255, 255, 255, 0.08);
 }
 
 @theme inline {
@@ -36,9 +37,24 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #fff 0%, #B2F042 100%);
+  background: linear-gradient(135deg, #ffffff 30%, #B2F042 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(178, 240, 66, 0.15));
+}
+
+.neon-border {
+  border: 1px solid var(--border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neon-border:hover {
+  border-color: rgba(178, 240, 66, 0.4);
+  box-shadow: 0 0 15px rgba(178, 240, 66, 0.1);
+}
+
+.lime-glow {
+  box-shadow: var(--brand-glow);
 }
 
 /* Aurora Background Effect */
