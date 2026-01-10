@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { SpotlightEffect } from "@/components/ui/spotlight-effect";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,19 +28,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0A0A0A]`}>
-        <div className="aurora-container" aria-hidden="true">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#FAFBFC]`}>
+        {/* <div className="aurora-container" aria-hidden="true">
           <div className="aurora-blob-1" />
           <div className="aurora-blob-2" />
           <div className="aurora-blob-3" />
-        </div>
-        <SpotlightEffect />
+        </div> */}
+        {/* SpotlightEffect removed as it's for dark mode usually */}
+        {/* <SpotlightEffect /> */}
         <div className="relative z-0">
           <LanguageProvider>
             <Navbar />
             <main className="min-h-screen pt-16">
               {children}
             </main>
+            <Toaster richColors position="bottom-right" />
           </LanguageProvider>
         </div>
       </body>

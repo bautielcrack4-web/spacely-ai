@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { DesignTool } from "@/components/DesignTool";
 import { PaywallModal } from "@/components/PaywallModal";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 export default function DashboardPage() {
     const [loading, setLoading] = useState(false);
@@ -113,12 +114,13 @@ export default function DashboardPage() {
                 if (data.result) {
                     const outputUrl = Array.isArray(data.result) ? data.result[0] : data.result;
                     setGeneratedImage(outputUrl);
+                    toast.success("Design generated successfully!");
                     // Clear pending design if successful
                     localStorage.removeItem('pendingDesign');
                 }
             } catch (err: any) {
                 console.error("API Error", err);
-                alert("Error: " + err.message);
+                toast.error(err.message || "Failed to generate design");
             } finally {
                 setLoading(false);
             }
