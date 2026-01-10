@@ -35,9 +35,9 @@ export function Sidebar() {
     ];
 
     return (
-        <aside className="w-64 h-screen bg-[#0A0A0A] border-r border-[#1F1F1F] flex flex-col fixed left-0 top-0 z-50">
+        <div className="hidden md:flex w-64 flex-col fixed inset-y-0 z-50 bg-[#0A0A0A] border-r border-[#1F1F1F]">
             {/* Logo */}
-            <div className="p-6">
+            <div className="h-16 flex items-center px-6 border-b border-[#1F1F1F]">
                 <div className="flex items-center gap-2 text-white font-bold text-xl">
                     <div className="w-8 h-8 relative">
                         <Image src="/logo.png" alt="Logo" fill className="object-contain" />
@@ -49,23 +49,20 @@ export function Sidebar() {
             {/* Main Nav */}
             <div className="flex-1 px-4 space-y-2">
                 {navItems.map((item) => (
-                    {
-                        navItems.map((item) => (
-                            <Link
-                                key={item.label}
-                                href={item.href}
-                                className={cn(
-                                    "flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 group border border-transparent",
-                                    item.active
-                                        ? "bg-[#1F1F1F] text-[#B2F042] border-[#B2F042]/20"
-                                        : "text-gray-400 hover:text-white hover:bg-[#1F1F1F]/50"
-                                )}
-                            >
-                                <item.icon className="w-6 h-6 mb-2" />
-                                <span className="text-xs font-medium">{item.label}</span>
-                            </Link>
-                        ))
-                    }
+                    <Link
+                        key={item.label}
+                        href={item.href}
+                        className={cn(
+                            "flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 group border border-transparent",
+                            item.active
+                                ? "bg-[#1F1F1F] text-[#B2F042] border-[#B2F042]/20"
+                                : "text-gray-400 hover:text-white hover:bg-[#1F1F1F]/50"
+                        )}
+                    >
+                        <item.icon className="w-6 h-6 mb-2" />
+                        <span className="text-xs font-medium">{item.label}</span>
+                    </Link>
+                ))}
             </div>
 
             {/* Bottom Actions */}
@@ -92,6 +89,6 @@ export function Sidebar() {
                     </div>
                 </div>
             </div>
-        </aside>
+        </div>
     );
 }

@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
+import { MobileSidebar } from "@/components/dashboard/MobileSidebar";
 
 export default function DashboardLayout({
     children,
@@ -6,9 +7,10 @@ export default function DashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="min-h-screen bg-[#0A0A0A] text-white flex">
+        <div className="min-h-screen bg-[#0A0A0A]">
             <Sidebar />
-            <main className="flex-1 ml-64 p-6 overflow-auto">
+            <MobileSidebar />
+            <main className="md:ml-64 p-4 md:p-8">
                 {children}
             </main>
         </div>
