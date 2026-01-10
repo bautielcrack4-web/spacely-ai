@@ -29,9 +29,9 @@ export function Sidebar() {
     };
 
     const navItems = [
-        { icon: ImageIcon, label: "Render", href: "/dashboard", active: true },
-        { icon: Brush, label: "Inpaint", href: "/dashboard/inpaint", disabled: true },
-        { icon: Maximize2, label: "Upscale", href: "/dashboard/upscale", disabled: true },
+        { icon: ImageIcon, label: "Render", href: "/dashboard", active: pathname === "/dashboard" },
+        { icon: Brush, label: "Inpaint", href: "/dashboard/inpaint", active: pathname === "/dashboard/inpaint" },
+        { icon: Maximize2, label: "Upscale", href: "/dashboard/upscale", active: pathname === "/dashboard/upscale" },
     ];
 
     return (
@@ -49,21 +49,23 @@ export function Sidebar() {
             {/* Main Nav */}
             <div className="flex-1 px-4 space-y-2">
                 {navItems.map((item) => (
-                    <Link
-                        key={item.label}
-                        href={item.disabled ? "#" : item.href}
-                        className={cn(
-                            "flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 group border border-transparent",
-                            item.active
-                                ? "bg-[#1F1F1F] text-[#B2F042] border-[#B2F042]/20"
-                                : "text-gray-400 hover:text-white hover:bg-[#1F1F1F]/50",
-                            item.disabled && "opacity-50 cursor-not-allowed"
-                        )}
-                    >
-                        <item.icon className="w-6 h-6 mb-2" />
-                        <span className="text-xs font-medium">{item.label}</span>
-                    </Link>
-                ))}
+                    {
+                        navItems.map((item) => (
+                            <Link
+                                key={item.label}
+                                href={item.href}
+                                className={cn(
+                                    "flex flex-col items-center justify-center p-4 rounded-xl transition-all duration-200 group border border-transparent",
+                                    item.active
+                                        ? "bg-[#1F1F1F] text-[#B2F042] border-[#B2F042]/20"
+                                        : "text-gray-400 hover:text-white hover:bg-[#1F1F1F]/50"
+                                )}
+                            >
+                                <item.icon className="w-6 h-6 mb-2" />
+                                <span className="text-xs font-medium">{item.label}</span>
+                            </Link>
+                        ))
+                    }
             </div>
 
             {/* Bottom Actions */}

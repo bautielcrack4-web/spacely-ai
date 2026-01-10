@@ -26,6 +26,30 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Gallery Section Placeholder */}
+      <section id="gallery" className="max-w-7xl mx-auto px-4 w-full py-20">
+        <h2 className="text-3xl font-bold text-white text-center mb-12"><span className="text-gradient">Gallery Preview</span></h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="aspect-square bg-surface-100 rounded-xl border border-border animate-pulse" />
+          ))}
+        </div>
+      </section>
+
+      {/* Pricing Section Placeholder */}
+      <section id="pricing" className="max-w-7xl mx-auto px-4 w-full py-20">
+        <h2 className="text-3xl font-bold text-white text-center mb-12">Simple Pricing</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {['Weekly', 'Monthly', 'Yearly'].map((plan, i) => (
+            <div key={i} className="p-8 bg-surface-100 rounded-2xl border border-border flex flex-col items-center">
+              <h3 className="text-xl font-bold text-white mb-2">{plan}</h3>
+              <p className="text-gray-400 mb-6">Unlimited Generations</p>
+              <div className="w-full h-10 bg-brand/10 rounded-lg" />
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
