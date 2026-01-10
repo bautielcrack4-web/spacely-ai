@@ -40,7 +40,7 @@ export function Sidebar() {
             <div className="h-16 flex items-center px-6 border-b border-[#1F1F1F]">
                 <div className="flex items-center gap-2 text-white font-bold text-xl">
                     <div className="w-8 h-8 relative">
-                        <Image src="/logo.png" alt="Logo" fill className="object-contain" />
+                        <Image src="/spacely-logo.png" alt="Logo" fill className="object-contain" />
                     </div>
                     <span>Spacely AI</span>
                 </div>

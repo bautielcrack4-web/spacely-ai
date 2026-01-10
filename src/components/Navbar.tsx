@@ -16,10 +16,10 @@ export function Navbar() {
                 <div className="flex justify-between h-16 items-center">
                     <div className="flex items-center gap-2">
                         <div className="w-8 h-8 relative">
-                            <Image src="/logo.png" alt="Logo" fill className="object-contain invert" />
+                            <Image src="/spacely-logo.png" alt="Logo" fill className="object-contain invert" />
                         </div>
                         <span className="text-xl font-bold text-white tracking-tight">
-                            Spacely <span className="text-brand">AI</span>
+                            Spacely <span className="text-brand">AI</span> <span className="text-[10px] text-gray-500 ml-1">v2.0</span>
                         </span>
                     </div>
 

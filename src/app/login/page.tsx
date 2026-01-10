@@ -44,7 +44,7 @@ export default function LoginPage() {
 
                 <div className="relative z-10 text-center space-y-6 max-w-lg">
                     <div className="w-24 h-24 mx-auto relative mb-8">
-                        <Image src="/logo.png" alt="Logo" fill className="object-contain" />
+                        <Image src="/spacely-logo.png" alt="Logo" fill className="object-contain" />
                     </div>
                     <h2 className="text-4xl font-bold text-white tracking-tight">
                         Design your dream space

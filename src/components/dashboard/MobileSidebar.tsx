@@ -31,7 +31,7 @@ export function MobileSidebar() {
             <div className="h-16 flex items-center justify-between px-4 border-b border-[#1F1F1F] bg-[#0A0A0A] fixed top-0 w-full z-40">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8 relative">
-                        <Image src="/logo.png" alt="Logo" fill className="object-contain invert" />
+                        <Image src="/spacely-logo.png" alt="Logo" fill className="object-contain invert" />
                     </div>
                     <span className="font-bold text-white">Spacely AI</span>
                 </div>
