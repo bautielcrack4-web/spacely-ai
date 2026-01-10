@@ -132,7 +132,7 @@ export function RenderControls({
                     <div className="relative">
                         <select
                             className="w-full bg-[#1F1F1F] border border-[#2F2F2F] rounded-lg p-3 text-sm text-white appearance-none focus:outline-none focus:border-[#B2F042]"
-                            onChange={(e) => setPrompt((prev) => `${e.target.value}, ${prev}`)} // Appending style for now
+                            onChange={(e) => setPrompt(`${e.target.value}, ${prompt}`)} // Appending style for now
                         >
                             <option value="Modern Minimalist">Modern Minimalist</option>
                             <option value="Scandinavian">Scandinavian</option>
