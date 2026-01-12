@@ -58,42 +58,54 @@ export async function POST(req: Request) {
         const variations = [];
 
         for (const pred of predictions) {
-            // Output handling
-            let resultUrl = "";
-            if (typeof pred.output === "string") {
-                resultUrl = pred.output;
-            } else if (Array.isArray(pred.output)) {
-                resultUrl = pred.output[0].toString();
-            } else if (pred.output && typeof (pred.output as any).url === "function") {
-                resultUrl = (pred.output as any).url();
-            } else {
-                resultUrl = pred.output.toString();
+            let resultBuffer: Uint8Array | null = null;
+            let finalImageUrl = "";
+
+            if (pred.output instanceof ReadableStream) {
+                const reader = pred.output.getReader();
+                const chunks = [];
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                }
+                const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+                resultBuffer = new Uint8Array(totalLength);
+                let offset = 0;
+                for (const chunk of chunks) {
+                    resultBuffer.set(chunk, offset);
+                    offset += chunk.length;
+                }
+            } else if (typeof pred.output === "string") {
+                finalImageUrl = pred.output;
+            } else if (Array.isArray(pred.output) && pred.output.length > 0) {
+                finalImageUrl = pred.output[0].toString();
             }
 
-            if (resultUrl) {
-                // Upload to Supabase Storage (to persist it)
-                const imageResponse = await fetch(resultUrl);
-                const imageBlob = await imageResponse.blob();
-                const fileName = `variations/${id}-${pred.seed}.png`;
+            if (resultBuffer || finalImageUrl) {
+                let publicUrl = finalImageUrl;
 
-                const { error: uploadError } = await supabase.storage
-                    .from("generations")
-                    .upload(fileName, imageBlob, { contentType: "image/png", upsert: true });
+                if (resultBuffer) {
+                    const fileName = `variations/${id}-${pred.seed}.png`;
+                    const { error: uploadError } = await supabase.storage
+                        .from("generations")
+                        .upload(fileName, resultBuffer, { contentType: "image/png", upsert: true });
 
-                if (!uploadError) {
-                    const publicUrl = supabase.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
+                    if (!uploadError) {
+                        publicUrl = supabase.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
+                    }
+                }
 
+                if (publicUrl) {
                     // Save to DB
-                    // We need the original generation to get user_id, style, room_type
                     const { data: original } = await supabase.from("generations").select("*").eq("id", id).single();
-
                     if (original) {
                         const { data: newGen } = await supabase.from("generations").insert({
                             user_id: original.user_id,
                             image_url: publicUrl,
-                            prompt: finalPrompt, // Use the prompt from the scope
-                            style: original.style, // Keep original style
-                            room_type: original.room_type, // Keep original room_type
+                            prompt: finalPrompt,
+                            style: original.style,
+                            room_type: original.room_type,
                             parent_id: id,
                             seed: pred.seed,
                             is_variation: true
