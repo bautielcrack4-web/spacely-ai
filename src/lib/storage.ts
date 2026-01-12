@@ -19,12 +19,14 @@ export async function uploadTempImage(file: File): Promise<string> {
 
         if (uploadError) throw uploadError;
 
-        // 2. Get URL
-        const { data } = supabase.storage
+        // 2. Get Signed URL (Better reliability for AI services)
+        const { data } = await supabase.storage
             .from('generations')
-            .getPublicUrl(fileName);
+            .createSignedUrl(fileName, 3600); // 1 hour
 
-        return data.publicUrl;
+        if (!data?.signedUrl) throw new Error("Failed to generate signed URL");
+
+        return data.signedUrl;
     } catch (error) {
         console.error("Upload failed:", error);
         throw new Error("Failed to upload image. Please try again.");

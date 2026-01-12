@@ -3,13 +3,15 @@ import { createClient } from "@supabase/supabase-js";
 import Replicate from "replicate";
 
 export const maxDuration = 60;
-
 const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN,
 });
 
 // Move initialization inside handler to avoid build-time errors
-export async function POST(req: Request) {
+export const maxDuration = 60; // Allow 60 seconds (max for Hobby)
+export const dynamic = 'force-dynamic';
+
+export async function POST(request: Request) {
     const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
