@@ -74,9 +74,20 @@ export default function ColorPage() {
                 })
             });
 
-            const data = await response.json();
+            if (!response.ok) {
+                const text = await response.text();
+                // console.error("API Error Body:", text);
+                let errorMessage = response.statusText;
+                try {
+                    const errorJson = JSON.parse(text);
+                    errorMessage = errorJson.error || errorMessage;
+                } catch {
+                    errorMessage = `Error ${response.status}: ${text.slice(0, 100)}`;
+                }
+                throw new Error(errorMessage);
+            }
 
-            if (data.error) throw new Error(data.error);
+            const data = await response.json();
 
             setResultImage(data.result);
             toast.success("Colors applied successfully!");
