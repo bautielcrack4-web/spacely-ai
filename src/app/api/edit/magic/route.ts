@@ -23,8 +23,9 @@ export async function POST(req: Request) {
         }
 
         // 1. Call Replicate (p-image-edit)
-        // We send the image + the instruction prompt directly.
-        // p-image-edit handles "Add", "Remove", "Change" instructions natively.
+        console.log("Calling p-image-edit for Magic Edit...");
+        console.log("Prompt:", prompt);
+
         const output = await replicate.run(
             "prunaai/p-image-edit:c5d2d0b6",
             {
@@ -34,7 +35,12 @@ export async function POST(req: Request) {
                     aspect_ratio: "match_input_image",
                 }
             }
-        );
+        ).catch(err => {
+            console.error("Replicate API Error (Magic):", err);
+            throw err;
+        });
+
+        console.log("Replicate Output (Magic):", output);
 
         // 2. Process Result
         const resultUrl = Array.isArray(output) ? output[0] : output;

@@ -37,6 +37,9 @@ export async function POST(req: Request) {
         }
 
         // 2. Call Replicate (p-image-edit)
+        console.log("Calling p-image-edit for Color Match...");
+        console.log("Prompt:", finalPrompt);
+
         const output = await replicate.run(
             "prunaai/p-image-edit:c5d2d0b6",
             {
@@ -46,7 +49,12 @@ export async function POST(req: Request) {
                     aspect_ratio: "match_input_image",
                 }
             }
-        );
+        ).catch(err => {
+            console.error("Replicate API Error (Color):", err);
+            throw err;
+        });
+
+        console.log("Replicate Output (Color):", output);
 
         // 3. Process Result
         const resultUrl = Array.isArray(output) ? output[0] : output;

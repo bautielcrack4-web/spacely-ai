@@ -26,20 +26,27 @@ export async function POST(req: Request) {
         // If user provided a prompt, append it. Otherwise use default smart prompt.
         const finalPrompt = prompt && prompt.length > 5
             ? prompt
-            : "Place the furniture object from the second image into the room shown in the first image. Ensure realistic lighting, shadows, and perspective matching.";
+            : "Place image 2 into image 1. Ensure realistic lighting, shadows, and perspective matching.";
 
         // 2. Call Replicate (p-image-edit)
+        console.log("Calling p-image-edit for Furniture Placement...");
+        console.log("Prompt:", finalPrompt);
+
         const output = await replicate.run(
             "prunaai/p-image-edit:c5d2d0b6",
             {
                 input: {
                     images: [roomImage, furnitureImage],
                     prompt: finalPrompt,
-                    // reference_image: "1", // Removing this as it might be causing issues if not standard
-                    aspect_ratio: "match_input_image", // changed from custom
+                    aspect_ratio: "match_input_image",
                 }
             }
-        );
+        ).catch(err => {
+            console.error("Replicate API Error (Furniture):", err);
+            throw err;
+        });
+
+        console.log("Replicate Output (Furniture):", output);
 
         // 3. Process Result
         const resultUrl = Array.isArray(output) ? output[0] : output;
