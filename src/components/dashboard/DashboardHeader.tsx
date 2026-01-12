@@ -2,31 +2,11 @@
 
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Sparkles, Coins, Crown } from "lucide-react";
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 
 export function DashboardHeader() {
     const { t } = useLanguage();
-    const [credits, setCredits] = useState<number | null>(null);
-    const [isPro, setIsPro] = useState(false);
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                const { data } = await supabase
-                    .from('profiles')
-                    .select('credits, subscription_status')
-                    .eq('id', session.user.id)
-                    .single();
-                if (data) {
-                    setCredits(data.credits);
-                    setIsPro(data.subscription_status === 'active');
-                }
-            }
-        };
-        fetchProfile();
-    }, []);
+    const { isPro, credits } = useSubscriptionStatus();
 
     return (
         <header className="h-16 flex items-center justify-between px-8 bg-white/50 backdrop-blur-md border-b border-gray-100 sticky top-0 z-30">

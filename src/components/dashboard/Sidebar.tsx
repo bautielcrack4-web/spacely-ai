@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 import {
     CreditCard,
     HelpCircle,
@@ -27,22 +27,7 @@ export function Sidebar() {
     const router = useRouter();
     const { openPaywall } = usePaywall();
     const { t, language, setLanguage } = useLanguage();
-    const [isPro, setIsPro] = useState(false);
-
-    useEffect(() => {
-        const checkPro = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                const { data } = await supabase
-                    .from('profiles')
-                    .select('subscription_status')
-                    .eq('id', session.user.id)
-                    .single();
-                setIsPro(data?.subscription_status === 'active');
-            }
-        };
-        checkPro();
-    }, []);
+    const { isPro } = useSubscriptionStatus();
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
