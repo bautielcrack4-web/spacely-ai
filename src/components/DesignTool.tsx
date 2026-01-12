@@ -18,7 +18,7 @@ interface DesignToolProps {
         preview: string | null;
         prompt: string;
         style: string;
-    };
+    } | null;
 }
 
 import { TEMPLATES } from "@/lib/constants";
