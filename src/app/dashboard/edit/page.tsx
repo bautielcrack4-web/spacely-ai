@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
+import { PremiumLoader } from "@/components/ui/PremiumLoader";
 
 const QUICK_ACTIONS = [
     { label: "Make it modern", prompt: "Change the interior design to modern minimalist style" },
@@ -109,12 +110,9 @@ export default function MagicEditPage() {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center"
+                                    className="absolute inset-0 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center"
                                 >
-                                    <div className="flex flex-col items-center text-white">
-                                        <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mb-4" />
-                                        <p className="font-bold text-lg animate-pulse">Applying Magic...</p>
-                                    </div>
+                                    <PremiumLoader />
                                 </motion.div>
                             )}
                         </AnimatePresence>

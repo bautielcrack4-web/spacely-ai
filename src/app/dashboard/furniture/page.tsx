@@ -8,6 +8,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
+import { PremiumLoader } from "@/components/ui/PremiumLoader";
 
 export default function FurniturePage() {
     const { t } = useLanguage();
@@ -169,41 +171,39 @@ export default function FurniturePage() {
                 </div>
 
                 {/* Result Section */}
-                <div className="h-full bg-gray-50 rounded-[2.5rem] border border-gray-100 p-6 min-h-[500px] flex items-center justify-center relative overflow-hidden">
-                    {resultImage ? (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl"
-                        >
-                            <Image src={resultImage} alt="Result" fill className="object-cover" />
-                            <a
-                                href={resultImage}
-                                download="spacely-furniture-edit.png"
-                                target="_blank"
-                                className="absolute bottom-6 right-6 bg-white/20 backdrop-blur-md border border-white/20 text-white rounded-xl px-4 py-2 font-bold flex items-center gap-2 hover:bg-white/30 transition-colors"
+                <div className="lg:col-span-7 h-full">
+                    <div className="bg-gray-50 rounded-[2.5rem] border border-gray-100 p-6 h-full min-h-[500px] flex items-center justify-center relative overflow-hidden">
+                        {resultImage ? (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl"
                             >
-                                <Download className="w-4 h-4" />
-                                Download High Res
-                            </a>
-                        </motion.div>
-                    ) : (
-                        <div className="text-center text-gray-400">
-                            {isGenerating ? (
-                                <div className="flex flex-col items-center">
-                                    <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4" />
-                                    <p className="font-medium animate-pulse">Calculating optimal placement...</p>
-                                </div>
-                            ) : (
-                                <>
-                                    <ImageIcon className="w-16 h-16 mx-auto mb-4 opacity-20" />
-                                    <p className="font-medium">Result will appear here</p>
-                                </>
-                            )}
-                        </div>
-                    )}
+                                <Image src={resultImage} alt="Result" fill className="object-cover" />
+                                <a
+                                    href={resultImage}
+                                    download="spacely-furniture.png"
+                                    target="_blank"
+                                    className="absolute bottom-6 right-6 bg-white/20 backdrop-blur-md border border-white/20 text-white rounded-xl px-4 py-2 font-bold flex items-center gap-2 hover:bg-white/30 transition-colors"
+                                >
+                                    <Download className="w-4 h-4" />
+                                    Download High Res
+                                </a>
+                            </motion.div>
+                        ) : (
+                            <div className="text-center text-gray-400">
+                                {isGenerating ? (
+                                    <PremiumLoader />
+                                ) : (
+                                    <>
+                                        <Armchair className="w-16 h-16 mx-auto mb-4 opacity-20" />
+                                        <p className="font-medium">Result will appear here</p>
+                                    </>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
-
             </div>
         </div>
     );

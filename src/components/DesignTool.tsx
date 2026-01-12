@@ -8,6 +8,7 @@ import { StyleSelector } from "./StyleSelector";
 import { cn } from "@/lib/utils";
 import { ComparisonSlider } from "./ui/comparison-slider";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { PremiumLoader } from "./ui/PremiumLoader";
 
 interface DesignToolProps {
     onGenerate: (image: File | null, prompt: string, style: string, currentPreview?: string) => Promise<void>;
@@ -264,17 +265,9 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, initi
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="absolute inset-0 z-50 bg-white/60 backdrop-blur-md flex flex-col items-center justify-center"
+                            className="absolute inset-0 z-50 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center rounded-[32px]"
                         >
-                            <div className="relative w-32 h-32 mb-8">
-                                <div className="absolute inset-0 rounded-full border-4 border-purple-100 animate-pulse" />
-                                <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-purple-600 animate-spin" />
-                                <div className="absolute inset-4 rounded-full bg-white shadow-lg flex items-center justify-center">
-                                    <Sparkles className="w-8 h-8 text-purple-600 animate-pulse" />
-                                </div>
-                            </div>
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">Analyzing Space...</h3>
-                            <p className="text-gray-500">Applying {style} style</p>
+                            <PremiumLoader />
                         </motion.div>
                     )}
                 </AnimatePresence>

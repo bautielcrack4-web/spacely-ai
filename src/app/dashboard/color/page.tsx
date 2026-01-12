@@ -9,6 +9,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
+import { PremiumLoader } from "@/components/ui/PremiumLoader";
 
 const PALETTES = [
     { id: "minimalist", name: "Minimalist White", colors: ["#FFFFFF", "#F5F5F5", "#D4D4D4"] },
@@ -223,10 +224,7 @@ export default function ColorPage() {
                         ) : (
                             <div className="text-center text-gray-400">
                                 {isGenerating ? (
-                                    <div className="flex flex-col items-center">
-                                        <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4" />
-                                        <p className="font-medium animate-pulse">Matching color palette...</p>
-                                    </div>
+                                    <PremiumLoader />
                                 ) : (
                                     <>
                                         <Palette className="w-16 h-16 mx-auto mb-4 opacity-20" />
