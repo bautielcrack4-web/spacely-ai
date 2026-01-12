@@ -5,6 +5,7 @@ import { MobileSidebar } from "@/components/dashboard/MobileSidebar";
 import { PaywallProvider } from "@/contexts/PaywallContext";
 import { PaywallModal } from "@/components/PaywallModal";
 import { usePaywall } from "@/contexts/PaywallContext";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
     const { isOpen, closePaywall } = usePaywall();
@@ -20,9 +21,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
                 <Sidebar />
                 <MobileSidebar />
-                <main className="md:ml-64 p-4 md:p-8 relative z-10">
-                    {children}
-                </main>
+                <div className="md:ml-64 flex flex-col min-h-screen relative z-10">
+                    <DashboardHeader />
+                    <main className="p-4 md:p-6 flex-1">
+                        {children}
+                    </main>
+                </div>
             </div>
             <PaywallModal isOpen={isOpen} onClose={closePaywall} />
         </>

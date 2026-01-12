@@ -93,7 +93,7 @@ export function DesignTool({ onGenerate, loading, generatedImage, initialState }
                 </div>
 
                 {/* Settings Panel - Glassmorphism */}
-                <div className="flex-1 bg-white/80 backdrop-blur-xl rounded-[32px] p-6 border border-gray-100 shadow-sm flex flex-col gap-8">
+                <div className="flex-1 bg-white/80 backdrop-blur-xl rounded-[32px] p-6 border border-gray-100 shadow-xl shadow-purple-500/5 flex flex-col gap-8 transition-all hover:shadow-purple-500/10">
 
                     {/* Style Selector */}
                     <div>

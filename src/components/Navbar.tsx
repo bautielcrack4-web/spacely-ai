@@ -15,6 +15,10 @@ export function Navbar() {
     const pathname = usePathname();
     const { language, setLanguage, t } = useLanguage();
 
+    if (pathname.startsWith('/dashboard') || pathname.startsWith('/login')) {
+        return null;
+    }
+
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);

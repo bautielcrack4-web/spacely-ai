@@ -23,6 +23,8 @@ export function MobileSidebar() {
 
     const navItems = [
         { icon: ImageIcon, label: t("nav.render"), href: "/dashboard", active: pathname === "/dashboard" },
+        { icon: LayoutGrid, label: t("nav.pricing"), href: "/#pricing", active: false },
+        { icon: LayoutGrid, label: t("nav.faq"), href: "/#faq", active: false },
     ];
 
     return (

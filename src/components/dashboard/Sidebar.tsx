@@ -34,6 +34,8 @@ export function Sidebar() {
 
     const navItems = [
         { icon: ImageIcon, label: t("nav.render"), href: "/dashboard", active: pathname === "/dashboard" },
+        { icon: CreditCard, label: t("nav.pricing"), href: "/#pricing", active: false },
+        { icon: HelpCircle, label: t("nav.faq"), href: "/#faq", active: false },
     ];
 
     return (

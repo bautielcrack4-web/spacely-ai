@@ -39,7 +39,7 @@ export default function RootLayout({
         <div className="relative z-0">
           <LanguageProvider>
             <Navbar />
-            <main className="min-h-screen pt-16">
+            <main className="min-h-screen">
               {children}
             </main>
             <Toaster richColors position="bottom-right" />
