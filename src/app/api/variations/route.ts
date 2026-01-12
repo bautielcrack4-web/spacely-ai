@@ -57,57 +57,58 @@ export async function POST(req: Request) {
         // 4. Process Results & Save to DB
         const variations = [];
 
-        // Output handling
-        let resultUrl = "";
-        if (typeof pred.output === "string") {
-            resultUrl = pred.output;
-        } else if (Array.isArray(pred.output)) {
-            resultUrl = pred.output[0].toString();
-        } else if (pred.output && typeof (pred.output as any).url === "function") {
-            resultUrl = (pred.output as any).url();
-        } else {
-            resultUrl = pred.output.toString();
-        }
+        for (const pred of predictions) {
+            // Output handling
+            let resultUrl = "";
+            if (typeof pred.output === "string") {
+                resultUrl = pred.output;
+            } else if (Array.isArray(pred.output)) {
+                resultUrl = pred.output[0].toString();
+            } else if (pred.output && typeof (pred.output as any).url === "function") {
+                resultUrl = (pred.output as any).url();
+            } else {
+                resultUrl = pred.output.toString();
+            }
 
-        if (resultUrl) {
-            // Upload to Supabase Storage (to persist it)
-            const imageResponse = await fetch(resultUrl);
-            const imageBlob = await imageResponse.blob();
-            const fileName = `variations/${id}-${pred.seed}.png`;
+            if (resultUrl) {
+                // Upload to Supabase Storage (to persist it)
+                const imageResponse = await fetch(resultUrl);
+                const imageBlob = await imageResponse.blob();
+                const fileName = `variations/${id}-${pred.seed}.png`;
 
-            const { error: uploadError } = await supabase.storage
-                .from("generations")
-                .upload(fileName, imageBlob, { contentType: "image/png", upsert: true });
+                const { error: uploadError } = await supabase.storage
+                    .from("generations")
+                    .upload(fileName, imageBlob, { contentType: "image/png", upsert: true });
 
-            if (!uploadError) {
-                const publicUrl = supabase.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
+                if (!uploadError) {
+                    const publicUrl = supabase.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
 
-                // Save to DB
-                // We need the original generation to get user_id, style, room_type
-                const { data: original } = await supabase.from("generations").select("*").eq("id", id).single();
+                    // Save to DB
+                    // We need the original generation to get user_id, style, room_type
+                    const { data: original } = await supabase.from("generations").select("*").eq("id", id).single();
 
-                if (original) {
-                    const { data: newGen } = await supabase.from("generations").insert({
-                        user_id: original.user_id,
-                        image_url: publicUrl,
-                        prompt: finalPrompt, // Use the prompt from the scope
-                        style: original.style, // Keep original style
-                        room_type: original.room_type, // Keep original room_type
-                        parent_id: id,
-                        seed: pred.seed,
-                        is_variation: true
-                    }).select().single();
+                    if (original) {
+                        const { data: newGen } = await supabase.from("generations").insert({
+                            user_id: original.user_id,
+                            image_url: publicUrl,
+                            prompt: finalPrompt, // Use the prompt from the scope
+                            style: original.style, // Keep original style
+                            room_type: original.room_type, // Keep original room_type
+                            parent_id: id,
+                            seed: pred.seed,
+                            is_variation: true
+                        }).select().single();
 
-                    if (newGen) variations.push(newGen);
+                        if (newGen) variations.push(newGen);
+                    }
                 }
             }
         }
-    }
 
         return NextResponse.json({ variations });
 
-} catch (error) {
-    console.error("Variation Error:", error);
-    return NextResponse.json({ error: "Failed to generate variations" }, { status: 500 });
-}
+    } catch (error) {
+        console.error("Variation Error:", error);
+        return NextResponse.json({ error: "Failed to generate variations" }, { status: 500 });
+    }
 }
