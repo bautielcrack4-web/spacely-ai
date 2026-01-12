@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 interface PaywallModalProps {
     isOpen: boolean;
@@ -151,8 +152,13 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                             <div className="flex items-center gap-3">
                                 <div className="flex -space-x-2">
                                     {[1, 2, 3, 4].map(i => (
-                                        <div key={i} className={`w-8 h-8 rounded-full border-2 border-purple-900 bg-gray-300 relative overflow-hidden`}>
-                                            <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400" />
+                                        <div key={i} className="w-10 h-10 rounded-full border-2 border-purple-900 relative overflow-hidden">
+                                            <Image
+                                                src={`/testimonials/user${i}.jpg`}
+                                                alt={`Happy customer ${i}`}
+                                                fill
+                                                className="object-cover"
+                                            />
                                         </div>
                                     ))}
                                 </div>
