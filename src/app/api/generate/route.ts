@@ -105,8 +105,6 @@ export async function POST(request: Request) {
             }
         );
 
-        console.log("Replicate Output Type:", typeof output);
-
         let finalImageUrl = "";
 
         if (output instanceof ReadableStream) {
