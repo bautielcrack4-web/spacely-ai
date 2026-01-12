@@ -92,6 +92,7 @@ export function Hero() {
                                 original={beforeUrl}
                                 modified={afterUrl}
                                 className="w-full h-full"
+                                priority={true}
                             />
                         </div>
 

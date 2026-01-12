@@ -10,6 +10,16 @@ const replicate = new Replicate({
 export async function POST(request: Request) {
     try {
         const { imageUrl, prompt } = await request.json();
+
+        // Input Validation
+        if (!imageUrl || typeof imageUrl !== 'string' || !imageUrl.startsWith('data:image/')) {
+            return NextResponse.json({ error: "Valid image is required" }, { status: 400 });
+        }
+
+        if (!prompt || typeof prompt !== 'string' || prompt.length < 3) {
+            return NextResponse.json({ error: "Prompt is required (min 3 chars)" }, { status: 400 });
+        }
+
         const cookieStore = await cookies();
 
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

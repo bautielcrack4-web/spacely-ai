@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { SpotlightEffect } from "@/components/ui/spotlight-effect";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Toaster } from "sonner";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,13 +38,15 @@ export default function RootLayout({
         {/* SpotlightEffect removed as it's for dark mode usually */}
         {/* <SpotlightEffect /> */}
         <div className="relative z-0">
-          <LanguageProvider>
-            <Navbar />
-            <main className="min-h-screen">
-              {children}
-            </main>
-            <Toaster richColors position="bottom-right" />
-          </LanguageProvider>
+          <ErrorBoundary>
+            <LanguageProvider>
+              <Navbar />
+              <main className="min-h-screen">
+                {children}
+              </main>
+              <Toaster richColors position="bottom-right" />
+            </LanguageProvider>
+          </ErrorBoundary>
         </div>
       </body>
     </html>

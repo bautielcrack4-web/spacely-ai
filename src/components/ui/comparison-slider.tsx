@@ -8,9 +8,10 @@ interface ComparisonSliderProps {
     original: string;
     modified: string;
     className?: string;
+    priority?: boolean;
 }
 
-export function ComparisonSlider({ original, modified, className }: ComparisonSliderProps) {
+export function ComparisonSlider({ original, modified, className, priority }: ComparisonSliderProps) {
     const [sliderPosition, setSliderPosition] = useState(50);
     const [isDragging, setIsDragging] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -70,6 +71,7 @@ export function ComparisonSlider({ original, modified, className }: ComparisonSl
             <img
                 src={modified}
                 alt="After"
+                loading={priority ? "eager" : "lazy"}
                 className="absolute inset-0 w-full h-full object-contain pointer-events-none"
             />
 
@@ -81,6 +83,7 @@ export function ComparisonSlider({ original, modified, className }: ComparisonSl
                 <img
                     src={original}
                     alt="Before"
+                    loading={priority ? "eager" : "lazy"}
                     className="absolute inset-0 w-full h-full object-contain"
                 />
             </div>

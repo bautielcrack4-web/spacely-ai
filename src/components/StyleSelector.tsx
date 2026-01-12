@@ -3,17 +3,8 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
-
-export const STYLES = [
-    { id: "Modern Minimalist", label: "Minimalist", color: "bg-gray-100" },
-    { id: "Industrial", label: "Industrial", color: "bg-stone-200" },
-    { id: "Bohemian", label: "Bohemian", color: "bg-amber-100" },
-    { id: "Scandinavian", label: "Scandi", color: "bg-neutral-100" },
-    { id: "Cyberpunk", label: "Cyberpunk", color: "bg-purple-900 text-white" },
-    { id: "Tropical", label: "Tropical", color: "bg-emerald-100" },
-    { id: "Japanese Zen", label: "Zen", color: "bg-orange-50" },
-    { id: "Mid-Century Modern", label: "Mid-Century", color: "bg-yellow-100" },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
+import { STYLES } from "@/lib/constants";
 
 interface StyleSelectorProps {
     selectedStyle: string;
@@ -21,6 +12,7 @@ interface StyleSelectorProps {
 }
 
 export function StyleSelector({ selectedStyle, onSelect }: StyleSelectorProps) {
+    const { t } = useLanguage();
     return (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {STYLES.map((style) => (
@@ -29,16 +21,30 @@ export function StyleSelector({ selectedStyle, onSelect }: StyleSelectorProps) {
                     onClick={() => onSelect(style.id)}
                     className={cn(
                         "relative h-20 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-300 overflow-hidden group",
-                        style.color,
                         selectedStyle === style.id
                             ? "ring-2 ring-purple-600 scale-[1.02] shadow-lg shadow-purple-200/50"
-                            : "hover:scale-[1.02] hover:shadow-md border border-transparent"
+                            : "hover:scale-[1.02] hover:shadow-md border border-gray-100"
                     )}
                 >
+                    {/* Background Image */}
+                    <img
+                        src={style.image}
+                        alt={style.label}
+                        className={cn(
+                            "absolute inset-0 w-full h-full object-cover transition-all duration-500",
+                            selectedStyle === style.id ? "scale-110 blur-[1px] opacity-40" : "opacity-20 group-hover:opacity-40 group-hover:scale-110"
+                        )}
+                    />
+
+                    {/* Overlay for readability */}
+                    <div className={cn(
+                        "absolute inset-0 bg-white/20 transition-opacity",
+                        selectedStyle === style.id ? "opacity-0" : "opacity-100"
+                    )} />
+
                     <span className={cn(
-                        "z-10 relative",
-                        style.id === "Cyberpunk" ? "text-white" : "text-gray-900"
-                    )}>{style.label}</span>
+                        "z-10 relative text-gray-900 group-hover:scale-105 transition-transform",
+                    )}>{t(style.labelKey)}</span>
 
                     {/* Selected Indicator */}
                     {selectedStyle === style.id && (

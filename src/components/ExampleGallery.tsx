@@ -20,7 +20,7 @@ interface Example {
     badge: string | null;
 }
 
-const CATEGORIES = (t: any) => [
+const CATEGORIES = (t: (key: string) => string) => [
     { id: 'all', label: t('gallery.filter.all') },
     { id: 'kitchen', label: t('gallery.filter.kitchens') },
     { id: 'bedroom', label: t('gallery.filter.bedrooms') },
@@ -103,7 +103,7 @@ export function ExampleGallery() {
 
                 {/* Filters */}
                 <div className="flex flex-wrap justify-center gap-2 mb-12">
-                    {CATEGORIES(t).map((cat: any) => (
+                    {CATEGORIES(t).map((cat) => (
                         <Button
                             key={cat.id}
                             variant={filter === cat.id ? "default" : "outline"}
@@ -136,11 +136,13 @@ export function ExampleGallery() {
                                     <img
                                         src={item.before_url}
                                         alt="Before"
+                                        loading="lazy"
                                         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
                                     />
                                     <img
                                         src={item.after_url}
                                         alt="After"
+                                        loading="lazy"
                                         className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                                     />
 
