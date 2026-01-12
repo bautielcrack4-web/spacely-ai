@@ -15,10 +15,6 @@ export function Navbar() {
     const pathname = usePathname();
     const { language, setLanguage, t } = useLanguage();
 
-    if (pathname.startsWith('/dashboard') || pathname.startsWith('/login')) {
-        return null;
-    }
-
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
@@ -26,6 +22,10 @@ export function Navbar() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    if (pathname.startsWith('/dashboard') || pathname.startsWith('/login')) {
+        return null;
+    }
 
     const navLinks = [
         { href: "/dashboard", label: t("nav.render"), icon: <Sparkles className="w-3.5 h-3.5" /> },
@@ -90,7 +90,7 @@ export function Navbar() {
                         </div>
 
                         {/* PRO Button */}
-                        <Link href="/pricing">
+                        <Link href="/#pricing">
                             <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white font-bold px-6 py-2 rounded-xl shadow-lg shadow-purple-200 hover:scale-[1.02] transition-all duration-200 flex items-center gap-2 border-none h-11">
                                 <Crown className="w-4 h-4 fill-white" />
                                 {t("nav.upgrade")}
@@ -129,7 +129,7 @@ export function Navbar() {
                             </Link>
                         ))}
                         <div className="pt-4 border-t border-gray-100">
-                            <Link href="/pricing" onClick={() => setMobileMenuOpen(false)}>
+                            <Link href="/#pricing" onClick={() => setMobileMenuOpen(false)}>
                                 <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-6 rounded-xl border-none">
                                     <Crown className="w-4 h-4 fill-white mr-2" />
                                     {t("nav.upgrade")}
