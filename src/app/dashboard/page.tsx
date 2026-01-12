@@ -76,11 +76,12 @@ export default function DashboardPage() {
             if (file && !base64data.startsWith('data:')) {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
-                await new Promise(resolve => {
+                await new Promise((resolve, reject) => {
                     reader.onloadend = () => {
                         base64data = reader.result as string;
                         resolve(true);
                     };
+                    reader.onerror = () => reject(new Error("Failed to read file"));
                 });
             }
 
@@ -107,7 +108,7 @@ export default function DashboardPage() {
 
                 if (!res.ok) {
                     const error = await res.json();
-                    throw new Error(error.error || "Generation failed");
+                    throw new Error(error.details || error.error || "Generation failed");
                 }
 
                 const data = await res.json();
@@ -138,6 +139,11 @@ export default function DashboardPage() {
 
             <DesignTool
                 onGenerate={(file, prompt, style, currentPreview) => handleGenerate(file, prompt, style, currentPreview)}
+                onClear={() => {
+                    setGeneratedImage(null);
+                    setInitialState(null);
+                    localStorage.removeItem('pendingDesign');
+                }}
                 loading={loading}
                 generatedImage={generatedImage}
                 initialState={initialState}

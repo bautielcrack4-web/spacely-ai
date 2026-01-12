@@ -10,12 +10,13 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface DesignToolProps {
     onGenerate: (image: File | null, prompt: string, style: string, currentPreview?: string) => Promise<void>;
+    onClear?: () => void;
     loading: boolean;
     generatedImage: string | null;
     initialState?: { preview: string, prompt: string, style: string } | null;
 }
 
-export function DesignTool({ onGenerate, loading, generatedImage, initialState }: DesignToolProps) {
+export function DesignTool({ onGenerate, onClear, loading, generatedImage, initialState }: DesignToolProps) {
     const [file, setFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [prompt, setPrompt] = useState("");
@@ -35,6 +36,8 @@ export function DesignTool({ onGenerate, loading, generatedImage, initialState }
             const selected = e.target.files[0];
             setFile(selected);
             setPreview(URL.createObjectURL(selected));
+            // Reset input so the same file selection triggers again
+            e.target.value = "";
         }
     };
 
@@ -45,6 +48,13 @@ export function DesignTool({ onGenerate, loading, generatedImage, initialState }
             setFile(selected);
             setPreview(URL.createObjectURL(selected));
         }
+    };
+
+    const handleClearLocal = () => {
+        setFile(null);
+        setPreview(null);
+        setPrompt("");
+        onClear?.();
     };
 
     return (
@@ -166,7 +176,14 @@ export function DesignTool({ onGenerate, loading, generatedImage, initialState }
                             {/* Download / Action Bar */}
                             <div className="absolute top-6 right-6 flex gap-3 z-30">
                                 <Button
-                                    className="bg-white/90 backdrop-blur text-gray-900 hover:bg-white border-0 shadow-lg rounded-xl h-10 px-4 font-bold text-xs"
+                                    variant="outline"
+                                    className="bg-white/90 backdrop-blur text-gray-600 hover:text-red-600 border-0 shadow-lg rounded-xl h-10 px-4 font-bold text-xs"
+                                    onClick={handleClearLocal}
+                                >
+                                    Start New
+                                </Button>
+                                <Button
+                                    className="bg-purple-600 text-white hover:bg-purple-700 border-0 shadow-lg rounded-xl h-10 px-4 font-bold text-xs"
                                     onClick={() => {
                                         const a = document.createElement('a');
                                         a.href = generatedImage;
@@ -174,17 +191,25 @@ export function DesignTool({ onGenerate, loading, generatedImage, initialState }
                                         a.click();
                                     }}
                                 >
-                                    Download
+                                    Download Design
                                 </Button>
                             </div>
                         </div>
                     </div>
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-gray-300 gap-6">
-                        <div className="w-24 h-24 rounded-full bg-white shadow-sm flex items-center justify-center">
-                            <ImageIcon className="w-10 h-10 opacity-20" />
+                        <div className="w-24 h-24 rounded-full bg-white shadow-sm flex items-center justify-center relative group">
+                            <ImageIcon className="w-10 h-10 opacity-20 group-hover:opacity-40 transition-opacity" />
+                            {preview && (
+                                <Button
+                                    onClick={handleClearLocal}
+                                    className="absolute -top-2 -right-2 w-8 h-8 rounded-full p-0 bg-red-500 hover:bg-red-600 text-white border-0 shadow-lg"
+                                >
+                                    ×
+                                </Button>
+                            )}
                         </div>
-                        <p className="font-medium text-lg">Your masterpiece will appear here</p>
+                        <p className="font-medium text-lg text-gray-400">Your masterpiece will appear here</p>
                     </div>
                 )}
 

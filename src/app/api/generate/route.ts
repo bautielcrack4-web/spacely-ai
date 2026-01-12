@@ -43,7 +43,10 @@ export async function POST(request: Request) {
 
         if (authError || !user) {
             console.error("Auth Error in API:", authError);
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({
+                error: "Unauthorized",
+                details: authError?.message || "No user found in session. Please log out and back in."
+            }, { status: 401 });
         }
 
         const session = { user }; // For compatibility with rest of code
