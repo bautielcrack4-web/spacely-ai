@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import Replicate from "replicate";
 
-export const maxDuration = 60;
 const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN,
 });
@@ -18,7 +17,7 @@ export async function POST(request: Request) {
     );
 
     try {
-        const { roomImage, furnitureImage, prompt, userId } = await req.json();
+        const { roomImage, furnitureImage, prompt, userId } = await request.json();
 
         if (!roomImage || !furnitureImage) {
             return NextResponse.json({ error: "Missing images" }, { status: 400 });

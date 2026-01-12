@@ -2,26 +2,23 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import Replicate from "replicate";
 
-export const maxDuration = 60;
 
 const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN,
 });
 
 // Move initialization inside handler to avoid build-time errors
-// const supabase = createClient(
-//     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-//     process.env.SUPABASE_SERVICE_ROLE_KEY!
-// );
+export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
     const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
     try {
-        const { image, palette, prompt, userId } = await req.json();
+        const { image, palette, prompt, userId } = await request.json();
 
         if (!image) {
             return NextResponse.json({ error: "Missing image" }, { status: 400 });

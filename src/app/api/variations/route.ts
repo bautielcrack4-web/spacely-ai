@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import Replicate from "replicate";
 
-export const maxDuration = 60; // Allow 60 seconds for processing
 const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN,
 });
@@ -18,7 +17,7 @@ export async function POST(request: Request) {
     );
 
     try {
-        const { imageUrl, originalPrompt, id } = await req.json();
+        const { imageUrl, originalPrompt, id } = await request.json();
 
         if (!imageUrl || !id) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
