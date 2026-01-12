@@ -1,13 +1,14 @@
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Sparkles, Coins } from "lucide-react";
+import { Sparkles, Coins, Crown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 export function DashboardHeader() {
     const { t } = useLanguage();
     const [credits, setCredits] = useState<number | null>(null);
+    const [isPro, setIsPro] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -15,10 +16,13 @@ export function DashboardHeader() {
             if (session) {
                 const { data } = await supabase
                     .from('profiles')
-                    .select('credits')
+                    .select('credits, subscription_status')
                     .eq('id', session.user.id)
                     .single();
-                if (data) setCredits(data.credits);
+                if (data) {
+                    setCredits(data.credits);
+                    setIsPro(data.subscription_status === 'active');
+                }
             }
         };
         fetchProfile();
@@ -36,15 +40,25 @@ export function DashboardHeader() {
             </div>
 
             <div className="flex items-center gap-4">
-                {credits !== null && (
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-white shadow-sm border border-gray-100">
-                        <div className="w-6 h-6 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center">
-                            <Coins className="w-3.5 h-3.5" />
-                        </div>
-                        <span className="text-sm font-bold text-gray-700">
-                            {credits} {credits === 1 ? 'Credit' : 'Credits'}
+                {isPro ? (
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-200">
+                        <Crown className="w-4 h-4 text-white fill-white" />
+                        <span className="text-sm font-bold text-white uppercase tracking-wider">
+                            PRO Member
                         </span>
                     </div>
+                ) : (
+                    credits !== null && (
+                        /* Credits exist but hidden from UI per user request */
+                        <div className="hidden items-center gap-2 px-4 py-2 rounded-2xl bg-white shadow-sm border border-gray-100">
+                            <div className="w-6 h-6 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center">
+                                <Coins className="w-3.5 h-3.5" />
+                            </div>
+                            <span className="text-sm font-bold text-gray-700">
+                                {credits} {credits === 1 ? 'Credit' : 'Credits'}
+                            </span>
+                        </div>
+                    )
                 )}
             </div>
         </header>

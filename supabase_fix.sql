@@ -59,3 +59,22 @@ begin
   where id = user_id and credits > 0;
 end;
 $$ language plpgsql security definer;
+
+-- 6. SUBSCRIPTION UPDATE FUNCTION
+-- This allows the webhook to update status and credits bypassing RLS
+create or replace function update_subscription(
+    p_user_id uuid,
+    p_status text,
+    p_credits int,
+    p_customer_id text
+)
+returns void as $$
+begin
+  update public.profiles
+  set 
+    subscription_status = p_status,
+    credits = p_credits,
+    stripe_customer_id = p_customer_id
+  where id = p_user_id;
+end;
+$$ language plpgsql security definer;

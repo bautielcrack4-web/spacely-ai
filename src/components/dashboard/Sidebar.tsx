@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import {
     CreditCard,
     HelpCircle,
@@ -26,6 +27,22 @@ export function Sidebar() {
     const router = useRouter();
     const { openPaywall } = usePaywall();
     const { t, language, setLanguage } = useLanguage();
+    const [isPro, setIsPro] = useState(false);
+
+    useEffect(() => {
+        const checkPro = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                const { data } = await supabase
+                    .from('profiles')
+                    .select('subscription_status')
+                    .eq('id', session.user.id)
+                    .single();
+                setIsPro(data?.subscription_status === 'active');
+            }
+        };
+        checkPro();
+    }, []);
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -47,6 +64,9 @@ export function Sidebar() {
                         <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain" />
                     </div>
                     <span>Spacely AI</span>
+                    {isPro && (
+                        <span className="ml-2 px-2 py-0.5 rounded-md bg-gradient-to-r from-purple-600 to-pink-600 text-[10px] text-white">PRO</span>
+                    )}
                 </div>
             </div>
 
@@ -76,13 +96,15 @@ export function Sidebar() {
 
             {/* Bottom Actions */}
             <div className="px-4 py-6 space-y-6 border-t border-gray-50">
-                <Button
-                    onClick={openPaywall}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-95 text-white font-bold h-12 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-purple-200"
-                >
-                    <Crown className="w-4 h-4 fill-white" />
-                    {t("nav.upgrade")}
-                </Button>
+                {!isPro && (
+                    <Button
+                        onClick={openPaywall}
+                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-95 text-white font-bold h-12 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-purple-200"
+                    >
+                        <Crown className="w-4 h-4 fill-white" />
+                        {t("nav.upgrade")}
+                    </Button>
+                )}
 
                 <div className="flex items-center justify-between px-2">
                     <div className="flex gap-4">
