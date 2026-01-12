@@ -38,7 +38,6 @@ export async function POST(req: Request) {
                 input: {
                     images: [roomImage, furnitureImage],
                     prompt: finalPrompt,
-                    aspect_ratio: "match_input_image",
                 }
             }
         ).catch(err => {

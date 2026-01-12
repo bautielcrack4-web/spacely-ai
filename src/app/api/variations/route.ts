@@ -46,7 +46,6 @@ export async function POST(req: Request) {
                             images: [imageUrl],
                             prompt: finalPrompt,
                             seed: seed,
-                            aspect_ratio: "match_input_image",
                         }
                     }
                 );
