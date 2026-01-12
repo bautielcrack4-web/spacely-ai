@@ -14,6 +14,7 @@ import {
     Brush,
     Maximize2,
     Armchair,
+    Palette,
     LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ export function Sidebar() {
     const navItems = [
         { icon: ImageIcon, label: t("nav.render"), href: "/dashboard", active: pathname === "/dashboard" },
         { icon: Armchair, label: t("nav.furniture"), href: "/dashboard/furniture", active: pathname === "/dashboard/furniture" },
+        { icon: Palette, label: t("nav.color"), href: "/dashboard/color", active: pathname === "/dashboard/color" },
         { icon: CreditCard, label: t("nav.pricing"), href: "/#pricing", active: false },
         { icon: HelpCircle, label: t("nav.faq"), href: "/#faq", active: false },
     ];
