@@ -35,6 +35,8 @@ export async function POST(req: Request) {
         const seeds = Array.from({ length: 4 }, () => Math.floor(Math.random() * 1000000));
 
         // 3. Call Replicate in Parallel
+        const finalPrompt = "Create a variation of this interior design with similar style but slightly different details";
+
         const predictions = await Promise.all(
             seeds.map(async (seed) => {
                 const output = await replicate.run(
@@ -42,9 +44,9 @@ export async function POST(req: Request) {
                     {
                         input: {
                             images: [imageUrl],
-                            prompt: "Create a variation of this interior design with similar style but slightly different details",
+                            prompt: finalPrompt,
                             seed: seed,
-                            aspect_ratio: "custom", // Maintain aspect ratio if possible or use standard
+                            aspect_ratio: "match_input_image",
                         }
                     }
                 );
@@ -81,9 +83,9 @@ export async function POST(req: Request) {
                         const { data: newGen } = await supabase.from("generations").insert({
                             user_id: original.user_id,
                             image_url: publicUrl,
-                            prompt: originalPrompt,
-                            style: original.style,
-                            room_type: original.room_type,
+                            prompt: finalPrompt, // Use the prompt from the scope
+                            style: original.style, // Keep original style
+                            room_type: original.room_type, // Keep original room_type
                             parent_id: id,
                             seed: pred.seed,
                             is_variation: true

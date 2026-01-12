@@ -43,7 +43,7 @@ export async function POST(req: Request) {
                 input: {
                     images: [image],
                     prompt: finalPrompt,
-                    aspect_ratio: "custom",
+                    aspect_ratio: "match_input_image",
                 }
             }
         );

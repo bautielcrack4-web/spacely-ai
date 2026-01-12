@@ -33,12 +33,10 @@ export async function POST(req: Request) {
             "prunaai/p-image-edit:c5d2d0b6",
             {
                 input: {
-                    images: [roomImage, furnitureImage], // Order matters: 1=Room, 2=Item
+                    images: [roomImage, furnitureImage],
                     prompt: finalPrompt,
-                    reference_image: "1", // Room is the base
-                    aspect_ratio: "custom",
-                    // We can add logic to detect dimensions from base64 if needed, 
-                    // but p-image-edit usually handles it well.
+                    // reference_image: "1", // Removing this as it might be causing issues if not standard
+                    aspect_ratio: "match_input_image", // changed from custom
                 }
             }
         );
