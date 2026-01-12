@@ -70,201 +70,194 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
                 onClick={onClose}
             >
                 <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.9, opacity: 0 }}
+                    initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    exit={{ scale: 0.95, opacity: 0, y: 20 }}
                     transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                    className="relative w-full max-w-md bg-gradient-to-b from-white to-gray-50/80 rounded-3xl shadow-2xl max-h-[95vh] overflow-hidden"
+                    className="relative w-full max-w-5xl bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]"
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Close Button */}
                     <button
                         onClick={onClose}
-                        className="absolute right-4 top-4 z-10 rounded-full p-1.5 bg-white/80 backdrop-blur-sm text-gray-600 hover:bg-white transition-all shadow-sm"
+                        className="absolute right-6 top-6 z-20 rounded-full p-2 bg-black/5 hover:bg-black/10 transition-colors"
                     >
-                        <X className="h-5 w-5" />
+                        <X className="h-5 w-5 text-gray-500" />
                     </button>
 
-                    {/* Scrollable Content */}
-                    <div className="overflow-y-auto max-h-[95vh] pb-6">
-                        {/* Hero Section */}
-                        <div className="relative pt-12 pb-8 px-6 text-center bg-gradient-to-br from-purple-600 via-purple-500 to-pink-500 text-white">
-                            {/* Decorative Glow */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                    {/* LEFT SIDE: Hero & Value Prop */}
+                    <div className="w-full md:w-5/12 bg-gradient-to-br from-indigo-900 via-purple-900 to-fuchsia-900 text-white p-8 md:p-12 flex flex-col relative overflow-hidden">
+                        {/* Abstract Background Shapes */}
+                        <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+                            <div className="absolute top-[-50%] left-[-20%] w-[500px] h-[500px] rounded-full bg-purple-500 blur-[80px]" />
+                            <div className="absolute bottom-[-20%] right-[-20%] w-[300px] h-[300px] rounded-full bg-pink-500 blur-[60px]" />
+                        </div>
 
+                        <div className="relative z-10 flex-1 flex flex-col justify-center">
                             <motion.div
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.2 }}
-                                className="relative z-10"
                             >
-                                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
+                                <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full mb-8 border border-white/20">
                                     <Crown className="w-4 h-4 text-yellow-300 fill-yellow-300" />
-                                    <span className="text-sm font-bold uppercase tracking-wider">Go Premium</span>
+                                    <span className="text-xs font-bold uppercase tracking-widest text-white/90">Go Premium</span>
                                 </div>
 
-                                <h2 className="text-3xl font-black mb-3 leading-tight">
-                                    Get <span className="text-yellow-300">UNLIMITED</span><br />
-                                    Designs Now 🚀
+                                <h2 className="text-4xl md:text-5xl font-black mb-6 leading-[1.1] tracking-tight">
+                                    Unlock <br />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-400">UNLIMITED</span> <br />
+                                    Potential
                                 </h2>
 
-                                <p className="text-white/90 text-base font-medium max-w-xs mx-auto">
-                                    Join 12,000+ users creating stunning interiors without limits
+                                <p className="text-lg text-purple-100 font-medium mb-10 leading-relaxed opacity-90">
+                                    Join 12,000+ designers creating stunning interiors without limits.
                                 </p>
                             </motion.div>
+
+                            {/* Features List */}
+                            <div className="space-y-5">
+                                {[
+                                    { icon: Zap, text: "Unlimited generations", sub: "Create without boundaries" },
+                                    { icon: Sparkles, text: "All 32+ premium styles", sub: "Access exclusive content" },
+                                    { icon: Crown, text: "4K Ultra-HD exports", sub: "Print-ready quality" },
+                                    { icon: Check, text: "No watermarks", sub: "Professional branding" },
+                                ].map((feature, i) => (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ x: -20, opacity: 0 }}
+                                        animate={{ x: 0, opacity: 1 }}
+                                        transition={{ delay: 0.4 + i * 0.1 }}
+                                        className="flex items-center gap-4 group"
+                                    >
+                                        <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/20 transition-colors border border-white/10">
+                                            <feature.icon className="w-6 h-6 text-yellow-300" />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-base">{feature.text}</p>
+                                            <p className="text-sm text-purple-200">{feature.sub}</p>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
                         </div>
 
-                        {/* Features - iOS Style */}
-                        <div className="px-6 py-6 space-y-3">
-                            {[
-                                { icon: Zap, text: "UNLIMITED designs every day", highlight: "UNLIMITED" },
-                                { icon: Sparkles, text: "All 32+ premium styles", highlight: "32+" },
-                                { icon: Crown, text: "4K quality exports", highlight: "4K" },
-                                { icon: Check, text: "No watermarks ever", highlight: "No watermarks" },
-                                { icon: Users, text: "Priority support 24/7", highlight: "Priority" },
-                            ].map((feature, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ x: -20, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    transition={{ delay: 0.3 + i * 0.05 }}
-                                    className="flex items-center gap-4 p-3 rounded-2xl bg-white/60 backdrop-blur-sm border border-purple-100/50"
-                                >
-                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
-                                        <feature.icon className="w-5 h-5 text-white" />
-                                    </div>
-                                    <p className="text-gray-800 font-semibold text-sm">
-                                        {feature.text.split(feature.highlight)[0]}
-                                        <span className="text-purple-600">{feature.highlight}</span>
-                                        {feature.text.split(feature.highlight)[1]}
-                                    </p>
-                                </motion.div>
-                            ))}
+                        {/* Trust Footer */}
+                        <div className="mt-12 pt-8 border-t border-white/10 relative z-10">
+                            <div className="flex items-center gap-3">
+                                <div className="flex -space-x-2">
+                                    {[1, 2, 3, 4].map(i => (
+                                        <div key={i} className={`w-8 h-8 rounded-full border-2 border-purple-900 bg-gray-300 relative overflow-hidden`}>
+                                            <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-400" />
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="text-sm text-purple-100">
+                                    <span className="font-bold text-white">4.9/5</span> from 2,000+ reviews
+                                </div>
+                            </div>
                         </div>
+                    </div>
 
-                        {/* Pricing Plans - iOS Card Style */}
-                        <div className="px-6 space-y-3 mb-6">
-                            <p className="text-center text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">
-                                Choose Your Plan
-                            </p>
+                    {/* RIGHT SIDE: Plans & Checkout */}
+                    <div className="w-full md:w-7/12 bg-gray-50 p-6 md:p-10 flex flex-col overflow-y-auto">
+                        <div className="max-w-md mx-auto w-full flex-1 flex flex-col justify-center">
+                            <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">Choose the plan that fits you</h3>
 
-                            {plans.map((plan, index) => (
-                                <motion.button
-                                    key={plan.id}
-                                    initial={{ y: 20, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    transition={{ delay: 0.6 + index * 0.1 }}
-                                    onClick={() => setSelectedPlan(plan.id)}
-                                    className={cn(
-                                        "w-full relative rounded-2xl p-4 transition-all duration-300 border-2",
-                                        selectedPlan === plan.id
-                                            ? "border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg shadow-purple-200/50 scale-[1.02]"
-                                            : "border-gray-200 bg-white hover:border-purple-300"
-                                    )}
-                                >
-                                    {/* Popular Badge */}
-                                    {plan.popular && (
-                                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-lg">
-                                            ⭐ Most Popular
-                                        </div>
-                                    )}
-
-                                    {/* Savings Badge */}
-                                    {plan.savings && (
-                                        <div className="absolute -top-2.5 -right-2 bg-green-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">
-                                            {plan.savings}
-                                        </div>
-                                    )}
-
-                                    <div className="flex items-center justify-between">
-                                        <div className="text-left flex-1">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <h3 className="text-base font-black text-gray-900 uppercase tracking-tight">
-                                                    {plan.name} <span className="text-purple-600">UNLIMITED</span>
-                                                </h3>
-                                            </div>
-                                            {plan.subtitle && (
-                                                <p className="text-xs text-gray-500 font-semibold">{plan.subtitle}</p>
-                                            )}
-                                        </div>
-
-                                        <div className="text-right">
-                                            <div className="flex items-baseline gap-1">
-                                                <span className="text-2xl font-black text-gray-900">{plan.price}</span>
-                                                <span className="text-sm text-gray-500 font-medium">{plan.period}</span>
-                                            </div>
-                                        </div>
-
-                                        {/* Radio Indicator */}
+                            <div className="space-y-4 mb-8">
+                                {plans.map((plan, index) => (
+                                    <motion.button
+                                        key={plan.id}
+                                        initial={{ y: 20, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        transition={{ delay: 0.5 + index * 0.1 }}
+                                        onClick={() => setSelectedPlan(plan.id)}
+                                        className={cn(
+                                            "w-full relative group rounded-2xl p-0.5 transition-all duration-300",
+                                            selectedPlan === plan.id ? "scale-[1.02] shadow-xl shadow-purple-200" : "hover:scale-[1.01]"
+                                        )}
+                                    >
                                         <div className={cn(
-                                            "ml-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
-                                            selectedPlan === plan.id
-                                                ? "border-purple-500 bg-purple-500"
-                                                : "border-gray-300"
-                                        )}>
-                                            {selectedPlan === plan.id && (
-                                                <div className="w-2.5 h-2.5 rounded-full bg-white" />
+                                            "absolute inset-0 rounded-2xl bg-gradient-to-r transition-opacity duration-300",
+                                            selectedPlan === plan.id ? "from-purple-500 to-pink-500 opacity-100" : "opacity-0"
+                                        )} />
+
+                                        <div className="relative bg-white rounded-[14px] p-5 h-full flex items-center justify-between">
+                                            {/* Popular Badge */}
+                                            {plan.popular && (
+                                                <div className="absolute -top-3 left-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md z-10">
+                                                    Most Popular
+                                                </div>
                                             )}
+
+                                            <div className="flex items-center gap-4">
+                                                <div className={cn(
+                                                    "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors",
+                                                    selectedPlan === plan.id ? "border-purple-500" : "border-gray-200"
+                                                )}>
+                                                    {selectedPlan === plan.id && <div className="w-3 h-3 rounded-full bg-purple-500" />}
+                                                </div>
+                                                <div className="text-left">
+                                                    <div className="flex items-center gap-2">
+                                                        <h4 className="font-bold text-gray-900">{plan.name}</h4>
+                                                        {plan.savings && (
+                                                            <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full">{plan.savings}</span>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-sm text-gray-500">{plan.subtitle || "Cancel anytime"}</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="text-right">
+                                                <div className="font-black text-xl text-gray-900">{plan.price}</div>
+                                                <div className="text-xs text-gray-400 font-medium">{plan.period}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </motion.button>
-                            ))}
-                        </div>
+                                    </motion.button>
+                                ))}
+                            </div>
 
-                        {/* CTA Button - iOS Style */}
-                        <motion.div
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.9 }}
-                            className="px-6 space-y-4"
-                        >
-                            <Button
-                                className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 hover:opacity-90 text-white font-black text-lg py-7 rounded-2xl shadow-xl shadow-purple-300/50 transition-all active:scale-[0.98]"
-                                onClick={() => handleCheckout(selectedPlan)}
-                                disabled={!!loading}
+                            <motion.div
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ delay: 0.8 }}
+                                className="space-y-6"
                             >
-                                {loading ? (
-                                    <span className="flex items-center gap-2">
-                                        <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
-                                        Processing...
-                                    </span>
-                                ) : (
-                                    <span className="flex items-center justify-center gap-2">
-                                        <Lock className="w-5 h-5" />
-                                        START FREE TRIAL
-                                    </span>
-                                )}
-                            </Button>
+                                <Button
+                                    className="w-full bg-gray-900 hover:bg-black text-white font-bold text-lg h-16 rounded-2xl shadow-lg shadow-gray-200 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
+                                    onClick={() => handleCheckout(selectedPlan)}
+                                    disabled={!!loading}
+                                >
+                                    {loading ? (
+                                        "Processing..."
+                                    ) : (
+                                        <>
+                                            <span>Continue</span>
+                                            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                                                <Zap className="w-4 h-4 text-yellow-300 fill-yellow-300" />
+                                            </div>
+                                        </>
+                                    )}
+                                </Button>
 
-                            {/* Trust Indicators */}
-                            <div className="space-y-2">
-                                <p className="text-center text-xs text-gray-600 font-semibold">
-                                    ✓ Cancel anytime • No commitments
-                                </p>
-                                <p className="text-center text-xs text-gray-500">
-                                    🔒 Secure payment with Lemon Squeezy
-                                </p>
-                            </div>
+                                <div className="flex items-center justify-center gap-2 text-xs text-gray-400 font-medium pb-2">
+                                    <Lock className="w-3 h-3" />
+                                    Secured by Lemon Squeezy
+                                </div>
 
-                            {/* Money Back Guarantee - High Conversion Element */}
-                            <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-3 text-center">
-                                <p className="text-xs font-black text-green-700 uppercase tracking-wide">
-                                    💰 7-Day Money-Back Guarantee
-                                </p>
-                                <p className="text-[10px] text-green-600 font-medium mt-1">
-                                    Not satisfied? Get a full refund, no questions asked
-                                </p>
-                            </div>
-
-                            {/* Restore Purchases */}
-                            <button className="w-full text-gray-400 text-xs hover:text-gray-600 transition-colors font-medium">
-                                Restore Purchases
-                            </button>
-                        </motion.div>
+                                <div className="bg-green-50 rounded-xl p-4 flex items-center justify-center gap-3 border border-green-100">
+                                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-xl">💰</div>
+                                    <div className="text-left">
+                                        <p className="text-green-800 font-bold text-xs uppercase">100% Money-back guarantee</p>
+                                        <p className="text-green-600 text-[10px] leading-tight">Try risk-free for 7 days. If you're not happy, you get a full refund.</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </div>
                     </div>
                 </motion.div>
             </motion.div>
