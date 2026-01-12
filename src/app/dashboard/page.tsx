@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { DesignTool } from "@/components/DesignTool";
-import { PaywallModal } from "@/components/PaywallModal";
 import { supabase } from "@/lib/supabase";
 import { HistoryGallery } from "@/components/dashboard/HistoryGallery";
 import { useDesignGenerator } from "@/hooks/useDesignGenerator";
@@ -11,8 +10,6 @@ export default function DashboardPage() {
     const {
         loading,
         generatedImage,
-        showPaywall,
-        setShowPaywall,
         generateDesign,
         clearGeneration
     } = useDesignGenerator();
@@ -58,8 +55,6 @@ export default function DashboardPage() {
 
                 <HistoryGallery />
             </div>
-
-            <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} />
         </div>
     );
 }

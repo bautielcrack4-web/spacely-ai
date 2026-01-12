@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { usePaywall } from "@/contexts/PaywallContext";
 
 export function useDesignGenerator() {
     const [loading, setLoading] = useState(false);
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
-    const [showPaywall, setShowPaywall] = useState(false);
+    const { openPaywall } = usePaywall();
 
     const generateDesign = async (file: File | null, prompt: string, style: string, currentPreview?: string) => {
         setLoading(true);
@@ -94,7 +95,7 @@ export function useDesignGenerator() {
             });
 
             if (res.status === 403) {
-                setShowPaywall(true);
+                openPaywall();
                 setLoading(false);
                 return;
             }
@@ -129,8 +130,6 @@ export function useDesignGenerator() {
     return {
         loading,
         generatedImage,
-        showPaywall,
-        setShowPaywall,
         generateDesign,
         clearGeneration
     };
