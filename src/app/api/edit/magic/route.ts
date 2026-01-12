@@ -43,44 +43,59 @@ export async function POST(req: Request) {
         console.log("Replicate Output (Magic):", output);
 
         // 2. Process Result
-        let resultUrl = "";
-        if (typeof output === "string") {
-            resultUrl = output;
-        } else if (Array.isArray(output)) {
-            resultUrl = output[0].toString();
-        } else if (output && typeof (output as any).url === "function") {
-            resultUrl = (output as any).url();
-        } else {
-            resultUrl = output.toString();
+        let resultBuffer: Uint8Array | null = null;
+        let finalImageUrl = "";
+
+        if (output instanceof ReadableStream) {
+            const reader = output.getReader();
+            const chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+            }
+            const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+            resultBuffer = new Uint8Array(totalLength);
+            let offset = 0;
+            for (const chunk of chunks) {
+                resultBuffer.set(chunk, offset);
+                offset += chunk.length;
+            }
+        } else if (typeof output === "string") {
+            finalImageUrl = output;
+        } else if (Array.isArray(output) && output.length > 0) {
+            finalImageUrl = output[0].toString();
         }
 
-        if (resultUrl) {
-            // Upload to Storage
-            const imageResponse = await fetch(resultUrl);
-            const imageBlob = await imageResponse.blob();
-            const fileName = `magic/${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
+        if (resultBuffer || finalImageUrl) {
+            let publicUrl = finalImageUrl;
 
-            const { error: uploadError } = await supabase.storage
-                .from("generations")
-                .upload(fileName, imageBlob, { contentType: "image/png", upsert: true });
+            if (resultBuffer) {
+                const fileName = `magic/${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
+                const { error: uploadError } = await supabase.storage
+                    .from("generations")
+                    .upload(fileName, resultBuffer, { contentType: "image/png", upsert: true });
 
-            if (!uploadError) {
-                const publicUrl = supabase.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
-
-                // Save to DB
-                if (userId) {
-                    await supabase.from("generations").insert({
-                        user_id: userId,
-                        image_url: publicUrl,
-                        prompt: prompt,
-                        style: "Magic Edit",
-                        room_type: "Custom Edit",
-                        is_variation: false
-                    });
+                if (uploadError) {
+                    console.error("Storage Upload Error:", uploadError);
+                    throw new Error("Failed to save image to storage");
                 }
-
-                return NextResponse.json({ result: publicUrl });
+                publicUrl = supabase.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
             }
+
+            // Save to DB
+            if (userId && publicUrl) {
+                await supabase.from("generations").insert({
+                    user_id: userId,
+                    image_url: publicUrl,
+                    prompt: prompt,
+                    style: "Magic Edit",
+                    room_type: "Custom Edit",
+                    is_variation: false
+                });
+            }
+
+            return NextResponse.json({ result: publicUrl });
         }
 
         return NextResponse.json({ error: "Generation failed" }, { status: 500 });
