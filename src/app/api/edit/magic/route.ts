@@ -27,7 +27,7 @@ export async function POST(req: Request) {
         console.log("Prompt:", prompt);
 
         const output = await replicate.run(
-            "prunaai/p-image-edit:c5d2d0b6",
+            "prunaai/p-image-edit",
             {
                 input: {
                     images: [image],
@@ -43,7 +43,16 @@ export async function POST(req: Request) {
         console.log("Replicate Output (Magic):", output);
 
         // 2. Process Result
-        const resultUrl = Array.isArray(output) ? output[0] : output;
+        let resultUrl = "";
+        if (typeof output === "string") {
+            resultUrl = output;
+        } else if (Array.isArray(output)) {
+            resultUrl = output[0].toString();
+        } else if (output && typeof (output as any).url === "function") {
+            resultUrl = (output as any).url();
+        } else {
+            resultUrl = output.toString();
+        }
 
         if (resultUrl) {
             // Upload to Storage
