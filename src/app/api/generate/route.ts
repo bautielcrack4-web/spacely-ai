@@ -30,11 +30,15 @@ export async function POST(request: Request) {
             }
         )
 
-        // 1. Check User Session
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
+        // 1. Check User (getUser is more reliable than getSession on server)
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+        if (authError || !user) {
+            console.error("Auth Error in API:", authError);
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
+
+        const session = { user }; // For compatibility with rest of code
 
         // 2. Check Credits & Subscription Status
         const { data: profile } = await supabase
