@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 import { PremiumLoader } from "@/components/ui/PremiumLoader";
+import { uploadTempImage } from "@/lib/storage";
 
 const PALETTES = [
     { id: "minimalist", name: "Minimalist White", colors: ["#FFFFFF", "#F5F5F5", "#D4D4D4"] },
@@ -23,6 +24,7 @@ const PALETTES = [
 export default function ColorPage() {
     const { t } = useLanguage();
     const [image, setImage] = useState<string | null>(null);
+    const [file, setFile] = useState<File | null>(null);
     const [selectedPalette, setSelectedPalette] = useState<string | null>(null);
     const [customPrompt, setCustomPrompt] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
@@ -37,22 +39,25 @@ export default function ColorPage() {
             return;
         }
 
+        setFile(file);
         const reader = new FileReader();
         reader.onload = (event) => {
             setImage(event.target?.result as string);
+            setResultImage(null);
         };
         reader.readAsDataURL(file);
     };
 
     const handleGenerate = async () => {
-        if (!image) {
+        if (!file) {
             toast.error("Please upload a room photo first.");
             return;
         }
 
-        const palette = selectedPalette ? PALETTES.find(p => p.id === selectedPalette)?.name : null;
+        const paletteName = selectedPalette ? PALETTES.find(p => p.id === selectedPalette)?.name : null;
+        const finalPrompt = paletteName ? `Apply a ${paletteName} color palette.` : customPrompt;
 
-        if (!palette && !customPrompt) {
+        if (!finalPrompt) {
             toast.error("Please select a palette or enter a custom prompt.");
             return;
         }
@@ -63,13 +68,15 @@ export default function ColorPage() {
         try {
             const { data: { user } } = await supabase.auth.getUser();
 
+            // Upload first
+            const imageUrl = file ? await uploadTempImage(file) : image;
+
             const response = await fetch("/api/edit/color", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    image,
-                    palette,
-                    prompt: customPrompt,
+                    image: imageUrl,
+                    prompt: finalPrompt,
                     userId: user?.id
                 })
             });

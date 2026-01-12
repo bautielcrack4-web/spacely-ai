@@ -10,11 +10,14 @@ import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 import { PremiumLoader } from "@/components/ui/PremiumLoader";
+import { uploadTempImage } from "@/lib/storage";
 
 export default function FurniturePage() {
     const { t } = useLanguage();
     const [roomImage, setRoomImage] = useState<string | null>(null);
     const [furnitureImage, setFurnitureImage] = useState<string | null>(null);
+    const [roomFile, setRoomFile] = useState<File | null>(null);
+    const [furnitureFile, setFurnitureFile] = useState<File | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [resultImage, setResultImage] = useState<string | null>(null);
     const [prompt, setPrompt] = useState("");
@@ -27,6 +30,9 @@ export default function FurniturePage() {
             toast.error("File is too large. Max 10MB.");
             return;
         }
+
+        if (type === 'room') setRoomFile(file);
+        else setFurnitureFile(file);
 
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -49,12 +55,18 @@ export default function FurniturePage() {
         try {
             const { data: { user } } = await supabase.auth.getUser();
 
+            // 1. Upload images first to bypass 4.5MB Payload Limit
+            const [roomUrl, furnitureUrl] = await Promise.all([
+                uploadTempImage(roomFile!),
+                uploadTempImage(furnitureFile!)
+            ]);
+
             const response = await fetch("/api/edit/furniture", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    roomImage,
-                    furnitureImage,
+                    roomImage: roomUrl,
+                    furnitureImage: furnitureUrl,
                     prompt,
                     userId: user?.id
                 })

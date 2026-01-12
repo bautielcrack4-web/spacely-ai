@@ -9,6 +9,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { PremiumLoader } from "@/components/ui/PremiumLoader";
+import { uploadTempImage } from "@/lib/storage";
 
 const QUICK_ACTIONS = [
     { label: "Make it modern", prompt: "Change the interior design to modern minimalist style" },
@@ -21,6 +22,7 @@ const QUICK_ACTIONS = [
 export default function MagicEditPage() {
     const { t } = useLanguage();
     const [image, setImage] = useState<string | null>(null);
+    const [file, setFile] = useState<File | null>(null);
     const [prompt, setPrompt] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
     const [resultImage, setResultImage] = useState<string | null>(null);
@@ -34,6 +36,7 @@ export default function MagicEditPage() {
             return;
         }
 
+        setFile(file);
         const reader = new FileReader();
         reader.onload = (event) => {
             setImage(event.target?.result as string);
@@ -53,11 +56,19 @@ export default function MagicEditPage() {
         try {
             const { data: { user } } = await supabase.auth.getUser();
 
+            let imageUrl = image;
+            // Only upload if it's a fresh file (not a result URL from previous edit)
+            if (file && !resultImage) {
+                imageUrl = await uploadTempImage(file);
+            } else if (resultImage) {
+                imageUrl = resultImage; // Already a URL
+            }
+
             const response = await fetch("/api/edit/magic", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    image: resultImage || image, // Allow chaining edits
+                    image: imageUrl,
                     prompt,
                     userId: user?.id
                 })
