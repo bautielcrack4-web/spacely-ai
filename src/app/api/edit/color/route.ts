@@ -115,6 +115,7 @@ export async function POST(req: Request) {
 
     } catch (error) {
         console.error("Color Edit Error:", error);
-        return NextResponse.json({ error: "Failed to change colors" }, { status: 500 });
+        const errorMessage = error instanceof Error ? error.message : "Failed to change colors";
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 }

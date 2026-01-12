@@ -69,7 +69,8 @@ export default function FurniturePage() {
 
         } catch (error) {
             console.error(error);
-            toast.error("Failed to place furniture. Please try again.");
+            const message = error instanceof Error ? error.message : "Failed to place furniture. Please try again.";
+            toast.error(message);
         } finally {
             setIsGenerating(false);
         }

@@ -83,7 +83,8 @@ export default function ColorPage() {
 
         } catch (error) {
             console.error(error);
-            toast.error("Failed to change colors. Please try again.");
+            const message = error instanceof Error ? error.message : "Failed to change colors. Please try again.";
+            toast.error(message);
         } finally {
             setIsGenerating(false);
         }

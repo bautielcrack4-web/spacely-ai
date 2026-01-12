@@ -73,7 +73,8 @@ export default function MagicEditPage() {
 
         } catch (error) {
             console.error(error);
-            toast.error("Failed to edit image. Play try again.");
+            const message = error instanceof Error ? error.message : "Failed to edit image. Play try again.";
+            toast.error(message);
         } finally {
             setIsGenerating(false);
         }
