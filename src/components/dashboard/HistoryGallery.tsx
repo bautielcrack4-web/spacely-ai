@@ -7,6 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ComparisonSlider } from "../ui/comparison-slider";
 import { motion, AnimatePresence } from "framer-motion";
 import { ImageIcon, Sparkles } from "lucide-react";
+import { VariationsModal } from "../VariationsModal";
 
 interface Generation {
     id: string;
@@ -60,6 +61,40 @@ export function HistoryGallery() {
 
     const isHistoryEmpty = generations.length === 0;
 
+    // Variations Logic
+    const [selectedGen, setSelectedGen] = useState<Generation | null>(null);
+    const [variationsResults, setVariationsResults] = useState<any[]>([]);
+    const [isVariationsLoading, setIsVariationsLoading] = useState(false);
+    const [showVariationsModal, setShowVariationsModal] = useState(false);
+
+    const handleGenerateVariations = async (gen: Generation) => {
+        setIsVariationsLoading(true);
+        setSelectedGen(gen);
+        setShowVariationsModal(true);
+        setVariationsResults([]); // Reset previous results
+
+        try {
+            const response = await fetch("/api/variations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    imageUrl: gen.image_url,
+                    originalPrompt: gen.prompt,
+                    id: gen.id
+                })
+            });
+
+            const data = await response.json();
+            if (data.variations) {
+                setVariationsResults(data.variations);
+            }
+        } catch (error) {
+            console.error("Failed to generate variations", error);
+        } finally {
+            setIsVariationsLoading(false);
+        }
+    };
+
     return (
         <section className="mt-12 pb-24">
             <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
@@ -94,15 +129,32 @@ export function HistoryGallery() {
                                 loading="lazy"
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
-                                <p className="text-white text-xs line-clamp-2 leading-relaxed italic">
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
+                                <p className="text-white text-xs line-clamp-2 leading-relaxed italic mb-3">
                                     "{gen.prompt}"
                                 </p>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleGenerateVariations(gen);
+                                    }}
+                                    className="w-full bg-white/20 hover:bg-white/30 backdrop-blur-md text-white text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-2 transition-colors border border-white/20"
+                                >
+                                    <Sparkles className="w-3 h-3" />
+                                    Variations
+                                </button>
                             </div>
                         </motion.div>
                     ))}
                 </AnimatePresence>
             </div>
+
+            <VariationsModal
+                isOpen={showVariationsModal}
+                onClose={() => setShowVariationsModal(false)}
+                isLoading={isVariationsLoading}
+                variations={variationsResults}
+            />
         </section>
     );
 }
