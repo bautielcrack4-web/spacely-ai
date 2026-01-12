@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -14,16 +14,16 @@ interface StyleSelectorProps {
 export function StyleSelector({ selectedStyle, onSelect }: StyleSelectorProps) {
     const { t } = useLanguage();
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {STYLES.map((style) => (
                 <button
                     key={style.id}
                     onClick={() => onSelect(style.id)}
                     className={cn(
-                        "relative h-20 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-300 overflow-hidden group",
+                        "relative aspect-[4/5] rounded-[1.5rem] flex flex-col justify-end transition-all duration-500 overflow-hidden group border-2",
                         selectedStyle === style.id
-                            ? "ring-2 ring-purple-600 scale-[1.02] shadow-lg shadow-purple-200/50"
-                            : "hover:scale-[1.02] hover:shadow-md border border-gray-100"
+                            ? "border-purple-600 scale-[1.02] shadow-xl shadow-purple-100"
+                            : "border-transparent hover:border-purple-200 hover:scale-[1.02] hover:shadow-lg shadow-sm"
                     )}
                 >
                     {/* Background Image */}
@@ -31,26 +31,51 @@ export function StyleSelector({ selectedStyle, onSelect }: StyleSelectorProps) {
                         src={style.image}
                         alt={style.label}
                         className={cn(
-                            "absolute inset-0 w-full h-full object-cover transition-all duration-500",
-                            selectedStyle === style.id ? "scale-110 blur-[1px] opacity-40" : "opacity-20 group-hover:opacity-40 group-hover:scale-110"
+                            "absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out",
+                            selectedStyle === style.id ? "scale-110" : "group-hover:scale-110"
                         )}
                     />
 
-                    {/* Overlay for readability */}
-                    <div className={cn(
-                        "absolute inset-0 bg-white/20 transition-opacity",
-                        selectedStyle === style.id ? "opacity-0" : "opacity-100"
-                    )} />
+                    {/* Gradient Overlay for Text Readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 transition-opacity duration-300" />
 
-                    <span className={cn(
-                        "z-10 relative text-gray-900 group-hover:scale-105 transition-transform",
-                    )}>{t(style.labelKey)}</span>
-
-                    {/* Selected Indicator */}
-                    {selectedStyle === style.id && (
-                        <div className="absolute top-2 right-2 z-10 w-5 h-5 bg-purple-600 rounded-full flex items-center justify-center text-white">
-                            <Check className="w-3 h-3" />
+                    {/* Style Label with Frosted Glass Effect */}
+                    <div className="relative z-10 w-full p-3 pt-6">
+                        <div className={cn(
+                            "bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-2.5 transition-all duration-300",
+                            selectedStyle === style.id ? "bg-white/20" : "group-hover:bg-white/20"
+                        )}>
+                            <p className={cn(
+                                "text-xs font-black uppercase tracking-widest text-white text-center",
+                            )}>
+                                {t(style.labelKey)}
+                            </p>
                         </div>
+                    </div>
+
+                    {/* Selected Indicator Badge */}
+                    <AnimatePresence>
+                        {selectedStyle === style.id && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.5, y: -10 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.5, y: -10 }}
+                                className="absolute top-3 right-3 z-20 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white shadow-lg border-2 border-white"
+                            >
+                                <Check className="w-4 h-4 stroke-[3]" />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* Selection Pulse Effect */}
+                    {selectedStyle === style.id && (
+                        <motion.div
+                            layoutId="pulse"
+                            className="absolute inset-0 border-4 border-purple-500/30 rounded-[1.5rem] z-10"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: [0, 1, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                        />
                     )}
                 </button>
             ))}
