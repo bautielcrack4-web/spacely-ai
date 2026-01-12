@@ -45,7 +45,10 @@ export async function POST(req: Request) {
         let resultBuffer: Uint8Array | null = null;
         let finalImageUrl = "";
 
+        console.log("Processing Replicate output type:", typeof output);
+
         if (output instanceof ReadableStream) {
+            console.log("Output is ReadableStream. Reading...");
             const reader = output.getReader();
             const chunks = [];
             while (true) {
@@ -54,6 +57,8 @@ export async function POST(req: Request) {
                 chunks.push(value);
             }
             const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+            console.log("Stream read complete. Total bytes:", totalLength);
+
             resultBuffer = new Uint8Array(totalLength);
             let offset = 0;
             for (const chunk of chunks) {
@@ -64,6 +69,9 @@ export async function POST(req: Request) {
             finalImageUrl = output;
         } else if (Array.isArray(output) && output.length > 0) {
             finalImageUrl = output[0].toString();
+        } else {
+            console.error("Unknown output format:", output);
+            throw new Error("Received unknown output format from Replicate");
         }
 
         if (resultBuffer || finalImageUrl) {
@@ -71,19 +79,23 @@ export async function POST(req: Request) {
 
             if (resultBuffer) {
                 const fileName = `magic/${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
+                console.log("Uploading to Supabase:", fileName);
+
                 const { error: uploadError } = await supabase.storage
                     .from("generations")
                     .upload(fileName, resultBuffer, { contentType: "image/png", upsert: true });
 
                 if (uploadError) {
                     console.error("Storage Upload Error:", uploadError);
-                    throw new Error("Failed to save image to storage");
+                    throw new Error(`Failed to save image to storage: ${uploadError.message}`);
                 }
                 publicUrl = supabase.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
+                console.log("Upload successful. Public URL:", publicUrl);
             }
 
             // Save to DB
             if (userId && publicUrl) {
+                console.log("Saving to DB for user:", userId);
                 await supabase.from("generations").insert({
                     user_id: userId,
                     image_url: publicUrl,
