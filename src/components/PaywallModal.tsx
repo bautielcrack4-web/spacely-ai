@@ -1,9 +1,10 @@
 "use client";
 
-import { Check, X } from "lucide-react";
+import { Check, X, Crown, Zap, Sparkles, Lock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface PaywallModalProps {
     isOpen: boolean;
@@ -12,6 +13,7 @@ interface PaywallModalProps {
 
 export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
     const [loading, setLoading] = useState<string | null>(null);
+    const [selectedPlan, setSelectedPlan] = useState("monthly");
 
     if (!isOpen) return null;
 
@@ -34,125 +36,238 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
         }
     };
 
+    const plans = [
+        {
+            id: "weekly",
+            name: "Weekly",
+            price: "$5.99",
+            period: "/week",
+            savings: null,
+            popular: false,
+        },
+        {
+            id: "monthly",
+            name: "Monthly",
+            price: "$14.99",
+            period: "/month",
+            savings: "SAVE 60%",
+            popular: true,
+        },
+        {
+            id: "yearly",
+            name: "Yearly",
+            price: "$119.99",
+            period: "/year",
+            savings: "BEST VALUE",
+            popular: false,
+            subtitle: "Just $9.99/month"
+        },
+    ];
+
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
-            <div className="relative w-full max-w-4xl bg-white rounded-3xl p-6 md:p-10 shadow-2xl max-h-[90vh] overflow-y-auto">
-                <button
-                    onClick={onClose}
-                    className="absolute right-4 top-4 rounded-full p-2 text-gray-500 hover:bg-gray-100 transition-colors"
+        <AnimatePresence>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
+                onClick={onClose}
+            >
+                <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                    className="relative w-full max-w-md bg-gradient-to-b from-white to-gray-50/80 rounded-3xl shadow-2xl max-h-[95vh] overflow-hidden"
+                    onClick={(e) => e.stopPropagation()}
                 >
-                    <X className="h-6 w-6" />
-                </button>
+                    {/* Close Button */}
+                    <button
+                        onClick={onClose}
+                        className="absolute right-4 top-4 z-10 rounded-full p-1.5 bg-white/80 backdrop-blur-sm text-gray-600 hover:bg-white transition-all shadow-sm"
+                    >
+                        <X className="h-5 w-5" />
+                    </button>
 
-                <div className="text-center mb-10">
-                    <h2 className="text-3xl font-bold text-slate-900 mb-2">Unlock Premium Features</h2>
-                    <p className="text-lg text-gray-600">
-                        Continue creating stunning designs with unlimited access
-                    </p>
-                </div>
+                    {/* Scrollable Content */}
+                    <div className="overflow-y-auto max-h-[95vh] pb-6">
+                        {/* Hero Section */}
+                        <div className="relative pt-12 pb-8 px-6 text-center bg-gradient-to-br from-purple-600 via-purple-500 to-pink-500 text-white">
+                            {/* Decorative Glow */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    {/* Weekly Plan */}
-                    <div className="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow bg-white flex flex-col">
-                        <h3 className="text-xl font-semibold text-slate-900 mb-4">WEEKLY UNLIMITED</h3>
-                        <div className="text-3xl font-bold text-slate-900 mb-1">$5.99<span className="text-base font-normal text-gray-500">/week</span></div>
+                            <motion.div
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ delay: 0.2 }}
+                                className="relative z-10"
+                            >
+                                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
+                                    <Crown className="w-4 h-4 text-yellow-300 fill-yellow-300" />
+                                    <span className="text-sm font-bold uppercase tracking-wider">Go Premium</span>
+                                </div>
 
-                        <ul className="space-y-3 my-6 flex-1">
-                            {[
-                                "Unlimited designs",
-                                "All 32+ styles",
-                                "HD quality exports",
-                                "No watermarks",
-                                "Priority processing"
-                            ].map((feature, i) => (
-                                <li key={i} className="flex items-center text-base text-gray-700">
-                                    <Check className="h-5 w-5 text-emerald-500 mr-3 flex-shrink-0" />
-                                    {feature}
-                                </li>
-                            ))}
-                        </ul>
+                                <h2 className="text-3xl font-black mb-3 leading-tight">
+                                    Get <span className="text-yellow-300">UNLIMITED</span><br />
+                                    Designs Now 🚀
+                                </h2>
 
-                        <Button
-                            className="w-full bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] hover:from-[#9775FA] hover:to-[#7C3AED] text-white font-semibold py-6 rounded-xl"
-                            onClick={() => handleCheckout('weekly')}
-                            disabled={loading === 'weekly'}
-                        >
-                            {loading === 'weekly' ? 'Processing...' : 'START 7-DAY FREE TRIAL'}
-                        </Button>
-                    </div>
-
-                    {/* Monthly Plan - Highlighted */}
-                    <div className="border-2 border-brand rounded-xl p-6 shadow-xl relative bg-white flex flex-col transform md:-translate-y-4">
-                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                            ⭐ Most Popular
+                                <p className="text-white/90 text-base font-medium max-w-xs mx-auto">
+                                    Join 12,000+ users creating stunning interiors without limits
+                                </p>
+                            </motion.div>
                         </div>
 
-                        <h3 className="text-xl font-semibold text-slate-900 mb-4">MONTHLY UNLIMITED</h3>
-                        <div className="text-3xl font-bold text-slate-900 mb-1">$14.99<span className="text-base font-normal text-gray-500">/month</span></div>
-                        <div className="text-green-600 text-sm font-medium mb-4">Save 60% vs Weekly</div>
-
-                        <ul className="space-y-3 my-6 flex-1">
+                        {/* Features - iOS Style */}
+                        <div className="px-6 py-6 space-y-3">
                             {[
-                                "Everything in Weekly",
-                                "Best value",
-                                "Cancel anytime"
+                                { icon: Zap, text: "UNLIMITED designs every day", highlight: "UNLIMITED" },
+                                { icon: Sparkles, text: "All 32+ premium styles", highlight: "32+" },
+                                { icon: Crown, text: "4K quality exports", highlight: "4K" },
+                                { icon: Check, text: "No watermarks ever", highlight: "No watermarks" },
+                                { icon: Users, text: "Priority support 24/7", highlight: "Priority" },
                             ].map((feature, i) => (
-                                <li key={i} className="flex items-center text-base text-gray-700">
-                                    <Check className="h-5 w-5 text-emerald-500 mr-3 flex-shrink-0" />
-                                    {feature}
-                                </li>
+                                <motion.div
+                                    key={i}
+                                    initial={{ x: -20, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    transition={{ delay: 0.3 + i * 0.05 }}
+                                    className="flex items-center gap-4 p-3 rounded-2xl bg-white/60 backdrop-blur-sm border border-purple-100/50"
+                                >
+                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                                        <feature.icon className="w-5 h-5 text-white" />
+                                    </div>
+                                    <p className="text-gray-800 font-semibold text-sm">
+                                        {feature.text.split(feature.highlight)[0]}
+                                        <span className="text-purple-600">{feature.highlight}</span>
+                                        {feature.text.split(feature.highlight)[1]}
+                                    </p>
+                                </motion.div>
                             ))}
-                        </ul>
+                        </div>
 
-                        <Button
-                            className="w-full bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] hover:from-[#9775FA] hover:to-[#7C3AED] text-white font-semibold py-6 rounded-xl shadow-lg shadow-brand/30"
-                            onClick={() => handleCheckout('monthly')}
-                            disabled={loading === 'monthly'}
-                        >
-                            {loading === 'monthly' ? 'Processing...' : 'START FREE TRIAL'}
-                        </Button>
-                    </div>
+                        {/* Pricing Plans - iOS Card Style */}
+                        <div className="px-6 space-y-3 mb-6">
+                            <p className="text-center text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">
+                                Choose Your Plan
+                            </p>
 
-                    {/* Yearly Plan */}
-                    <div className="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow bg-white flex flex-col">
-                        <h3 className="text-xl font-semibold text-slate-900 mb-4">YEARLY UNLIMITED</h3>
-                        <div className="text-3xl font-bold text-slate-900 mb-1">$119.99<span className="text-base font-normal text-gray-500">/year</span></div>
-                        <div className="text-gray-500 text-sm mb-4">($9.99/mo - Save $60/year)</div>
+                            {plans.map((plan, index) => (
+                                <motion.button
+                                    key={plan.id}
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: 0.6 + index * 0.1 }}
+                                    onClick={() => setSelectedPlan(plan.id)}
+                                    className={cn(
+                                        "w-full relative rounded-2xl p-4 transition-all duration-300 border-2",
+                                        selectedPlan === plan.id
+                                            ? "border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg shadow-purple-200/50 scale-[1.02]"
+                                            : "border-gray-200 bg-white hover:border-purple-300"
+                                    )}
+                                >
+                                    {/* Popular Badge */}
+                                    {plan.popular && (
+                                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-lg">
+                                            ⭐ Most Popular
+                                        </div>
+                                    )}
 
-                        <ul className="space-y-3 my-6 flex-1">
-                            {[
-                                "Everything in Monthly",
-                                "Biggest savings",
-                                "Priority support"
-                            ].map((feature, i) => (
-                                <li key={i} className="flex items-center text-base text-gray-700">
-                                    <Check className="h-5 w-5 text-emerald-500 mr-3 flex-shrink-0" />
-                                    {feature}
-                                </li>
+                                    {/* Savings Badge */}
+                                    {plan.savings && (
+                                        <div className="absolute -top-2.5 -right-2 bg-green-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">
+                                            {plan.savings}
+                                        </div>
+                                    )}
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="text-left flex-1">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <h3 className="text-base font-black text-gray-900 uppercase tracking-tight">
+                                                    {plan.name} <span className="text-purple-600">UNLIMITED</span>
+                                                </h3>
+                                            </div>
+                                            {plan.subtitle && (
+                                                <p className="text-xs text-gray-500 font-semibold">{plan.subtitle}</p>
+                                            )}
+                                        </div>
+
+                                        <div className="text-right">
+                                            <div className="flex items-baseline gap-1">
+                                                <span className="text-2xl font-black text-gray-900">{plan.price}</span>
+                                                <span className="text-sm text-gray-500 font-medium">{plan.period}</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Radio Indicator */}
+                                        <div className={cn(
+                                            "ml-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
+                                            selectedPlan === plan.id
+                                                ? "border-purple-500 bg-purple-500"
+                                                : "border-gray-300"
+                                        )}>
+                                            {selectedPlan === plan.id && (
+                                                <div className="w-2.5 h-2.5 rounded-full bg-white" />
+                                            )}
+                                        </div>
+                                    </div>
+                                </motion.button>
                             ))}
-                        </ul>
+                        </div>
 
-                        <Button
-                            className="w-full bg-gradient-to-r from-[#A78BFA] to-[#8B5CF6] hover:from-[#9775FA] hover:to-[#7C3AED] text-white font-semibold py-6 rounded-xl"
-                            onClick={() => handleCheckout('yearly')}
-                            disabled={loading === 'yearly'}
+                        {/* CTA Button - iOS Style */}
+                        <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.9 }}
+                            className="px-6 space-y-4"
                         >
-                            {loading === 'yearly' ? 'Processing...' : 'START FREE TRIAL'}
-                        </Button>
-                    </div>
-                </div>
+                            <Button
+                                className="w-full bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 hover:opacity-90 text-white font-black text-lg py-7 rounded-2xl shadow-xl shadow-purple-300/50 transition-all active:scale-[0.98]"
+                                onClick={() => handleCheckout(selectedPlan)}
+                                disabled={!!loading}
+                            >
+                                {loading ? (
+                                    <span className="flex items-center gap-2">
+                                        <div className="w-5 h-5 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                                        Processing...
+                                    </span>
+                                ) : (
+                                    <span className="flex items-center justify-center gap-2">
+                                        <Lock className="w-5 h-5" />
+                                        START FREE TRIAL
+                                    </span>
+                                )}
+                            </Button>
 
-                <div className="text-center space-y-4">
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 text-sm text-gray-500">
-                        <span>• Cancel anytime, no commitments</span>
-                        <span>• Secure payment with Lemon Squeezy</span>
-                    </div>
+                            {/* Trust Indicators */}
+                            <div className="space-y-2">
+                                <p className="text-center text-xs text-gray-600 font-semibold">
+                                    ✓ Cancel anytime • No commitments
+                                </p>
+                                <p className="text-center text-xs text-gray-500">
+                                    🔒 Secure payment with Lemon Squeezy
+                                </p>
+                            </div>
 
-                    <button className="text-gray-400 text-sm hover:text-gray-600 transition-colors">
-                        [Restore Purchases]
-                    </button>
-                </div>
-            </div>
-        </div>
+                            {/* Money Back Guarantee - High Conversion Element */}
+                            <div className="bg-green-50 border-2 border-green-200 rounded-2xl p-3 text-center">
+                                <p className="text-xs font-black text-green-700 uppercase tracking-wide">
+                                    💰 7-Day Money-Back Guarantee
+                                </p>
+                                <p className="text-[10px] text-green-600 font-medium mt-1">
+                                    Not satisfied? Get a full refund, no questions asked
+                                </p>
+                            </div>
+
+                            {/* Restore Purchases */}
+                            <button className="w-full text-gray-400 text-xs hover:text-gray-600 transition-colors font-medium">
+                                Restore Purchases
+                            </button>
+                        </motion.div>
+                    </div>
+                </motion.div>
+            </motion.div>
+        </AnimatePresence>
     );
 }
