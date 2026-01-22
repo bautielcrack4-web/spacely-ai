@@ -38,6 +38,9 @@ export async function POST(request: Request) {
         // 3. Call Replicate in Parallel
         const finalPrompt = "Create a variation of this interior design with similar style but slightly different details";
 
+        const QUALITY_SUFFIX = ", photorealistic, 8k, highly detailed, architectural photography";
+        const NEGATIVE_PROMPT = "text, watermark, logo, low quality, blurry, distorted";
+
         const predictions = await Promise.all(
             seeds.map(async (seed) => {
                 const output = await replicate.run(
@@ -45,7 +48,8 @@ export async function POST(request: Request) {
                     {
                         input: {
                             images: [imageUrl],
-                            prompt: finalPrompt,
+                            prompt: finalPrompt + QUALITY_SUFFIX,
+                            negative_prompt: NEGATIVE_PROMPT,
                             seed: seed,
                         }
                     }

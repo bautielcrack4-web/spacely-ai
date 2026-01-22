@@ -105,12 +105,17 @@ export async function POST(request: Request) {
         // Using Pruna AI's model via Replicate
         // Model: prunaai/p-image-edit
         // This model returns a ReadableStream of the image file
+        // Prompt Engineering
+        const QUALITY_SUFFIX = ", photorealistic, 8k, highly detailed, architectural photography, interior design magazine style";
+        const NEGATIVE_PROMPT = "text, watermark, logo, low quality, blurry, distorted, ugly, bad anatomy, bad perspective";
+
         const output = await replicate.run(
             "prunaai/p-image-edit",
             {
                 input: {
                     images: [imageUrl],
-                    prompt: prompt,
+                    prompt: prompt + QUALITY_SUFFIX,
+                    negative_prompt: NEGATIVE_PROMPT,
                 },
             }
         );

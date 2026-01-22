@@ -33,12 +33,16 @@ export async function POST(request: Request) {
         console.log("Calling p-image-edit for Furniture Placement...");
         console.log("Prompt:", finalPrompt);
 
+        const QUALITY_SUFFIX = ", photorealistic, 8k, highly detailed, architectural photography";
+        const NEGATIVE_PROMPT = "text, watermark, logo, low quality, blurry, distorted";
+
         const output = await replicate.run(
             "prunaai/p-image-edit",
             {
                 input: {
                     images: [roomImage, furnitureImage],
-                    prompt: finalPrompt,
+                    prompt: finalPrompt + QUALITY_SUFFIX,
+                    negative_prompt: NEGATIVE_PROMPT,
                 }
             }
         ).catch(err => {
