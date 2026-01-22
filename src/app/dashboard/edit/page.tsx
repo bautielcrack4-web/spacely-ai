@@ -90,9 +90,12 @@ export default function MagicEditPage() {
 
             const data = await response.json();
 
-            setResultImage(data.result);
+            // Iterative Flow: Update the MAIN image with the result
+            // This allows the next prompt to be applied to the NEW image
+            setImage(data.result);
+            setResultImage(data.result); // Keep checks valid
             setPrompt(""); // Clear prompt after success
-            toast.success("Magic edit complete!");
+            toast.success("Magic edit complete! Continue editing or download.");
 
         } catch (error) {
             console.error(error);
@@ -142,10 +145,17 @@ export default function MagicEditPage() {
                         </AnimatePresence>
 
                         {/* Reset Button (Only if edited) */}
-                        {resultImage && (
+                        {file && image !== null && (
                             <button
-                                onClick={() => setResultImage(null)}
-                                className="absolute top-4 right-4 bg-white/10 hover:bg-white/20 backdrop-blur text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                                onClick={() => {
+                                    const reader = new FileReader();
+                                    reader.onload = (e) => {
+                                        setImage(e.target?.result as string);
+                                        setResultImage(null);
+                                    };
+                                    reader.readAsDataURL(file);
+                                }}
+                                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 backdrop-blur text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
                             >
                                 Reset to Original
                             </button>
