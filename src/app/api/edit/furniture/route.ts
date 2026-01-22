@@ -50,9 +50,11 @@ export async function POST(request: Request) {
 
         // 2. Construct Prompt
         // If user provided a prompt, append it. Otherwise use default smart prompt.
+        const basePrompt = "Place the furniture object from image 2 into the room in image 1. Position it naturally on the floor. Adapt lighting, shadows, and perspective to match the room perfectly.";
+
         const finalPrompt = prompt && prompt.length > 5
-            ? prompt
-            : "Place image 2 into image 1. Ensure realistic lighting, shadows, and perspective matching.";
+            ? `${prompt}. ${basePrompt}`
+            : basePrompt;
 
         // 3. Call Replicate (p-image-edit)
         console.log("Calling p-image-edit for Furniture Placement...");

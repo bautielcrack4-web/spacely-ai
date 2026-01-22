@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 import { PremiumLoader } from "@/components/ui/PremiumLoader";
+import { PremiumLockOverlay } from "@/components/ui/PremiumLockOverlay";
 import { uploadTempImage } from "@/lib/storage";
 
 export default function FurniturePage() {
@@ -20,6 +21,7 @@ export default function FurniturePage() {
     const [furnitureFile, setFurnitureFile] = useState<File | null>(null);
     const [isGenerating, setIsGenerating] = useState(false);
     const [resultImage, setResultImage] = useState<string | null>(null);
+    const [isLocked, setIsLocked] = useState(false);
     const [prompt, setPrompt] = useState("");
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'room' | 'furniture') => {
@@ -73,6 +75,11 @@ export default function FurniturePage() {
             });
 
             if (!response.ok) {
+                if (response.status === 403 || response.status === 429) {
+                    await new Promise(resolve => setTimeout(resolve, 4000));
+                    setIsLocked(true);
+                    return;
+                }
                 const text = await response.text();
                 console.error("API Error Body:", text);
                 let errorMessage = response.statusText;
@@ -200,19 +207,27 @@ export default function FurniturePage() {
                         {resultImage ? (
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
+                                animate={{
+                                    opacity: 1,
+                                    scale: 1,
+                                    filter: isLocked ? 'blur(20px)' : 'none'
+                                }}
                                 className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl"
                             >
                                 <Image src={resultImage} alt="Result" fill className="object-cover" />
-                                <a
-                                    href={resultImage}
-                                    download="spacely-furniture.png"
-                                    target="_blank"
-                                    className="absolute bottom-6 right-6 bg-white/20 backdrop-blur-md border border-white/20 text-white rounded-xl px-4 py-2 font-bold flex items-center gap-2 hover:bg-white/30 transition-colors"
-                                >
-                                    <Download className="w-4 h-4" />
-                                    Download High Res
-                                </a>
+                                {isLocked && <PremiumLockOverlay />}
+
+                                {!isLocked && (
+                                    <a
+                                        href={resultImage}
+                                        download="spacely-furniture.png"
+                                        target="_blank"
+                                        className="absolute bottom-6 right-6 bg-white/20 backdrop-blur-md border border-white/20 text-white rounded-xl px-4 py-2 font-bold flex items-center gap-2 hover:bg-white/30 transition-colors"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        Download High Res
+                                    </a>
+                                )}
                             </motion.div>
                         ) : (
                             <div className="text-center text-gray-400">

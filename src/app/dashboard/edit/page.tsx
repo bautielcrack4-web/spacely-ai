@@ -9,6 +9,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { PremiumLoader } from "@/components/ui/PremiumLoader";
+import { PremiumLockOverlay } from "@/components/ui/PremiumLockOverlay";
 import { uploadTempImage } from "@/lib/storage";
 
 const QUICK_ACTIONS = [
@@ -26,6 +27,7 @@ export default function MagicEditPage() {
     const [prompt, setPrompt] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
     const [resultImage, setResultImage] = useState<string | null>(null);
+    const [isLocked, setIsLocked] = useState(false);
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -75,6 +77,14 @@ export default function MagicEditPage() {
             });
 
             if (!response.ok) {
+                if (response.status === 403 || response.status === 429) {
+                    await new Promise(resolve => setTimeout(resolve, 4000)); // Simulate generation
+                    // In teaser mode, we "show" a blurred result. For magic edit, we can just use the original image
+                    // blurred, effectively locking the state.
+                    setIsLocked(true);
+                    return;
+                }
+
                 const text = await response.text();
                 console.error("API Error Body:", text);
                 let errorMessage = response.statusText;
@@ -123,12 +133,20 @@ export default function MagicEditPage() {
                 {/* Main Canvas Area */}
                 {image ? (
                     <div className="relative w-full h-full max-w-5xl rounded-2xl overflow-hidden shadow-2xl transition-all">
-                        <Image
-                            src={resultImage || image}
-                            alt="Workspace"
-                            fill
-                            className="object-contain"
-                        />
+                        <motion.div
+                            className="relative w-full h-full"
+                            animate={{ filter: isLocked ? 'blur(25px)' : 'none' }}
+                        >
+                            <Image
+                                src={resultImage || image}
+                                alt="Workspace"
+                                fill
+                                className="object-contain"
+                            />
+                        </motion.div>
+
+                        {/* Lock Overlay */}
+                        {isLocked && <PremiumLockOverlay />}
 
                         {/* Loading Overlay */}
                         <AnimatePresence>
@@ -137,15 +155,15 @@ export default function MagicEditPage() {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    className="absolute inset-0 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center"
+                                    className="absolute inset-0 z-30 bg-white/80 backdrop-blur-md flex flex-col items-center justify-center"
                                 >
                                     <PremiumLoader />
                                 </motion.div>
                             )}
                         </AnimatePresence>
 
-                        {/* Reset Button (Only if edited) */}
-                        {file && image !== null && (
+                        {/* Reset Button (Only if edited & NOT Locked) */}
+                        {file && image !== null && !isLocked && (
                             <button
                                 onClick={() => {
                                     const reader = new FileReader();
@@ -155,19 +173,19 @@ export default function MagicEditPage() {
                                     };
                                     reader.readAsDataURL(file);
                                 }}
-                                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 backdrop-blur text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors"
+                                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 backdrop-blur text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors z-20"
                             >
                                 Reset to Original
                             </button>
                         )}
 
-                        {/* Download Button (Only if edited) */}
-                        {resultImage && (
+                        {/* Download Button (Only if edited & NOT Locked) */}
+                        {resultImage && !isLocked && (
                             <a
                                 href={resultImage}
                                 download="spacely-magic-edit.png"
                                 target="_blank"
-                                className="absolute top-4 left-4 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 shadow-lg"
+                                className="absolute top-4 left-4 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 shadow-lg z-20"
                             >
                                 <Download className="w-4 h-4" />
                                 Download
