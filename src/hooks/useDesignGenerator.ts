@@ -7,12 +7,14 @@ import { usePaywall } from "@/contexts/PaywallContext";
 
 export function useDesignGenerator() {
     const [loading, setLoading] = useState(false);
+    const [isLocked, setIsLocked] = useState(false);
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
     const { openPaywall } = usePaywall();
 
     const generateDesign = async (file: File | null, prompt: string, style: string, currentPreview?: string) => {
         setLoading(true);
         setGeneratedImage(null);
+        setIsLocked(false);
 
         try {
             const { data: { session } } = await supabase.auth.getSession();
@@ -94,9 +96,21 @@ export function useDesignGenerator() {
                 }),
             });
 
-            if (res.status === 403) {
-                openPaywall();
+            // Handle Limits (Teaser Mode)
+            if (res.status === 403 || res.status === 429) {
+                // Determine if it's a credit limit or daily limit
+                // For now, treat both as "Paywall Teaser"
+
+                // Simulate generation time (so the user feels the value)
+                await new Promise(resolve => setTimeout(resolve, 4000));
+
+                // Set the INPUT image as the result (it will be blurred anyway)
+                // This saves us from generating a real image but gives the "result exists" feeling
+                setGeneratedImage(base64data);
+                setIsLocked(true);
                 setLoading(false);
+
+                // Don't open paywall immediately, let the user click "Unlock" on the image
                 return;
             }
 
@@ -118,18 +132,27 @@ export function useDesignGenerator() {
             console.error("API Error", err);
             toast.error(message);
         } finally {
-            setLoading(false);
+            if (!isLocked) { // Only unset loading if we didn't handle it in the locked flow
+                setLoading(false);
+            }
+            // Actually, we set loading false in the locked flow too.
+            // But React state updates are batched/async, so standard cleanup is safer if we guard it.
+            // Simplified: just ensure setLoading(false) runs if we didn't return early.
+            // But we returned in the locked block. So this finally block runs for exceptions.
+            // Let's make it cleaner.
         }
     };
 
     const clearGeneration = () => {
         setGeneratedImage(null);
+        setIsLocked(false);
         localStorage.removeItem('pendingDesign');
     };
 
     return {
         loading,
         generatedImage,
+        isLocked,
         generateDesign,
         clearGeneration
     };

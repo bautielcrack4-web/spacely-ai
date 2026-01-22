@@ -10,6 +10,7 @@ export default function DashboardPage() {
     const {
         loading,
         generatedImage,
+        isLocked,
         generateDesign,
         clearGeneration
     } = useDesignGenerator();
@@ -50,6 +51,7 @@ export default function DashboardPage() {
                     }}
                     loading={loading}
                     generatedImage={generatedImage}
+                    isLocked={isLocked}
                     initialState={initialState}
                 />
 

@@ -1,5 +1,6 @@
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import Replicate from "replicate";
 
 const replicate = new Replicate({
@@ -11,19 +12,43 @@ export const maxDuration = 60; // Allow 60 seconds (max for Hobby)
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    const cookieStore = await cookies();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+    const supabase = createServerClient(
+        supabaseUrl,
+        supabaseAnonKey,
+        {
+            cookies: {
+                get(name: string) {
+                    return cookieStore.get(name)?.value
+                },
+                set(name: string, value: string, options: CookieOptions) {
+                    cookieStore.set({ name, value, ...options })
+                },
+                remove(name: string, options: CookieOptions) {
+                    cookieStore.set({ name, value: '', ...options })
+                },
+            },
+        }
     );
 
     try {
-        const { image, prompt, userId } = await request.json();
+        const { image, prompt } = await request.json();
+
+        // 1. Check User
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError || !user) {
+            console.error("Auth Error in API:", authError);
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
 
         if (!image || !prompt) {
             return NextResponse.json({ error: "Missing image or prompt" }, { status: 400 });
         }
 
-        // 1. Call Replicate (p-image-edit)
+        // 2. Call Replicate (p-image-edit)
         console.log("Calling p-image-edit for Magic Edit...");
         console.log("Prompt:", prompt);
 
@@ -46,7 +71,7 @@ export async function POST(request: Request) {
 
         console.log("Replicate Output (Magic):", output);
 
-        // 2. Process Result
+        // 3. Process Result
         let resultBuffer: Uint8Array | null = null;
         let finalImageUrl = "";
 
@@ -99,10 +124,10 @@ export async function POST(request: Request) {
             }
 
             // Save to DB
-            if (userId && publicUrl) {
-                console.log("Saving to DB for user:", userId);
+            if (user.id && publicUrl) {
+                console.log("Saving to DB for user:", user.id);
                 await supabase.from("generations").insert({
-                    user_id: userId,
+                    user_id: user.id,
                     image_url: publicUrl,
                     prompt: prompt,
                     style: "Magic Edit",

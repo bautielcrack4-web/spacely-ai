@@ -227,6 +227,9 @@ const translations: Record<Language, Record<string, string>> = {
         "dashboard.preview.empty": "Your masterpiece will appear here",
         "dashboard.community.title": "Community Inspirations",
         "dashboard.community.empty_hint": "No history yet. Start designing to see your work here!",
+        "dashboard.teaser.title": "Unlock Your Professional Design",
+        "dashboard.teaser.subtitle": "Your masterpiece is ready. Upgrade to PRO to view the high-quality result instantly.",
+        "dashboard.teaser.button": "Unlock Design Now",
     },
     es: {
         "nav.render": "Renderizar",
@@ -410,6 +413,9 @@ const translations: Record<Language, Record<string, string>> = {
         "dashboard.preview.empty": "Tu obra maestra aparecerá aquí",
         "dashboard.community.title": "Inspiraciones de la Comunidad",
         "dashboard.community.empty_hint": "Sin historial aún. ¡Empieza a diseñar para ver tu trabajo aquí!",
+        "dashboard.teaser.title": "Desbloquea Tu Diseño Profesional",
+        "dashboard.teaser.subtitle": "Tu obra maestra está lista. Mejora a PRO para ver el resultado en alta calidad al instante.",
+        "dashboard.teaser.button": "Desbloquear Diseño Ahora",
     },
     zh: {
         "nav.render": "渲染",
@@ -776,6 +782,9 @@ const translations: Record<Language, Record<string, string>> = {
         "dashboard.preview.empty": "आपकी उत्कृष्ट कृति यहाँ दिखाई देगी",
         "dashboard.community.title": "सामुदायिक प्रेरणा",
         "dashboard.community.empty_hint": "अभी तक कोई इतिहास नहीं है। अपना काम यहाँ देखने के लिए डिजाइनिंग शुरू करें!",
+        "dashboard.teaser.title": "अपना पेशेवर डिज़ाइन अनलॉक करें",
+        "dashboard.teaser.subtitle": "आपकी उत्कृष्ट कृति तैयार है। उच्च गुणवत्ता परिणाम तुरंत देखने के लिए PRO में अपग्रेड करें।",
+        "dashboard.teaser.button": "डिज़ाइन अभी अनलॉक करें",
     },
     ar: {
         "nav.render": "تصيير",
@@ -959,6 +968,9 @@ const translations: Record<Language, Record<string, string>> = {
         "dashboard.preview.empty": "رائعتك ستظهر هنا",
         "dashboard.community.title": "إلهامات المجتمع",
         "dashboard.community.empty_hint": "لا يوجد سجل حتى الآن. ابدأ التصميم لرؤية عملك هنا!",
+        "dashboard.teaser.title": "افتح تصميمك الاحترافي",
+        "dashboard.teaser.subtitle": "تحفتك الفنية جاهزة. قم بالترقية إلى PRO لعرض النتيجة عالية الجودة على الفور.",
+        "dashboard.teaser.button": "افتح التصميم الآن",
     },
 };
 

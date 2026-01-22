@@ -1,5 +1,6 @@
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import Replicate from "replicate";
 
 
@@ -12,19 +13,43 @@ export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    const cookieStore = await cookies();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+    const supabase = createServerClient(
+        supabaseUrl,
+        supabaseAnonKey,
+        {
+            cookies: {
+                get(name: string) {
+                    return cookieStore.get(name)?.value
+                },
+                set(name: string, value: string, options: CookieOptions) {
+                    cookieStore.set({ name, value, ...options })
+                },
+                remove(name: string, options: CookieOptions) {
+                    cookieStore.set({ name, value: '', ...options })
+                },
+            },
+        }
     );
 
     try {
-        const { image, palette, prompt, userId } = await request.json();
+        const { image, palette, prompt } = await request.json();
+
+        // 1. Check User
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError || !user) {
+            console.error("Auth Error in API:", authError);
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
 
         if (!image) {
             return NextResponse.json({ error: "Missing image" }, { status: 400 });
         }
 
-        // 1. Construct Prompt
+        // 2. Construct Prompt
         // If user provided a specific prompt, use it. Otherwise build from palette.
         let finalPrompt = "";
         if (prompt && prompt.length > 3) {
@@ -33,7 +58,7 @@ export async function POST(request: Request) {
             finalPrompt = `Change the color palette of this room to ${palette}. Keep the furniture, layout, and style exactly the same, only change the colors of walls, decor, and textiles.`;
         }
 
-        // 2. Call Replicate (p-image-edit)
+        // 3. Call Replicate (p-image-edit)
         console.log("Calling p-image-edit for Color Match...");
         console.log("Prompt:", finalPrompt);
 
@@ -56,7 +81,7 @@ export async function POST(request: Request) {
 
         console.log("Replicate Output (Color):", output);
 
-        // 3. Process Result
+        // 4. Process Result
         let resultBuffer: Uint8Array | null = null;
         let finalImageUrl = "";
 
@@ -109,10 +134,10 @@ export async function POST(request: Request) {
             }
 
             // Save to DB
-            if (userId && publicUrl) {
-                console.log("Saving to DB for user:", userId);
+            if (user.id && publicUrl) {
+                console.log("Saving to DB for user:", user.id);
                 await supabase.from("generations").insert({
-                    user_id: userId,
+                    user_id: user.id,
                     image_url: publicUrl,
                     prompt: finalPrompt,
                     style: "Color Match",

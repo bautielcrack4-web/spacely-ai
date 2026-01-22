@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, Wand2, Sparkles, ImageIcon, Download, X, History, Zap, MessageSquare } from "lucide-react";
+import { Upload, Wand2, Sparkles, ImageIcon, Download, X, History, Zap, MessageSquare, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StyleSelector } from "./StyleSelector";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ interface DesignToolProps {
     onClear?: () => void;
     loading: boolean;
     generatedImage: string | null;
+    isLocked?: boolean;
     initialState?: {
         preview: string | null;
         prompt: string;
@@ -23,10 +24,13 @@ interface DesignToolProps {
 }
 
 import { TEMPLATES } from "@/lib/constants";
+import { usePaywall } from "@/contexts/PaywallContext";
 
-export function DesignTool({ onGenerate, onClear, loading, generatedImage, initialState }: DesignToolProps) {
+export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLocked = false, initialState }: DesignToolProps) {
     const { t } = useLanguage();
+    const { openPaywall } = usePaywall();
     const [file, setFile] = useState<File | null>(null);
+    // ... existing state ...
     const [preview, setPreview] = useState<string | null>(null);
     const [prompt, setPrompt] = useState("");
     const [style, setStyle] = useState("Modern Minimalist");
@@ -49,12 +53,11 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, initi
             e.target.value = "";
         }
     };
-
+    // ... other handlers ...
     const handleTemplateSelect = (imageUrl: string) => {
         setFile(null); // Clear manual file
         setPreview(imageUrl);
     };
-
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
@@ -63,13 +66,13 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, initi
             setPreview(URL.createObjectURL(selected));
         }
     };
-
     const handleClearLocal = () => {
         setFile(null);
         setPreview(null);
         setPrompt("");
         onClear?.();
     };
+
 
     return (
         <div className="flex flex-col lg:flex-row h-[calc(100vh-100px)] gap-6 p-4 md:p-6 overflow-hidden max-w-[1920px] mx-auto">
@@ -204,10 +207,14 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, initi
             {/* RIGHT PREVIEW PANEL */}
             <div className="flex-1 bg-gray-50 rounded-[32px] border border-gray-100 overflow-hidden relative shadow-inner">
                 {generatedImage && preview ? (
-                    <div className="w-full h-full p-4 md:p-8">
+                    <div className="w-full h-full p-4 md:p-8 relative">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.98, filter: 'blur(10px)' }}
-                            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                            animate={{
+                                opacity: 1,
+                                scale: 1,
+                                filter: isLocked ? 'blur(25px)' : 'blur(0px)'
+                            }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
                             className="w-full h-full rounded-[32px] overflow-hidden bg-white shadow-2xl relative"
                         >
@@ -217,8 +224,34 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, initi
                                 className="w-full h-full"
                                 priority={true}
                             />
+                        </motion.div>
 
-                            {/* Download / Action Bar */}
+                        {/* Teaser Overlay (Locked State) */}
+                        {isLocked && (
+                            <div className="absolute inset-0 z-40 flex flex-col items-center justify-center p-8 text-center bg-black/20 backdrop-blur-[2px]">
+                                <div className="bg-white/90 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl max-w-md border border-white/50 animate-in fade-in zoom-in duration-500">
+                                    <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/30">
+                                        <Lock className="w-8 h-8 text-white" />
+                                    </div>
+                                    <h3 className="text-2xl font-black text-gray-900 mb-2">
+                                        {t('dashboard.teaser.title') || "Unlock Your Design"}
+                                    </h3>
+                                    <p className="text-gray-600 mb-8 font-medium leading-relaxed">
+                                        {t('dashboard.teaser.subtitle') || "This high-quality render is ready. Upgrade to PRO to view your result instantly."}
+                                    </p>
+                                    <Button
+                                        onClick={openPaywall}
+                                        className="w-full h-14 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg shadow-xl shadow-purple-200 hover:scale-[1.02] transition-transform"
+                                    >
+                                        <Zap className="w-5 h-5 mr-2 fill-current" />
+                                        {t('dashboard.teaser.button') || "Unlock Now"}
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Download / Action Bar (Only if NOT locked) */}
+                        {!isLocked && (
                             <div className="absolute top-6 right-6 flex gap-3 z-30">
                                 <Button
                                     variant="outline"
@@ -239,7 +272,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, initi
                                     {t('dashboard.preview.download')}
                                 </Button>
                             </div>
-                        </motion.div>
+                        )}
                     </div>
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-gray-300 gap-6">
