@@ -114,6 +114,6 @@ export async function POST(request: Request) {
     } catch (error) {
         console.error("Magic Edit Error:", error);
         const errorMessage = error instanceof Error ? error.message : "Failed to perform magic edit";
-        return NextResponse.json({ error: errorMessage }, { status: 500 });
+        return NextResponse.json({ error: "Failed to process image", details: errorMessage }, { status: 500 });
     }
 }

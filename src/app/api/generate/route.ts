@@ -136,8 +136,9 @@ export async function POST(request: Request) {
 
     } catch (error) {
         console.error("Error processing request:", error);
+        const message = error instanceof Error ? error.message : "Generation failed";
         return NextResponse.json(
-            { error: "Failed to process image" },
+            { error: "Failed to process image", details: message },
             { status: 500 }
         );
     }
