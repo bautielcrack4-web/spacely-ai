@@ -228,7 +228,7 @@ export default function Home() {
                   7-Day Money-Back Guarantee
                 </h4>
                 <p className="text-green-700 font-medium text-lg opacity-90 leading-relaxed">
-                  Try Spacely AI risk-free. If you're not absolutely thrilled with your new interior designs, we'll refund every penny. No questions asked.
+                  Try RoomCraft App risk-free. If you're not absolutely thrilled with your new interior designs, we'll refund every penny. No questions asked.
                 </p>
               </div>
               <div className="flex flex-col gap-2 items-center">
@@ -249,9 +249,9 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-16">
             <Link href="/" className="flex items-center gap-3">
               <div className="w-10 h-10 relative">
-                <img src="/logo-pixel.png" alt="Spacely AI" className="w-full h-full object-contain" />
+                <img src="/logo-pixel.png" alt="RoomCraft App" className="w-full h-full object-contain" />
               </div>
-              <span className="text-xl font-bold text-gray-900 tracking-tight">Spacely AI</span>
+              <span className="text-xl font-bold text-gray-900 tracking-tight">RoomCraft App</span>
             </Link>
 
             <nav className="flex gap-8">
@@ -265,7 +265,7 @@ export default function Home() {
 
           <div className="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-sm text-gray-400 font-medium text-center md:text-left">
-              © 2024 Spacely AI (Bagasy Studio). Todos los derechos reservados. <br className="md:hidden" />
+              © 2024 RoomCraft App (Bagasy Studio). Todos los derechos reservados. <br className="md:hidden" />
               Inuitive IA para el rediseño de espacios.
             </p>
             <div className="flex gap-6">

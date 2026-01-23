@@ -245,7 +245,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                                     onClick={() => {
                                         const a = document.createElement('a');
                                         a.href = generatedImage;
-                                        a.download = 'spacely-design.png';
+                                        a.download = 'roomcraft-app-design.png';
                                         a.click();
                                     }}
                                 >

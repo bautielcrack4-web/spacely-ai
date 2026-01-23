@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Spacely AI - Rediseño de interiores con IA",
+  title: "RoomCraft App - Interior Design",
   description: "Rediseña tu casa o jardín en segundos con inteligencia artificial.",
 };
 

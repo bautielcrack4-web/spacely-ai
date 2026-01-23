@@ -47,9 +47,9 @@ export function Navbar() {
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                         <div className="w-8 h-8 relative">
-                            <Image src="/logo-pixel.png" alt="Spacely AI" fill className="object-contain" />
+                            <Image src="/logo-pixel.png" alt="RoomCraft App" fill className="object-contain" />
                         </div>
-                        <span className="font-bold text-gray-900 text-lg">Spacely AI</span>
+                        <span className="font-bold text-gray-900 text-lg">RoomCraft App</span>
                     </Link>
 
                     {/* Center Nav Links - Desktop */}

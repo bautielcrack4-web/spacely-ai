@@ -183,7 +183,7 @@ export default function MagicEditPage() {
                         {resultImage && !isLocked && (
                             <a
                                 href={resultImage}
-                                download="spacely-magic-edit.png"
+                                download="roomcraft-app-magic-edit.png"
                                 target="_blank"
                                 className="absolute top-4 left-4 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 shadow-lg z-20"
                             >

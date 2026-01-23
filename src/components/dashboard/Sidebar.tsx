@@ -54,7 +54,7 @@ export function Sidebar() {
                     <div className="w-8 h-8 relative">
                         <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span>Spacely AI</span>
+                    <span>RoomCraft App</span>
                     {isPro && (
                         <span className="ml-2 px-2 py-0.5 rounded-md bg-gradient-to-r from-purple-600 to-pink-600 text-[10px] text-white">PRO</span>
                     )}

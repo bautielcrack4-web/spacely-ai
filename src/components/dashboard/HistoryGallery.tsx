@@ -81,7 +81,7 @@ export function HistoryGallery() {
             const blobUrl = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = blobUrl;
-            a.download = `spacely-${prompt.slice(0, 20).replace(/\s+/g, '-')}.png`;
+            a.download = `roomcraft-app-${prompt.slice(0, 20).replace(/\s+/g, '-')}.png`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(blobUrl);

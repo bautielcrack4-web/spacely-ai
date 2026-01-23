@@ -35,7 +35,7 @@ export function MobileSidebar() {
                     <div className="w-8 h-8 relative">
                         <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span className="font-bold text-gray-900 uppercase tracking-tighter">Spacely AI</span>
+                    <span className="font-bold text-gray-900 uppercase tracking-tighter">RoomCraft App</span>
                 </div>
                 <button onClick={() => setIsOpen(true)} className="p-2 text-gray-400 hover:text-purple-600 transition-colors">
                     <Menu className="w-6 h-6" />

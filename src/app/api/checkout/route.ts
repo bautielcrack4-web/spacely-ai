@@ -11,9 +11,9 @@ lemonSqueezySetup({
 
 // Configure these with your actual Variant IDs from Lemon Squeezy
 const PLANS = {
-    weekly: "1205274",   // Spacely AI - Weekly Unlimited
-    monthly: "1205283", // Spacely AI - Monthly Unlimited
-    yearly: "1205302",   // Spacely AI - Yearly Unlimited
+    weekly: "1205274",   // RoomCraft App - Weekly Unlimited
+    monthly: "1205283", // RoomCraft App - Monthly Unlimited
+    yearly: "1205302",   // RoomCraft App - Yearly Unlimited
 };
 
 export async function POST(request: Request) {
@@ -69,8 +69,8 @@ export async function POST(request: Request) {
                 },
                 productOptions: {
                     redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/`,
-                    receiptButtonText: 'Go to Spacely AI',
-                    receiptThankYouNote: 'Thank you for subscribing to Spacely AI!',
+                    receiptButtonText: 'Go to RoomCraft App',
+                    receiptThankYouNote: 'Thank you for subscribing to RoomCraft App!',
                 }
             }
         );

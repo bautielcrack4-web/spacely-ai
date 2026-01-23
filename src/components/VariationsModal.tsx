@@ -31,7 +31,7 @@ export function VariationsModal({ isOpen, onClose, variations, isLoading, onUseV
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `spacely-variation-${variation.seed}.png`;
+            a.download = `roomcraft-app-variation-${variation.seed}.png`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
