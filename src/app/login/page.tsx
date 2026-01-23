@@ -57,19 +57,19 @@ export default function LoginPage() {
             </div>
 
             {/* Right Side - Login Form */}
-            <div className="w-full md:w-1/2 flex items-center justify-center p-8 bg-transparent relative">
-                <Link href="/" className="absolute top-8 left-8 text-gray-500 hover:text-purple-600 flex items-center gap-2 text-sm transition-colors font-medium">
+            <div className="w-full md:w-1/2 flex items-center justify-center p-4 md:p-8 bg-transparent relative">
+                <Link href="/" className="absolute top-4 md:top-8 left-4 md:left-8 text-gray-500 hover:text-purple-600 flex items-center gap-2 text-xs md:text-sm transition-colors font-medium z-20">
                     <ArrowLeft className="w-4 h-4" />
                     Back to Home
                 </Link>
 
-                <div className="w-full max-w-[400px] space-y-8">
-                    <div className="text-center md:text-left">
-                        <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h1>
+                <div className="w-full max-w-[400px] space-y-6 md:space-y-8 mt-12 md:mt-0">
+                    <div className="text-center md:text-left px-4">
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Welcome back</h1>
                         <p className="text-gray-500 text-sm">Enter your details to access your dashboard</p>
                     </div>
 
-                    <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-xl shadow-purple-50">
+                    <div className="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-3xl border border-gray-100 shadow-xl shadow-purple-50 mx-4 md:mx-0">
                         <Auth
                             supabaseClient={supabase}
                             appearance={{
@@ -104,8 +104,8 @@ export default function LoginPage() {
                                     }
                                 },
                                 className: {
-                                    button: 'font-bold transition-all duration-200 bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 shadow-md',
-                                    input: 'transition-all duration-200 focus:ring-2 focus:ring-purple-500/20 border-gray-200',
+                                    button: 'font-bold transition-all duration-200 bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 shadow-md w-full',
+                                    input: 'transition-all duration-200 focus:ring-2 focus:ring-purple-500/20 border-gray-200 w-full',
                                     label: 'text-gray-700 font-medium mb-1.5 block',
                                     anchor: 'text-purple-600 hover:text-pink-600 font-semibold transition-colors',
                                 }

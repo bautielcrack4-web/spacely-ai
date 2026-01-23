@@ -14,13 +14,13 @@ interface StyleSelectorProps {
 export function StyleSelector({ selectedStyle, onSelect }: StyleSelectorProps) {
     const { t } = useLanguage();
     return (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-3 md:gap-4">
             {STYLES.map((style) => (
                 <button
                     key={style.id}
                     onClick={() => onSelect(style.id)}
                     className={cn(
-                        "relative aspect-[4/5] rounded-[2rem] flex flex-col justify-end transition-all duration-700 overflow-hidden group border-2 shadow-sm",
+                        "relative aspect-[4/5] rounded-[1.5rem] md:rounded-[2rem] flex flex-col justify-end transition-all duration-700 overflow-hidden group border-2 shadow-sm",
                         selectedStyle === style.id
                             ? "border-purple-600 scale-[1.02] shadow-2xl shadow-purple-200 ring-4 ring-purple-500/10"
                             : "border-gray-100 hover:border-purple-300 hover:scale-[1.02] hover:shadow-xl"
@@ -43,15 +43,15 @@ export function StyleSelector({ selectedStyle, onSelect }: StyleSelectorProps) {
                     )} />
 
                     {/* Style Label with Frosted Glass Effect */}
-                    <div className="relative z-10 w-full p-4">
+                    <div className="relative z-10 w-full p-2 md:p-4">
                         <div className={cn(
-                            "backdrop-blur-xl border rounded-[1.2rem] p-3 transition-all duration-500",
+                            "backdrop-blur-xl border rounded-[0.8rem] md:rounded-[1.2rem] p-2 md:p-3 transition-all duration-500",
                             selectedStyle === style.id
                                 ? "bg-white/20 border-white/40 shadow-lg"
                                 : "bg-black/20 border-white/10 group-hover:bg-white/10 group-hover:border-white/20"
                         )}>
                             <p className={cn(
-                                "text-[10px] font-black uppercase tracking-[0.2em] text-white text-center leading-none",
+                                "text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-white text-center leading-none",
                             )}>
                                 {t(style.labelKey)}
                             </p>
