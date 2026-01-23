@@ -7,11 +7,17 @@ export const STYLES = [
     { id: "Tropical", label: "Tropical", labelKey: "styles.tropical", color: "bg-emerald-100", image: "/styles/tropical.png" },
     { id: "Japanese Zen", label: "Zen", labelKey: "styles.japanese", color: "bg-orange-50", image: "/styles/zen.png" },
     { id: "Mid-Century Modern", label: "Mid-Century", labelKey: "styles.midcentury", color: "bg-yellow-100", image: "/styles/midcentury.png" },
+    { id: "Luxury Art Deco", label: "Art Deco", labelKey: "styles.artdeco", color: "bg-amber-500", image: "/styles/luxury_art_deco.png" },
+    { id: "Japandi", label: "Japandi", labelKey: "styles.japandi", color: "bg-stone-100", image: "/styles/japandi.png" },
+    { id: "Rustic Farmhouse", label: "Farmhouse", labelKey: "styles.farmhouse", color: "bg-orange-100", image: "/styles/rustic_farmhouse.png" },
+    { id: "Minimalist Dark", label: "Dark", labelKey: "styles.dark", color: "bg-gray-900", image: "/styles/minimalist_dark.png" },
+    { id: "Coastal Mediterranean", label: "Coastal", labelKey: "styles.coastal", color: "bg-blue-100", image: "/styles/coastal.png" },
+    { id: "Retro 70s", label: "Retro", labelKey: "styles.retro", color: "bg-orange-600", image: "/styles/retro_70s.png" },
 ];
 
 export const TEMPLATES = [
     { id: 'living', label: 'Living Room', labelKey: 'dashboard.templates.living', image: '/examples/assets/sala-estar-vacia-muebles-puerta_305343-47672.avif' },
-    { id: 'bedroom', label: 'Bedroom', labelKey: 'dashboard.templates.bedroom', image: '/examples/assets/dormitorio-vacío-brillante-37799054.webp' },
+    { id: 'bedroom', label: 'Bedroom', labelKey: 'dashboard.templates.bedroom', image: '/examples/assets/bedroom.webp' },
     { id: 'room', label: 'Empty Room', labelKey: 'dashboard.templates.room', image: '/examples/assets/habitacion-vacia-casa-nueva.jpg' },
     { id: 'kitchen', label: 'Old Kitchen', labelKey: 'dashboard.templates.kitchen', image: '/examples/assets/please-dont-kill-me-painting-revitalizing-old-kitchen-v0-pshezzqc7qjd1.webp' },
 ];

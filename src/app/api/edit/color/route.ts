@@ -2,6 +2,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import Replicate from "replicate";
+import { checkPolicy, trackGeneration } from "@/lib/policy";
 
 
 const replicate = new Replicate({
@@ -38,16 +39,8 @@ export async function POST(request: Request) {
     try {
         const { image, palette, prompt } = await request.json();
 
-        // 1. Check User
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        if (authError || !user) {
-            console.error("Auth Error in API:", authError);
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
-
-        if (!image) {
-            return NextResponse.json({ error: "Missing image" }, { status: 400 });
-        }
+        const { user, isPro, error } = await checkPolicy();
+        if (error) return error;
 
         // 2. Construct Prompt
         // If user provided a specific prompt, use it. Otherwise build from palette.
@@ -60,8 +53,6 @@ export async function POST(request: Request) {
 
         // 3. Call Replicate (p-image-edit)
         console.log("Calling p-image-edit for Color Match...");
-        console.log("Prompt:", finalPrompt);
-
         const QUALITY_SUFFIX = ", photorealistic, 8k, highly detailed, architectural photography";
         const NEGATIVE_PROMPT = "text, watermark, logo, low quality, blurry, distorted";
 
@@ -74,21 +65,13 @@ export async function POST(request: Request) {
                     negative_prompt: NEGATIVE_PROMPT,
                 }
             }
-        ).catch(err => {
-            console.error("Replicate API Error (Color):", err);
-            throw err;
-        });
-
-        console.log("Replicate Output (Color):", output);
+        );
 
         // 4. Process Result
         let resultBuffer: Uint8Array | null = null;
         let finalImageUrl = "";
 
-        console.log("Processing Replicate output type:", typeof output);
-
         if (output instanceof ReadableStream) {
-            console.log("Output is ReadableStream. Reading...");
             const reader = output.getReader();
             const chunks = [];
             while (true) {
@@ -97,8 +80,6 @@ export async function POST(request: Request) {
                 chunks.push(value);
             }
             const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-            console.log("Stream read complete. Total bytes:", totalLength);
-
             resultBuffer = new Uint8Array(totalLength);
             let offset = 0;
             for (const chunk of chunks) {
@@ -109,9 +90,6 @@ export async function POST(request: Request) {
             finalImageUrl = output;
         } else if (Array.isArray(output) && output.length > 0) {
             finalImageUrl = output[0].toString();
-        } else {
-            console.error("Unknown output format:", output);
-            throw new Error("Received unknown output format from Replicate");
         }
 
         if (resultBuffer || finalImageUrl) {
@@ -119,35 +97,27 @@ export async function POST(request: Request) {
 
             if (resultBuffer) {
                 const fileName = `colors/${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
-                console.log("Uploading to Supabase:", fileName);
-
                 const { error: uploadError } = await supabase.storage
                     .from("generations")
                     .upload(fileName, resultBuffer, { contentType: "image/png", upsert: true });
 
-                if (uploadError) {
-                    console.error("Storage Upload Error:", uploadError);
-                    throw new Error(`Failed to save image to storage: ${uploadError.message}`);
-                }
+                if (uploadError) throw new Error(`Failed to save image: ${uploadError.message}`);
                 publicUrl = supabase.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
-                console.log("Upload successful. Public URL:", publicUrl);
             }
 
-            // Save to DB
+            // Save to DB and deduct credits using shared utility
             if (user.id && publicUrl) {
-                console.log("Saving to DB for user:", user.id);
-                await supabase.from("generations").insert({
-                    user_id: user.id,
-                    image_url: publicUrl,
+                await trackGeneration(user.id, isPro, {
+                    imageUrl: publicUrl,
                     prompt: finalPrompt,
                     style: "Color Match",
-                    room_type: "Custom Edit",
-                    is_variation: false
+                    roomType: "residential"
                 });
             }
 
             return NextResponse.json({ result: publicUrl });
         }
+
 
         return NextResponse.json({ error: "Generation failed" }, { status: 500 });
 

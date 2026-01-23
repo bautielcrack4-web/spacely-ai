@@ -2,6 +2,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import Replicate from "replicate";
+import { checkPolicy, trackGeneration } from "@/lib/policy";
 
 const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN,
@@ -37,29 +38,14 @@ export async function POST(request: Request) {
     try {
         const { roomImage, furnitureImage, prompt } = await request.json();
 
-        // 1. Check User
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
-        if (authError || !user) {
-            console.error("Auth Error in API:", authError);
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
-
-        if (!roomImage || !furnitureImage) {
-            return NextResponse.json({ error: "Missing images" }, { status: 400 });
-        }
+        const { user, isPro, error } = await checkPolicy();
+        if (error) return error;
 
         // 2. Construct Prompt
-        // If user provided a prompt, append it. Otherwise use default smart prompt.
         const basePrompt = "Place the furniture object from image 2 into the room in image 1. Position it naturally on the floor. Adapt lighting, shadows, and perspective to match the room perfectly.";
-
-        const finalPrompt = prompt && prompt.length > 5
-            ? `${prompt}. ${basePrompt}`
-            : basePrompt;
+        const finalPrompt = prompt && prompt.length > 5 ? `${prompt}. ${basePrompt}` : basePrompt;
 
         // 3. Call Replicate (p-image-edit)
-        console.log("Calling p-image-edit for Furniture Placement...");
-        console.log("Prompt:", finalPrompt);
-
         const QUALITY_SUFFIX = ", photorealistic, 8k, highly detailed, architectural photography";
         const NEGATIVE_PROMPT = "text, watermark, logo, low quality, blurry, distorted";
 
@@ -72,21 +58,13 @@ export async function POST(request: Request) {
                     negative_prompt: NEGATIVE_PROMPT,
                 }
             }
-        ).catch(err => {
-            console.error("Replicate API Error (Furniture):", err);
-            throw err;
-        });
-
-        console.log("Replicate Output (Furniture):", output);
+        );
 
         // 4. Process Result
         let resultBuffer: Uint8Array | null = null;
         let finalImageUrl = "";
 
-        console.log("Processing Replicate output type:", typeof output);
-
         if (output instanceof ReadableStream) {
-            console.log("Output is ReadableStream. Reading...");
             const reader = output.getReader();
             const chunks = [];
             while (true) {
@@ -95,8 +73,6 @@ export async function POST(request: Request) {
                 chunks.push(value);
             }
             const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-            console.log("Stream read complete. Total bytes:", totalLength);
-
             resultBuffer = new Uint8Array(totalLength);
             let offset = 0;
             for (const chunk of chunks) {
@@ -104,14 +80,9 @@ export async function POST(request: Request) {
                 offset += chunk.length;
             }
         } else if (typeof output === "string") {
-            console.log("Output is string:", output);
             finalImageUrl = output;
         } else if (Array.isArray(output) && output.length > 0) {
-            console.log("Output is array:", output);
             finalImageUrl = output[0].toString();
-        } else {
-            console.error("Unknown output format:", output);
-            throw new Error("Received unknown output format from Replicate");
         }
 
         if (resultBuffer || finalImageUrl) {
@@ -119,36 +90,27 @@ export async function POST(request: Request) {
 
             if (resultBuffer) {
                 const fileName = `furniture/${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
-                console.log("Uploading to Supabase:", fileName);
-
                 const { error: uploadError } = await supabase.storage
                     .from("generations")
                     .upload(fileName, resultBuffer, { contentType: "image/png", upsert: true });
 
-                if (uploadError) {
-                    console.error("Storage Upload Error:", uploadError);
-                    throw new Error(`Failed to save image to storage: ${uploadError.message}`);
-                }
+                if (uploadError) throw new Error(`Failed to save image: ${uploadError.message}`);
                 publicUrl = supabase.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
-                console.log("Upload successful. Public URL:", publicUrl);
             }
 
-            // Save to DB
+            // Save to DB and deduct credits using shared utility
             if (user.id && publicUrl) {
-                console.log("Saving to DB for user:", user.id);
-                const { error: dbError } = await supabase.from("generations").insert({
-                    user_id: user.id,
-                    image_url: publicUrl,
+                await trackGeneration(user.id, isPro, {
+                    imageUrl: publicUrl,
                     prompt: finalPrompt,
                     style: "Furniture Placement",
-                    room_type: "Custom Edit",
-                    is_variation: false
+                    roomType: "residential"
                 });
-                if (dbError) console.error("DB Save Error:", dbError);
             }
 
             return NextResponse.json({ result: publicUrl });
         }
+
 
         return NextResponse.json({ error: "Generation failed" }, { status: 500 });
 

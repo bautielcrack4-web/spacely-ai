@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import Replicate from "replicate";
+import { checkPolicy, trackGeneration } from "@/lib/policy";
 
 const replicate = new Replicate({
     auth: process.env.REPLICATE_API_TOKEN,
@@ -11,33 +11,23 @@ export const maxDuration = 60; // Allow 60 seconds (max for Hobby)
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-
     try {
-        const { imageUrl, originalPrompt, id } = await request.json();
+        const { imageUrl, id } = await request.json();
+        const { user, isPro, error } = await checkPolicy();
+        if (error) return error;
 
         if (!imageUrl || !id) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        // 1. Verify User (Optional: Check credits here if needed)
-        // For now assuming active session is validated by middleware or client context
-        // Ideally we should get session from header but we'll trust the request for this prototype
-        // or better, pass the user ID. 
+        // Use service role for variations to ensure parents can be found, but checkPolicy validated the user session.
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+        const { createClient: createSupbaseClient } = await import('@supabase/supabase-js');
+        const adminClient = createSupbaseClient(supabaseUrl, supabaseServiceKey);
 
-        // Let's get the user ID from the request headers if available or just proceed. 
-        // In a real app we'd validate the session.
-
-        // 2. Prepare Prompts & Seeds
-        // We generate 4 variations with different seeds
         const seeds = Array.from({ length: 4 }, () => Math.floor(Math.random() * 1000000));
-
-        // 3. Call Replicate in Parallel
         const finalPrompt = "Create a variation of this interior design with similar style but slightly different details";
-
         const QUALITY_SUFFIX = ", photorealistic, 8k, highly detailed, architectural photography";
         const NEGATIVE_PROMPT = "text, watermark, logo, low quality, blurry, distorted";
 
@@ -58,9 +48,7 @@ export async function POST(request: Request) {
             })
         );
 
-        // 4. Process Results & Save to DB
         const variations = [];
-
         for (const pred of predictions) {
             let resultBuffer: Uint8Array | null = null;
             let finalImageUrl = "";
@@ -91,32 +79,25 @@ export async function POST(request: Request) {
 
                 if (resultBuffer) {
                     const fileName = `variations/${id}-${pred.seed}.png`;
-                    const { error: uploadError } = await supabase.storage
+                    const { error: uploadError } = await adminClient.storage
                         .from("generations")
                         .upload(fileName, resultBuffer, { contentType: "image/png", upsert: true });
 
                     if (!uploadError) {
-                        publicUrl = supabase.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
+                        publicUrl = adminClient.storage.from("generations").getPublicUrl(fileName).data.publicUrl;
                     }
                 }
 
                 if (publicUrl) {
-                    // Save to DB
-                    const { data: original } = await supabase.from("generations").select("*").eq("id", id).single();
-                    if (original) {
-                        const { data: newGen } = await supabase.from("generations").insert({
-                            user_id: original.user_id,
-                            image_url: publicUrl,
-                            prompt: finalPrompt,
-                            style: original.style,
-                            room_type: original.room_type,
-                            parent_id: id,
-                            seed: pred.seed,
-                            is_variation: true
-                        }).select().single();
-
-                        if (newGen) variations.push(newGen);
-                    }
+                    await trackGeneration(user.id, isPro, {
+                        imageUrl: publicUrl,
+                        prompt: finalPrompt,
+                        style: "Variation",
+                        roomType: "residential",
+                        parentId: id,
+                        isVariation: true
+                    });
+                    variations.push({ image_url: publicUrl });
                 }
             }
         }
