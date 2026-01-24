@@ -73,22 +73,6 @@ export function Navbar() {
 
                     {/* Right Side */}
                     <div className="hidden md:flex items-center gap-4">
-                        {/* Language Selector */}
-                        <div className="relative group">
-                            <select
-                                value={language}
-                                onChange={(e) => setLanguage(e.target.value as any)}
-                                className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 pl-4 pr-10 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all cursor-pointer"
-                            >
-                                <option value="en">🇺🇸 EN</option>
-                                <option value="es">🇪🇸 ES</option>
-                                <option value="zh">🇨🇳 ZH</option>
-                                <option value="hi">🇮🇳 HI</option>
-                                <option value="ar">🇸🇦 AR</option>
-                            </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none group-hover:text-purple-500 transition-colors" />
-                        </div>
-
                         {/* PRO Button */}
                         <Link href="/#pricing">
                             <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white font-bold px-6 py-2 rounded-xl shadow-lg shadow-purple-200 hover:scale-[1.02] transition-all duration-200 flex items-center gap-2 border-none h-11">

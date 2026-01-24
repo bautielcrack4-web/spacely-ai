@@ -16,8 +16,8 @@ import { cn } from "@/lib/utils";
 const TOOLS = [
     {
         id: "interior",
-        title: "Diseño de Interiores",
-        description: "Sube una foto, elige un estilo, ¡deja que la IA diseñe el cuarto!",
+        title: "Interior Design",
+        description: "Upload a photo, pick a style, and let AI design your room!",
         image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800",
         href: "/dashboard/create?mode=interior",
         color: "from-purple-500 to-indigo-600",
@@ -25,35 +25,35 @@ const TOOLS = [
     },
     {
         id: "exterior",
-        title: "Diseño Exterior",
-        description: "Foto de tu hogar, elige estilo e IA diseña fachadas y jardines.",
+        title: "Exterior Design",
+        description: "Photo of your home, pick a style and let AI design facades and gardens.",
         image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800",
         href: "/dashboard/create?mode=exterior",
         color: "from-emerald-500 to-teal-600",
-        tag: "Nuevo"
+        tag: "New"
     },
     {
         id: "paint",
-        title: "Pintura",
-        description: "Elige tu color favorito y dale un nuevo look a tu espacio en un instante.",
+        title: "AI Paint",
+        description: "Pick your favorite color and give your space a new look instantly.",
         image: "https://images.unsplash.com/photo-1562663474-6cbb3eaa4d14?auto=format&fit=crop&q=80&w=800",
         href: "/dashboard/create?mode=paint",
         color: "from-pink-500 to-rose-600",
-        tag: "Magia"
+        tag: "Magic"
     },
     {
         id: "magic",
-        title: "Edición Mágica",
-        description: "Añade plantas, cambia suelos o iluminación con un solo clic.",
+        title: "Magic Edit",
+        description: "Add plants, change floors or lighting with a single click.",
         image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=800",
         href: "/dashboard/create?mode=magic",
         color: "from-violet-500 to-fuchsia-600",
-        tag: "Nuevo"
+        tag: "New"
     },
     {
         id: "floor-plan",
-        title: "Plano Nuevo",
-        description: "Edita planos con IA — reordena habitaciones fácilmente.",
+        title: "Floor Plan",
+        description: "Edit floor plans with AI — rearrange rooms easily.",
         image: "https://images.unsplash.com/photo-1596237553531-97216f947aa6?auto=format&fit=crop&q=80&w=800",
         href: "/dashboard/create?mode=floorplan",
         color: "from-amber-500 to-orange-600",
@@ -71,9 +71,9 @@ export default function ToolsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-4xl font-black tracking-tight text-gray-900"
                 >
-                    Herramientas <span className="text-purple-600">IA</span>
+                    AI <span className="text-purple-600">Tools</span>
                 </motion.h1>
-                <p className="text-gray-500 font-medium">Elige cómo quieres transformar tu espacio hoy.</p>
+                <p className="text-gray-500 font-medium">Choose how you want to transform your space today.</p>
             </div>
 
             {/* Tools Grid */}
@@ -118,7 +118,7 @@ export default function ToolsPage() {
 
                                 <div className="mt-4 flex items-center justify-between">
                                     <div className="flex items-center gap-2 px-6 py-3 bg-white text-black rounded-2xl font-bold text-sm shadow-xl transition-all group-hover:bg-purple-600 group-hover:text-white">
-                                        ¡Pruébalo!
+                                        Try it!
                                         <ArrowRight className="w-4 h-4" />
                                     </div>
 

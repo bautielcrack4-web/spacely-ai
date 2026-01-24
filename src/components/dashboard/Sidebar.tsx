@@ -38,10 +38,10 @@ export function Sidebar() {
     };
 
     const navItems = [
-        { icon: LayoutGrid, label: "Herramientas", href: "/dashboard", active: pathname === "/dashboard" },
-        { icon: PlusCircle, label: "Crear", href: "/dashboard/create", active: pathname === "/dashboard/create" },
-        { icon: Compass, label: "Descubrir", href: "/dashboard/discover", active: pathname === "/dashboard/discover" },
-        { icon: User, label: "Mi Perfil", href: "/dashboard/profile", active: pathname === "/dashboard/profile" },
+        { icon: LayoutGrid, label: "Tools", href: "/dashboard", active: pathname === "/dashboard" },
+        { icon: PlusCircle, label: "Create", href: "/dashboard/create", active: pathname === "/dashboard/create" },
+        { icon: Compass, label: "Discover", href: "/dashboard/discover", active: pathname === "/dashboard/discover" },
+        { icon: User, label: "My Profile", href: "/dashboard/profile", active: pathname === "/dashboard/profile" },
     ];
 
     return (
@@ -126,14 +126,6 @@ export function Sidebar() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <select
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value as any)}
-                            className="bg-transparent text-[10px] font-bold text-gray-400 hover:text-gray-900 border-none focus:ring-0 cursor-pointer appearance-none px-1 uppercase tracking-widest"
-                        >
-                            <option value="en">EN</option>
-                            <option value="es">ES</option>
-                        </select>
                         <div className="w-[1px] h-3 bg-gray-200" />
                         <button
                             onClick={async (e) => {

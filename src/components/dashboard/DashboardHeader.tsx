@@ -12,10 +12,10 @@ export function DashboardHeader() {
     const pathname = usePathname();
 
     const getTitle = () => {
-        if (pathname === "/dashboard/create") return "Crear Diseño";
-        if (pathname === "/dashboard/discover") return "Descubrir";
-        if (pathname === "/dashboard/profile") return "Tu Perfil";
-        return "Herramientas";
+        if (pathname === "/dashboard/create") return "Create Design";
+        if (pathname === "/dashboard/discover") return "Discover";
+        if (pathname === "/dashboard/profile") return "Your Profile";
+        return "Tools";
     };
 
     return (

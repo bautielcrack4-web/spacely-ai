@@ -143,13 +143,13 @@ Agent: ${navigator.userAgent}
                             className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-bold h-12 rounded-xl shadow-lg shadow-purple-200"
                         >
                             <Mail className="w-4 h-4 mr-2" />
-                            Enviar Email
+                            Send Email
                         </Button>
                     </div>
 
                     <div className="px-6 pb-6 text-center">
                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.1em]">
-                            O envía un correo directamente a: <span className="text-purple-600 select-all">bagasystudio@gmail.com</span>
+                            Or send an email directly to: <span className="text-purple-600 select-all">bagasystudio@gmail.com</span>
                         </p>
                     </div>
                 </motion.div>

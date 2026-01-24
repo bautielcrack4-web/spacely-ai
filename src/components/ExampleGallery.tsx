@@ -35,8 +35,8 @@ const FALLBACK_EXAMPLES: Example[] = [
         style_name: 'Modern Minimalist',
         before_url: '/hero/before.jpg',
         after_url: '/hero/after.png',
-        title: 'De Vacío a Minimalista Moderno',
-        description: 'Una sala vacía transformada en un espacio elegante con líneas limpias y luz natural.',
+        title: 'From Empty to Modern Minimalist',
+        description: 'An empty room transformed into an elegant space with clean lines and natural light.',
         badge: 'WOW FACTOR'
     },
     {
@@ -45,8 +45,8 @@ const FALLBACK_EXAMPLES: Example[] = [
         style_name: 'Scandinavian Wood',
         before_url: '/examples/assets/please-dont-kill-me-painting-revitalizing-old-kitchen-v0-pshezzqc7qjd1.webp',
         after_url: '/examples/assets/replicate-prediction-cfcty851k5rmr0cvmqe9q2sffr.jpeg',
-        title: 'Calidez Escandinava Renovada',
-        description: 'Moderniza la madera con diseño luminoso, open shelving y subway tiles.',
+        title: 'Scandinavian Warmth Renewed',
+        description: 'Modernize wood with bright design, open shelving, and subway tiles.',
         badge: null
     },
     {
@@ -55,8 +55,8 @@ const FALLBACK_EXAMPLES: Example[] = [
         style_name: 'Industrial Black',
         before_url: '/examples/assets/what-in-the-world-to-do-with-this-50s-pink-burgundy-tile-v0-3ni6qfjcclka1.webp',
         after_url: '/examples/assets/replicate-prediction-r7aescnddhrmw0cvmqmb698qmw.jpeg',
-        title: 'De Rosa Retro a Industrial Negro',
-        description: 'El contraste más dramático: azulejos rosa años 50 convertidos en baño industrial completamente negro.',
+        title: 'From Retro Pink to Industrial Black',
+        description: 'The most dramatic contrast: 50s pink tiles converted into a completely black industrial bathroom.',
         badge: 'TRENDING'
     }
 ];

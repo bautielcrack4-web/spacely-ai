@@ -40,6 +40,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
     const [style, setStyle] = useState("Modern Minimalist");
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [currentStep, setCurrentStep] = useState(1);
+    const [history, setHistory] = useState<string[]>([]);
+    const [historyIndex, setHistoryIndex] = useState(-1);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const isDirectMode = mode === 'magic' || mode === 'paint';
@@ -50,8 +52,57 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
             setPrompt(initialState.prompt);
             setStyle(initialState.style);
             setCurrentStep(4); // Jump to summary if coming from a template/preset
+
+            if (initialState.preview) {
+                setHistory([initialState.preview]);
+                setHistoryIndex(0);
+            }
         }
     }, [initialState]);
+
+    // Handle history initialization when a preview is first set (e.g. upload)
+    useEffect(() => {
+        if (preview && history.length === 0) {
+            setHistory([preview]);
+            setHistoryIndex(0);
+        }
+    }, [preview, history.length]);
+
+    // Handle new generated images for iteration
+    useEffect(() => {
+        if (generatedImage && !isLocked) {
+            // Update history and local preview
+            const newHistory = [...history.slice(0, historyIndex + 1), generatedImage];
+            setHistory(newHistory);
+            setHistoryIndex(newHistory.length - 1);
+            setPreview(generatedImage);
+
+            // If in direct mode, immediately move back to Step 3 for quick iteration
+            if (isDirectMode) {
+                // Short delay to let the user see the result if they want, or just jump
+                setTimeout(() => {
+                    setCurrentStep(3);
+                    setPrompt(""); // Clear prompt for next iteration
+                }, 100);
+            }
+        }
+    }, [generatedImage, isLocked]);
+
+    const handleUndo = () => {
+        if (historyIndex > 0) {
+            const nextIndex = historyIndex - 1;
+            setHistoryIndex(nextIndex);
+            setPreview(history[nextIndex]);
+        }
+    };
+
+    const handleRedo = () => {
+        if (historyIndex < history.length - 1) {
+            const nextIndex = historyIndex + 1;
+            setHistoryIndex(nextIndex);
+            setPreview(history[nextIndex]);
+        }
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -79,6 +130,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
         setFile(null);
         setPreview(null);
         setPrompt("");
+        setHistory([]);
+        setHistoryIndex(-1);
         onClear?.();
     };
 
@@ -99,10 +152,10 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                     <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 px-1">
                         <span>{t('dashboard.form.step')} {currentStep} / 4</span>
                         <span className="text-purple-600">
-                            {currentStep === 1 && "Imagen"}
-                            {currentStep === 2 && "Estilo"}
-                            {currentStep === 3 && "Detalles"}
-                            {currentStep === 4 && "Generar"}
+                            {currentStep === 1 && "Image"}
+                            {currentStep === 2 && "Style"}
+                            {currentStep === 3 && "Details"}
+                            {currentStep === 4 && "Generate"}
                         </span>
                     </div>
                     <div className="flex gap-2 h-1.5 px-1">
@@ -127,10 +180,10 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                     </div>
                     <div>
                         <h2 className="font-black text-gray-900 text-xl tracking-tight leading-none">
-                            {mode === 'paint' ? "Pintura Instantánea" : "Edición Mágica"}
+                            {mode === 'paint' ? "Instant Paint" : "Magic Edit"}
                         </h2>
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1">
-                            {mode === 'paint' ? "Cambia colores en un clic" : "Modifica tu espacio con IA"}
+                            {mode === 'paint' ? "Change colors in an eye blink" : "Modify your space with AI"}
                         </p>
                     </div>
                 </div>
@@ -144,8 +197,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                     className="space-y-8"
                 >
                     <div className="space-y-2 px-1">
-                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Añadir una foto</h3>
-                        <p className="text-gray-500 text-xs font-medium">Comienza subiendo o tomando una foto de tu espacio.</p>
+                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Add a photo</h3>
+                        <p className="text-gray-500 text-xs font-medium">Start by uploading or taking a room photo.</p>
                     </div>
 
                     <div
@@ -211,8 +264,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                                     <ImageIcon className="w-5 h-5" />
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-sm font-black text-gray-900 uppercase tracking-widest leading-none mb-1">Galería</p>
-                                    <p className="text-[10px] font-bold text-gray-400">Seleccionar de tu carrete</p>
+                                    <p className="text-sm font-black text-gray-900 uppercase tracking-widest leading-none mb-1">Gallery</p>
+                                    <p className="text-[10px] font-bold text-gray-400">Select from your reel</p>
                                 </div>
                             </button>
                             <button
@@ -223,8 +276,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                                     <Maximize2 className="w-5 h-5" />
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-sm font-black text-gray-900 uppercase tracking-widest leading-none mb-1">Hacer Foto</p>
-                                    <p className="text-[10px] font-bold text-gray-400">Tomar con la cámara</p>
+                                    <p className="text-sm font-black text-gray-900 uppercase tracking-widest leading-none mb-1">Take Photo</p>
+                                    <p className="text-[10px] font-bold text-gray-400">Use your camera</p>
                                 </div>
                             </button>
                         </div>
@@ -236,7 +289,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                                 <label className="text-xs font-black text-gray-900 uppercase tracking-widest">{t('dashboard.templates.or_start')}</label>
                             </div>
                             <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none snap-x">
-                                {TEMPLATES.map((tmpl) => (
+                                {TEMPLATES.filter(tmpl => tmpl.category === mode || tmpl.category === 'all').map((tmpl) => (
                                     <button
                                         key={tmpl.id}
                                         onClick={() => {
@@ -260,7 +313,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                             onClick={() => setCurrentStep(isDirectMode ? 3 : 2)}
                             className="w-full h-16 rounded-[1.8rem] bg-black text-white font-black uppercase tracking-widest"
                         >
-                            Continuar
+                            Continue
                         </Button>
                     )}
                 </motion.div>
@@ -274,8 +327,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                     className="space-y-8"
                 >
                     <div className="space-y-2 px-1">
-                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Elige el estilo</h3>
-                        <p className="text-gray-500 text-xs font-medium">¿Qué vibra quieres darle a tu habitación?</p>
+                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Choose style</h3>
+                        <p className="text-gray-500 text-xs font-medium">What vibe do you want for your room?</p>
                     </div>
 
                     <div className="max-h-[450px] overflow-y-auto pr-2 scrollbar-none">
@@ -296,7 +349,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                             onClick={() => setCurrentStep(1)}
                             className="flex-1 h-14 rounded-2xl text-xs font-black uppercase tracking-widest"
                         >
-                            Atrás
+                            Back
                         </Button>
                     </div>
                 </motion.div>
@@ -310,8 +363,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                     className="space-y-8"
                 >
                     <div className="space-y-2 px-1">
-                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Describe el cambio</h3>
-                        <p className="text-gray-500 text-xs font-medium">Opcional: puedes ser específico sobre colores o muebles.</p>
+                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Describe the change</h3>
+                        <p className="text-gray-500 text-xs font-medium">Optional: you can be specific about colors or furniture.</p>
                     </div>
 
                     <div className="relative group">
@@ -330,8 +383,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                     {mode === 'magic' && (
                         <div className="flex gap-2 flex-wrap justify-center">
                             {[
-                                "Hazlo moderno", "Añadir plantas", "Cambiar suelo a madera",
-                                "Paredes azules", "Iluminación de atardecer"
+                                "Make it modern", "Add plants", "Change floor to wood",
+                                "Blue walls", "Sunset lighting"
                             ].map((action) => (
                                 <button
                                     key={action}
@@ -347,16 +400,16 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                     <div className="flex gap-3">
                         <Button
                             variant="outline"
-                            onClick={() => setCurrentStep(2)}
+                            onClick={() => setCurrentStep(isDirectMode ? 1 : 2)}
                             className="flex-1 h-16 rounded-[1.8rem] text-xs font-black uppercase tracking-widest"
                         >
-                            Atrás
+                            Back
                         </Button>
                         <Button
                             onClick={() => setCurrentStep(4)}
                             className="flex-[2] h-16 rounded-[1.8rem] bg-black text-white font-black uppercase tracking-widest"
                         >
-                            {isDirectMode ? "Generar Ahora" : "Ver Resumen"}
+                            {isDirectMode ? "Generate Now" : "Review Summary"}
                         </Button>
                     </div>
                 </motion.div>
@@ -370,8 +423,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                     className="space-y-8"
                 >
                     <div className="space-y-2 px-1">
-                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Todo listo</h3>
-                        <p className="text-gray-500 text-xs font-medium">Revisa tu configuración antes de transformar el espacio.</p>
+                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Ready</h3>
+                        <p className="text-gray-500 text-xs font-medium">Review your settings before transforming the space.</p>
                     </div>
 
                     {/* Summary Cards */}
@@ -490,7 +543,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                 {/* Background Text Label (Apple Style) - REMOVED per user request */}
 
                 {generatedImage && preview ? (
-                    <div className="w-full h-full p-4 md:p-8 lg:p-12 relative z-10">
+                    <div className="w-full h-full p-4 md:p-8 lg:p-12 relative z-10 group/preview">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.98, filter: 'blur(10px)' }}
                             animate={{
@@ -501,9 +554,41 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                             transition={{ duration: 0.8, ease: "easeOut" }}
                             className="w-full h-full rounded-[2.5rem] overflow-hidden bg-white shadow-2xl relative"
                         >
+                            {/* History Navigation Arrows */}
+                            <div className="absolute top-1/2 -translate-y-1/2 inset-x-8 z-50 flex justify-between pointer-events-none opacity-0 group-hover/preview:opacity-100 transition-all duration-300">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleUndo();
+                                    }}
+                                    disabled={historyIndex <= 0}
+                                    className={cn(
+                                        "w-12 h-12 rounded-full bg-white/90 backdrop-blur-md shadow-xl flex items-center justify-center transition-all pointer-events-auto",
+                                        historyIndex <= 0 ? "opacity-30 cursor-not-allowed" : "hover:scale-110 active:scale-95 text-purple-600"
+                                    )}
+                                    title="Previous version"
+                                >
+                                    <History className="w-5 h-5" />
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleRedo();
+                                    }}
+                                    disabled={historyIndex >= history.length - 1}
+                                    className={cn(
+                                        "w-12 h-12 rounded-full bg-white/90 backdrop-blur-md shadow-xl flex items-center justify-center transition-all pointer-events-auto",
+                                        historyIndex >= history.length - 1 ? "opacity-30 cursor-not-allowed" : "hover:scale-110 active:scale-95 text-purple-600"
+                                    )}
+                                    title="Next version"
+                                >
+                                    <History className="w-5 h-5 rotate-180 flip-y" />
+                                </button>
+                            </div>
+
                             <ComparisonSlider
-                                original={preview}
-                                modified={generatedImage}
+                                original={historyIndex > 0 ? history[historyIndex - 1] : preview}
+                                modified={preview}
                                 className="w-full h-full"
                                 priority={true}
                             >

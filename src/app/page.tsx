@@ -39,28 +39,28 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Diseño de Interior con IA
+              AI Interior Design
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Todo lo que necesitas para imaginar tu hogar ideal en segundos.
+              Everything you need to imagine your ideal home in seconds.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                title: "Renderizado Instantáneo",
-                desc: "Sube una foto y obtén un diseño profesional en menos de 10 segundos.",
+                title: "Instant Rendering",
+                desc: "Upload a photo and get a professional design in less than 10 seconds.",
                 icon: <Sparkles className="w-6 h-6" />
               },
               {
-                title: "Múltiples Estilos",
-                desc: "Desde Escandinavo hasta Industrial, explora decenas de estilos diferentes.",
+                title: "Multiple Styles",
+                desc: "From Scandinavian to Industrial, explore dozens of different styles.",
                 icon: <Check className="w-6 h-6" />
               },
               {
-                title: "Calidad Profesional",
-                desc: "Nuestra IA entiende la estructura de tu habitación para resultados realistas.",
+                title: "Professional Quality",
+                desc: "Our AI understands your room structure for realistic results.",
                 icon: <ArrowRight className="w-6 h-6" />
               }
             ].map((f, i) => (
@@ -113,7 +113,7 @@ export default function Home() {
                 id: "weekly",
                 name: t("pricing.weekly"),
                 price: "$5.99",
-                period: t("dashboard.templates.living").includes("Sala") ? "/semana" : "/week", // Quick hack as it's not in keys
+                period: "/week",
                 features: ["pricing.f.unlimited", "pricing.f.allRooms", "pricing.f.4k", "pricing.f.emailSupport"],
                 highlighted: false,
                 color: "from-blue-500 to-indigo-600"
@@ -122,7 +122,7 @@ export default function Home() {
                 id: "monthly",
                 name: t("pricing.monthly"),
                 price: "$14.99",
-                period: t("dashboard.templates.living").includes("Sala") ? "/mes" : "/month",
+                period: "/month",
                 features: ["pricing.f.everythingWeekly", "pricing.f.priority", "pricing.f.styles", "pricing.f.prioritySupport"],
                 highlighted: true,
                 badge: t("pricing.mostPopular"),
@@ -132,11 +132,11 @@ export default function Home() {
                 id: "yearly",
                 name: t("pricing.yearly"),
                 price: "$119.99",
-                period: t("dashboard.templates.living").includes("Sala") ? "/año" : "/year",
+                period: "/year",
                 features: ["pricing.f.everythingMonthly", "pricing.f.priority", "pricing.f.allRooms", "pricing.f.prioritySupport"],
                 highlighted: false,
                 color: "from-amber-500 to-orange-600",
-                subtitle: t("dashboard.templates.living").includes("Sala") ? "Solo $9.99/mes" : "Just $9.99/month"
+                subtitle: "Just $9.99/month"
               },
             ].map((plan, i) => (
               <motion.div
@@ -257,11 +257,11 @@ export default function Home() {
             </Link>
 
             <nav className="flex gap-8">
-              {['Explorar', 'Precios', 'FAQ', 'Contacto'].map((item) => (
+              {['Explore', 'Pricing', 'FAQ', 'Contact'].map((item) => (
                 <button
                   key={item}
                   onClick={() => {
-                    if (item === 'Contacto') {
+                    if (item === 'Contact') {
                       openSupport("Other", "Contact request from Footer");
                     } else {
                       const element = document.getElementById(item.toLowerCase());
@@ -278,12 +278,12 @@ export default function Home() {
 
           <div className="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-sm text-gray-400 font-medium text-center md:text-left">
-              © 2024 RoomCraft App (Bagasy Studio). Todos los derechos reservados. <br className="md:hidden" />
-              Inuitive IA para el rediseño de espacios.
+              © 2024 RoomCraft App (Bagasy Studio). All rights reserved. <br className="md:hidden" />
+              Intuitive AI for space redesign.
             </p>
             <div className="flex gap-6">
-              <Link href="/legal/terms" className="text-gray-400 hover:text-gray-600 text-sm font-medium">Términos</Link>
-              <Link href="/legal/privacy" className="text-gray-400 hover:text-gray-600 text-sm font-medium">Privacidad</Link>
+              <Link href="/legal/terms" className="text-gray-400 hover:text-gray-600 text-sm font-medium">Terms</Link>
+              <Link href="/legal/privacy" className="text-gray-400 hover:text-gray-600 text-sm font-medium">Privacy</Link>
             </div>
           </div>
         </div>

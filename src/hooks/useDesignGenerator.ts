@@ -89,21 +89,24 @@ export function useDesignGenerator() {
             switch (mode) {
                 case "exterior":
                     finalPrompt = cleanPrompt
-                        ? `Professional architecture photography of a ${style} style home exterior, high quality, photorealistic, 8k resolution. ${cleanPrompt}`
-                        : `Professional architecture photography of a ${style} style home exterior, high quality, photorealistic, cinematic lighting`;
+                        ? `Professional architecture photography of a ${style} style home exterior. ${cleanPrompt}, ultra-high quality, 8k, photorealistic, cinematic lighting, architectural details, sharp focus.`
+                        : `Professional architecture photography of a ${style} style home exterior, high quality, photorealistic, cinematic lighting, stunning presentation.`;
                     break;
                 case "paint":
                     finalPrompt = cleanPrompt
-                        ? `A photorealistic interior with walls repainted to: ${cleanPrompt}. Maintain all furniture and structure. ${style} style, high quality.`
-                        : `A photorealistic interior with premium ${style} style wall colors. High quality, elegant lighting.`;
+                        ? `A highly photorealistic professional interior design shot where the primary walls are repainted to: ${cleanPrompt}. Maintain all original furniture, lighting, and layout perfectly. Only change the wall color with a high-end smooth finish. ${style} atmosphere.`
+                        : `A highly photorealistic professional interior with premium ${style} style wall colors. Elegant lighting, sharp details.`;
+                    break;
+                case "magic":
+                    finalPrompt = `An ultra-professional interior design modification. ${cleanPrompt}. Integrate the change naturally into the existing room structure, maintaining lighting and perspective. Photorealistic, 8k, high-end furniture and materials, ${style} aesthetic.`;
                     break;
                 case "floorplan":
                     finalPrompt = `2D architectural floor plan, ${style} style, clean lines, professional CAD rendering, bird's eye view, high quality. ${cleanPrompt}`;
                     break;
                 default: // interior
                     finalPrompt = cleanPrompt
-                        ? `${style} style interior design, professional photography, high quality, photorealistic. ${cleanPrompt}`
-                        : `${style} style interior design, high quality, photorealistic, elegant atmosphere`;
+                        ? `${style} style interior design, professional photography, high quality, photorealistic, 8k resolution, elegant composition. ${cleanPrompt}`
+                        : `${style} style interior design, high quality, photorealistic, elegant atmosphere, sharp focus.`;
             }
 
             const res = await fetch("/api/generate", {
