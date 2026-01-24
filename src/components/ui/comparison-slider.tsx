@@ -99,11 +99,11 @@ export function ComparisonSlider({ original, modified, className, priority }: Co
             </div>
 
             {/* Labels */}
-            <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-md text-white text-xs px-2 py-1 rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-xl text-gray-900 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl border border-white/50">
                 Original
             </div>
-            <div className="absolute bottom-4 right-4 bg-purple-600/90 backdrop-blur-md text-white font-bold text-xs px-2 py-1 rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
-                AI Redesign
+            <div className="absolute bottom-6 right-6 bg-black/90 backdrop-blur-xl text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl">
+                Redesign
             </div>
         </div>
     );

@@ -16,7 +16,8 @@ import {
     Armchair,
     Palette,
     Wand2,
-    LogOut
+    LogOut,
+    Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
@@ -24,6 +25,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePaywall } from "@/contexts/PaywallContext";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Sidebar() {
     const pathname = usePathname();
@@ -48,30 +50,31 @@ export function Sidebar() {
     ];
 
     return (
-        <div className="hidden md:flex w-64 flex-col fixed inset-y-0 z-50 bg-white border-r border-gray-100 shadow-xl shadow-purple-50/20">
-            {/* Logo */}
-            <div className="h-16 flex items-center px-6 border-b border-gray-50">
-                <div className="flex items-center gap-2 text-gray-900 font-bold text-xl uppercase tracking-tighter">
-                    <div className="w-8 h-8 relative">
+        <div className="hidden md:flex w-64 flex-col fixed inset-y-0 z-50 bg-white/70 backdrop-blur-xl border-r border-gray-100/50">
+            {/* Logo Section */}
+            <div className="h-20 flex items-center px-8">
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="w-9 h-9 relative transition-transform duration-500 group-hover:scale-110">
                         <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain" />
                     </div>
-                    <span>RoomCraft App</span>
-                    {isPro && (
-                        <span className="ml-2 px-2 py-0.5 rounded-md bg-gradient-to-r from-purple-600 to-pink-600 text-[10px] text-white">PRO</span>
-                    )}
-                </div>
+                    <div className="flex flex-col">
+                        <span className="font-bold text-gray-900 leading-none">RoomCraft</span>
+                        <span className="text-[10px] font-bold text-purple-600 tracking-[0.2em] uppercase mt-1">Studio</span>
+                    </div>
+                </Link>
             </div>
 
-            <div className="flex-1 px-4 py-8 space-y-4">
+            {/* Navigation */}
+            <div className="flex-1 px-4 py-6 space-y-1">
                 {navItems.map((item) => (
                     <Link
                         key={item.label}
                         href={item.href}
                         className={cn(
-                            "flex items-center gap-3 p-3.5 rounded-2xl transition-all duration-300 group border border-transparent font-semibold text-sm",
+                            "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group text-sm font-medium",
                             item.active
-                                ? "bg-gradient-to-r from-purple-50 to-pink-50 text-purple-600 border-purple-100/50 shadow-sm"
-                                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50/80"
+                                ? "bg-white shadow-sm ring-1 ring-gray-100 text-purple-600"
+                                : "text-gray-500 hover:text-gray-900 hover:bg-white/50"
                         )}
                     >
                         <item.icon className={cn(
@@ -80,43 +83,58 @@ export function Sidebar() {
                         )} />
                         <span>{item.label}</span>
                         {item.active && (
-                            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+                            <motion.div
+                                layoutId="active-pill"
+                                className="ml-auto w-1 h-4 rounded-full bg-purple-600"
+                            />
                         )}
                     </Link>
                 ))}
             </div>
 
-            {/* Bottom Actions */}
-            <div className="px-4 py-6 space-y-6 border-t border-gray-50">
+            {/* User & Settings Section */}
+            <div className="p-4 space-y-4">
                 {!isPro && (
-                    <Button
-                        onClick={openPaywall}
-                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-95 text-white font-bold h-12 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-purple-200"
-                    >
-                        <Crown className="w-4 h-4 fill-white" />
-                        {t("nav.upgrade")}
-                    </Button>
+                    <div className="p-4 rounded-[2rem] bg-gradient-to-br from-purple-600 to-pink-500 text-white shadow-xl shadow-purple-200/50 relative overflow-hidden group">
+                        <div className="relative z-10">
+                            <h4 className="font-bold text-sm mb-1 uppercase tracking-wider">Unleash Pro</h4>
+                            <p className="text-[10px] text-white/80 mb-3 leading-relaxed">Unlock unlimited renders & premium styles today.</p>
+                            <Button
+                                onClick={openPaywall}
+                                className="w-full bg-white text-purple-600 hover:bg-gray-50 font-bold h-9 rounded-xl text-[11px] shadow-sm border-none"
+                            >
+                                <Zap className="w-3 h-3 fill-purple-600 mr-2" />
+                                Upgrade Now
+                            </Button>
+                        </div>
+                        <Crown className="absolute -bottom-2 -right-2 w-20 h-20 text-white/10 rotate-12" />
+                    </div>
                 )}
 
-                <div className="flex items-center justify-between px-2">
-                    <div className="flex gap-4">
-                        <Link href="#" className="text-gray-400 hover:text-purple-600 transition-colors"><CreditCard className="w-5 h-5" /></Link>
-                        <Link href="#" className="text-gray-400 hover:text-purple-600 transition-colors"><HelpCircle className="w-5 h-5" /></Link>
+                <div className="flex items-center justify-between px-2 bg-gray-50/50 rounded-2xl p-2 border border-gray-100/50">
+                    <div className="flex gap-1">
+                        <button className="p-2 text-gray-400 hover:text-gray-900 transition-colors rounded-xl hover:bg-white">
+                            <Settings className="w-4 h-4" />
+                        </button>
+                        <button className="p-2 text-gray-400 hover:text-gray-900 transition-colors rounded-xl hover:bg-white">
+                            <HelpCircle className="w-4 h-4" />
+                        </button>
                     </div>
-                    <div className="flex gap-2 items-center">
+
+                    <div className="flex items-center gap-2">
                         <select
                             value={language}
                             onChange={(e) => setLanguage(e.target.value as any)}
-                            className="bg-transparent text-xs font-bold text-gray-500 hover:text-gray-900 border-none focus:ring-0 cursor-pointer appearance-none px-2"
+                            className="bg-transparent text-[10px] font-bold text-gray-400 hover:text-gray-900 border-none focus:ring-0 cursor-pointer appearance-none px-1 uppercase tracking-widest"
                         >
                             <option value="en">EN</option>
                             <option value="es">ES</option>
-                            <option value="zh">ZH</option>
-                            <option value="hi">HI</option>
-                            <option value="ar">AR</option>
                         </select>
-                        <div className="w-[1px] h-4 bg-gray-100 mx-1" />
-                        <button onClick={handleLogout} className="text-gray-400 hover:text-red-500 transition-colors bg-gray-50 p-2 rounded-xl">
+                        <div className="w-[1px] h-3 bg-gray-200" />
+                        <button
+                            onClick={handleLogout}
+                            className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-xl hover:bg-red-50"
+                        >
                             <LogOut className="w-4 h-4" />
                         </button>
                     </div>
