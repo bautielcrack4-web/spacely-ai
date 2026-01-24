@@ -42,6 +42,7 @@ export function Sidebar() {
         { icon: Armchair, label: t("nav.furniture"), href: "/dashboard/furniture", active: pathname === "/dashboard/furniture" },
         { icon: Palette, label: t("nav.color"), href: "/dashboard/color", active: pathname === "/dashboard/color" },
         { icon: Wand2, label: t("nav.magic"), href: "/dashboard/edit", active: pathname === "/dashboard/edit" },
+        ...(isPro ? [{ icon: CreditCard, label: "Subscription", href: "/dashboard/subscription", active: pathname === "/dashboard/subscription" }] : []),
         { icon: CreditCard, label: t("nav.pricing"), href: "/#pricing", active: false },
         { icon: HelpCircle, label: t("nav.faq"), href: "/#faq", active: false },
     ];
