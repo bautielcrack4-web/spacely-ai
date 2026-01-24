@@ -94,8 +94,27 @@ export function MagicEditTool({ onBack }: MagicEditToolProps) {
             }
 
             if (!res.ok) {
-                const error = await res.json();
-                throw new Error(error.details || error.error || "Generation failed");
+                // Improved robust error handling for non-JSON responses
+                const contentType = res.headers.get("content-type");
+                let errorDetails = "Generation failed";
+
+                try {
+                    if (contentType && contentType.includes("application/json")) {
+                        const errorData = await res.json();
+                        errorDetails = errorData.details || errorData.error || errorDetails;
+                    } else {
+                        const text = await res.text();
+                        if (text.includes("Request Entity Too Large") || res.status === 413) {
+                            errorDetails = "Image is too large. Please use a smaller file or reduce resolution.";
+                        } else {
+                            errorDetails = `Server error (${res.status}): ${text.slice(0, 50)}...`;
+                        }
+                    }
+                } catch (e) {
+                    errorDetails = `Error (${res.status})`;
+                }
+
+                throw new Error(errorDetails);
             }
 
             const data = await res.json();
@@ -104,7 +123,7 @@ export function MagicEditTool({ onBack }: MagicEditToolProps) {
                 setNewImage(data.result);
                 setShowTransition(true);
 
-                // After animation, update state
+                // After animation, update state (2.5s to allow for a beautiful reveal)
                 setTimeout(() => {
                     const newHistory = [...history.slice(0, historyIndex + 1), data.result];
                     setHistory(newHistory);
@@ -113,12 +132,13 @@ export function MagicEditTool({ onBack }: MagicEditToolProps) {
                     setShowTransition(false);
                     setNewImage(null);
                     setPrompt("");
-                    toast.success("Transformation complete!");
+                    toast.success("Design updated! ✨");
                 }, 2500);
             }
 
         } catch (err) {
-            const message = err instanceof Error ? err.message : "Failed to generate";
+            console.error("Magic Edit Error:", err);
+            const message = err instanceof Error ? err.message : "Failed to transform";
             toast.error(message);
         } finally {
             setLoading(false);
@@ -181,7 +201,7 @@ export function MagicEditTool({ onBack }: MagicEditToolProps) {
                 <div className="flex flex-col items-center gap-8">
                     {/* Image Canvas */}
                     <div
-                        className="relative w-full max-w-3xl aspect-[4/3] rounded-[2rem] overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl"
+                        className="relative w-full max-w-3xl aspect-[4/3] rounded-[2.5rem] overflow-hidden bg-white/5 backdrop-blur-3xl border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]"
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={handleDrop}
                     >
@@ -202,7 +222,7 @@ export function MagicEditTool({ onBack }: MagicEditToolProps) {
                                     animate={{ opacity: 1 }}
                                     src={currentImage}
                                     alt="Current"
-                                    className="w-full h-full object-contain"
+                                    className="w-full h-full object-contain pointer-events-none select-none"
                                 />
 
                                 {/* Transition Animation */}
@@ -213,27 +233,32 @@ export function MagicEditTool({ onBack }: MagicEditToolProps) {
                                             animate={{ clipPath: 'inset(0 0% 0 0)' }}
                                             exit={{ opacity: 0 }}
                                             transition={{
-                                                duration: 2,
-                                                ease: [0.22, 1, 0.36, 1]
+                                                duration: 2.2,
+                                                ease: [0.23, 1, 0.32, 1]
                                             }}
-                                            className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-transparent"
+                                            className="absolute inset-0 z-40"
                                         >
                                             <motion.img
-                                                initial={{ filter: 'blur(20px)' }}
-                                                animate={{ filter: 'blur(0px)' }}
-                                                transition={{ duration: 1.5, delay: 0.5 }}
+                                                initial={{ filter: 'blur(30px) scale(1.1)' }}
+                                                animate={{ filter: 'blur(0px) scale(1)' }}
+                                                transition={{ duration: 1.8, delay: 0.2 }}
                                                 src={newImage}
                                                 alt="New"
-                                                className="w-full h-full object-contain"
+                                                className="w-full h-full object-contain pointer-events-none select-none"
                                             />
 
-                                            {/* Magic Sparkle Effect */}
+                                            {/* Magic Reveal Line */}
                                             <motion.div
                                                 initial={{ left: '0%' }}
                                                 animate={{ left: '100%' }}
-                                                transition={{ duration: 2, ease: 'linear' }}
-                                                className="absolute top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-white to-transparent shadow-[0_0_30px_10px_rgba(255,255,255,0.5)]"
-                                            />
+                                                transition={{ duration: 2.2, ease: [0.23, 1, 0.32, 1] }}
+                                                className="absolute top-0 bottom-0 w-1.5 bg-white shadow-[0_0_40px_15px_rgba(255,255,255,0.6),0_0_20px_5px_rgba(168,85,247,0.4)] z-50"
+                                            >
+                                                {/* Sparkle Particles on the line */}
+                                                <div className="absolute top-1/4 -left-1 w-3 h-3 bg-white rounded-full blur-sm animate-pulse" />
+                                                <div className="absolute top-2/4 -right-1 w-2 h-2 bg-purple-200 rounded-full blur-sm animate-pulse delay-75" />
+                                                <div className="absolute top-3/4 -left-1 w-4 h-4 bg-white rounded-full blur-sm animate-pulse delay-150" />
+                                            </motion.div>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -245,49 +270,58 @@ export function MagicEditTool({ onBack }: MagicEditToolProps) {
                                             initial={{ opacity: 0 }}
                                             animate={{ opacity: 1 }}
                                             exit={{ opacity: 0 }}
-                                            className="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center gap-4"
+                                            className="absolute inset-0 bg-black/70 backdrop-blur-xl flex flex-col items-center justify-center gap-6 z-[60]"
                                         >
                                             <div className="relative">
-                                                <div className="w-16 h-16 rounded-full border-4 border-purple-500/30 border-t-purple-500 animate-spin" />
-                                                <Sparkles className="absolute inset-0 m-auto w-6 h-6 text-purple-400" />
+                                                <motion.div
+                                                    animate={{ rotate: 360 }}
+                                                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                                    className="w-20 h-20 rounded-full border-[3px] border-purple-500/20 border-t-purple-500"
+                                                />
+                                                <Sparkles className="absolute inset-0 m-auto w-8 h-8 text-purple-400 animate-pulse" />
                                             </div>
-                                            <p className="text-white/80 font-bold animate-pulse">Transforming your space...</p>
+                                            <div className="text-center space-y-2">
+                                                <p className="text-white text-xl font-black uppercase tracking-widest animate-pulse">Magical transformation</p>
+                                                <p className="text-white/40 text-sm font-medium">Reimagining your space...</p>
+                                            </div>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
 
                                 {/* History Navigation */}
-                                {history.length > 1 && !loading && (
-                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/40 backdrop-blur-md rounded-full px-4 py-2">
+                                {history.length > 1 && !loading && !showTransition && (
+                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/60 backdrop-blur-2xl rounded-full px-6 py-3 z-[70] border border-white/10 shadow-2xl">
                                         <button
                                             onClick={handleUndo}
                                             disabled={historyIndex <= 0}
                                             className={cn(
                                                 "p-2 rounded-full transition-all",
-                                                historyIndex <= 0 ? "opacity-30" : "hover:bg-white/10 text-white"
+                                                historyIndex <= 0 ? "opacity-20 cursor-not-allowed" : "hover:bg-white/10 text-white hover:scale-110 active:scale-95"
                                             )}
                                         >
-                                            <ArrowLeft className="w-4 h-4" />
+                                            <ArrowLeft className="w-5 h-5" />
                                         </button>
-                                        <span className="text-white/60 text-xs font-bold">{historyIndex + 1} / {history.length}</span>
+                                        <div className="flex flex-col items-center">
+                                            <span className="text-white font-black text-xs uppercase tracking-tighter">{historyIndex + 1} / {history.length}</span>
+                                        </div>
                                         <button
                                             onClick={handleRedo}
                                             disabled={historyIndex >= history.length - 1}
                                             className={cn(
                                                 "p-2 rounded-full transition-all",
-                                                historyIndex >= history.length - 1 ? "opacity-30" : "hover:bg-white/10 text-white"
+                                                historyIndex >= history.length - 1 ? "opacity-20 cursor-not-allowed" : "hover:bg-white/10 text-white hover:scale-110 active:scale-95"
                                             )}
                                         >
-                                            <ArrowRight className="w-4 h-4" />
+                                            <ArrowRight className="w-5 h-5" />
                                         </button>
                                     </div>
                                 )}
 
                                 {/* Watermark for Free Users */}
-                                {!isPro && !proLoading && historyIndex > 0 && (
-                                    <div className="absolute bottom-4 right-4 z-50">
-                                        <div className="bg-black/70 backdrop-blur-md text-white/90 text-[10px] font-black uppercase tracking-[0.15em] px-3 py-1.5 rounded-lg border border-white/20 select-none">
-                                            RoomCraft.app
+                                {!isPro && historyIndex > 0 && (
+                                    <div className="absolute bottom-8 right-8 z-[80]">
+                                        <div className="bg-black/80 backdrop-blur-md text-white/90 text-[11px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-xl border border-white/20 select-none shadow-2xl pointer-events-none">
+                                            RoomCraft.ai ✨
                                         </div>
                                     </div>
                                 )}

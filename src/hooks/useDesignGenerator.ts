@@ -123,25 +123,35 @@ export function useDesignGenerator() {
 
             // Handle Limits (Teaser Mode)
             if (res.status === 403 || res.status === 429) {
-                // Determine if it's a credit limit or daily limit
-                // For now, treat both as "Paywall Teaser"
-
                 // Simulate generation time (so the user feels the value)
                 await new Promise(resolve => setTimeout(resolve, 4000));
-
-                // Set the INPUT image as the result (it will be blurred anyway)
-                // This saves us from generating a real image but gives the "result exists" feeling
                 setGeneratedImage(base64data);
                 setIsLocked(true);
                 setLoading(false);
-
-                // Don't open paywall immediately, let the user click "Unlock" on the image
                 return;
             }
 
             if (!res.ok) {
-                const error = await res.json();
-                throw new Error(error.details || error.error || "Generation failed");
+                const contentType = res.headers.get("content-type");
+                let errorDetails = "Generation failed";
+
+                try {
+                    if (contentType && contentType.includes("application/json")) {
+                        const errorData = await res.json();
+                        errorDetails = errorData.details || errorData.error || errorDetails;
+                    } else {
+                        const text = await res.text();
+                        if (text.includes("Request Entity Too Large") || res.status === 413) {
+                            errorDetails = "Image too large. Please use a smaller file.";
+                        } else {
+                            errorDetails = `Server error (${res.status})`;
+                        }
+                    }
+                } catch (e) {
+                    errorDetails = `Error (${res.status})`;
+                }
+
+                throw new Error(errorDetails);
             }
 
             const data = await res.json();
