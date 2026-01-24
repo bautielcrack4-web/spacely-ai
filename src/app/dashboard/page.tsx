@@ -46,7 +46,7 @@ const TOOLS = [
         title: "Magic Edit",
         description: "Add plants, change floors or lighting with a single click.",
         image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=800",
-        href: "/dashboard/create?mode=magic",
+        href: "/dashboard/magic",
         color: "from-violet-500 to-fuchsia-600",
         tag: "New"
     },
