@@ -54,7 +54,7 @@ const TOOLS = [
         id: "floor-plan",
         title: "Floor Plan",
         description: "Edit floor plans with AI — rearrange rooms easily.",
-        image: "https://images.unsplash.com/photo-1596237553531-97216f947aa6?auto=format&fit=crop&q=80&w=800",
+        image: "/templates/floor_plan_template_2_1769246663099.png",
         href: "/dashboard/create?mode=floorplan",
         color: "from-amber-500 to-orange-600",
         tag: "Pro"
