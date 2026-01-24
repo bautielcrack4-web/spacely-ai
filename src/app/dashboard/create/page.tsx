@@ -54,11 +54,19 @@ function CreatePageContent() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#FAFBFC] relative">
-            {/* Background Gradients */}
-            <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-purple-50/50 to-transparent pointer-events-none" />
+        <div className="min-h-screen relative overflow-hidden">
+            {/* Premium Background with Mesh Gradients */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/20" />
 
-            <div className="max-w-[1920px] mx-auto px-4 md:px-6">
+            {/* Animated Gradient Orbs */}
+            <div className="absolute top-0 -left-40 w-96 h-96 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute top-40 right-0 w-80 h-80 bg-gradient-to-br from-blue-400/15 to-cyan-400/15 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+            <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-gradient-to-br from-indigo-400/10 to-purple-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+
+            {/* Subtle Grid Pattern */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]" />
+
+            <div className="max-w-[1920px] mx-auto px-4 md:px-6 relative z-10">
                 <DesignTool
                     onGenerate={(file, prompt, style, preview) => generateDesign(file, prompt, style, preview, mode)}
                     onClear={() => {

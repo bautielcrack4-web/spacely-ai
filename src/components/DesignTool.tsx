@@ -537,8 +537,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
 
 
             {/* RIGHT PREVIEW PANEL (Artboard) */}
-            <div className="w-full lg:flex-1 min-h-[500px] lg:h-full bg-slate-50/50 rounded-[3rem] border border-gray-100/50 overflow-hidden relative shadow-sm group">
-                <div className="absolute inset-0 bg-[#FAFBFC] z-0" />
+            <div className="w-full lg:flex-1 min-h-[500px] lg:h-full bg-white/40 backdrop-blur-xl rounded-[3rem] border border-white/60 overflow-hidden relative shadow-2xl shadow-purple-500/10 group">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-purple-50/30 to-pink-50/20 z-0" />
 
                 {/* Background Text Label (Apple Style) - REMOVED per user request */}
 
