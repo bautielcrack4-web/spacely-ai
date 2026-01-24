@@ -282,8 +282,8 @@ export default function Home() {
               Inuitive IA para el rediseño de espacios.
             </p>
             <div className="flex gap-6">
-              <Link href="#" className="text-gray-400 hover:text-gray-600 text-sm font-medium">Términos</Link>
-              <Link href="#" className="text-gray-400 hover:text-gray-600 text-sm font-medium">Privacidad</Link>
+              <Link href="/legal/terms" className="text-gray-400 hover:text-gray-600 text-sm font-medium">Términos</Link>
+              <Link href="/legal/privacy" className="text-gray-400 hover:text-gray-600 text-sm font-medium">Privacidad</Link>
             </div>
           </div>
         </div>

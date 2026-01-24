@@ -1,11 +1,13 @@
 "use client";
 
-import { Check, X, Crown, Zap, Sparkles, Lock, Users } from "lucide-react";
+import { Check, X, Crown, Zap, Sparkles, Lock, Users, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 
 interface PaywallModalProps {
     isOpen: boolean;
@@ -15,6 +17,26 @@ interface PaywallModalProps {
 export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
     const [loading, setLoading] = useState<string | null>(null);
     const [selectedPlan, setSelectedPlan] = useState("monthly");
+    const [currentPlan, setCurrentPlan] = useState<string | null>(null);
+    const router = useRouter();
+    const { isPro } = useSubscriptionStatus();
+
+    useEffect(() => {
+        if (isOpen && isPro) {
+            // Fetch current subscription to determine plan
+            fetch('/api/subscription/status')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.subscription?.plan_name) {
+                        const plan = data.subscription.plan_name.toLowerCase();
+                        if (plan.includes('weekly')) setCurrentPlan('weekly');
+                        else if (plan.includes('monthly')) setCurrentPlan('monthly');
+                        else if (plan.includes('yearly')) setCurrentPlan('yearly');
+                    }
+                })
+                .catch(console.error);
+        }
+    }, [isOpen, isPro]);
 
     if (!isOpen) return null;
 
