@@ -36,16 +36,25 @@ const TOOLS = [
         id: "paint",
         title: "Pintura",
         description: "Elige tu color favorito y dale un nuevo look a tu espacio en un instante.",
-        image: "https://images.unsplash.com/photo-1589939705384-5185138a04b9?auto=format&fit=crop&q=80&w=800",
+        image: "https://images.unsplash.com/photo-1562663474-6cbb3eaa4d14?auto=format&fit=crop&q=80&w=800",
         href: "/dashboard/create?mode=paint",
         color: "from-pink-500 to-rose-600",
         tag: "Magia"
     },
     {
+        id: "magic",
+        title: "Edición Mágica",
+        description: "Añade plantas, cambia suelos o iluminación con un solo clic.",
+        image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&q=80&w=800",
+        href: "/dashboard/create?mode=magic",
+        color: "from-violet-500 to-fuchsia-600",
+        tag: "Nuevo"
+    },
+    {
         id: "floor-plan",
         title: "Plano Nuevo",
         description: "Edita planos con IA — reordena habitaciones fácilmente.",
-        image: "https://images.unsplash.com/photo-1503387762-592dea58da41?auto=format&fit=crop&q=80&w=800",
+        image: "https://images.unsplash.com/photo-1596237553531-97216f947aa6?auto=format&fit=crop&q=80&w=800",
         href: "/dashboard/create?mode=floorplan",
         color: "from-amber-500 to-orange-600",
         tag: "Pro"

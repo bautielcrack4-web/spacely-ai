@@ -9,13 +9,21 @@ import { STYLES } from "@/lib/constants";
 interface StyleSelectorProps {
     selectedStyle: string;
     onSelect: (style: string) => void;
+    mode?: string;
 }
 
-export function StyleSelector({ selectedStyle, onSelect }: StyleSelectorProps) {
+export function StyleSelector({ selectedStyle, onSelect, mode = 'interior' }: StyleSelectorProps) {
     const { t } = useLanguage();
+
+    const filteredStyles = STYLES.filter(s => {
+        if (mode === 'exterior') return s.category === 'exterior' || s.category === 'all';
+        if (mode === 'interior') return s.category === 'interior' || s.category === 'all';
+        return true; // For other modes or "magic", show all or default
+    });
+
     return (
         <div className="grid grid-cols-2 gap-4 pb-4">
-            {STYLES.map((style) => (
+            {filteredStyles.map((style) => (
                 <button
                     key={style.id}
                     onClick={() => onSelect(style.id)}

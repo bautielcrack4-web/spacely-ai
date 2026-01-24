@@ -249,11 +249,15 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                     </div>
 
                     <div className="max-h-[450px] overflow-y-auto pr-2 scrollbar-none">
-                        <StyleSelector selectedStyle={style} onSelect={(s) => {
-                            setStyle(s);
-                            // Auto-advance some delay for better feel?
-                            setTimeout(() => setCurrentStep(3), 300);
-                        }} />
+                        <StyleSelector
+                            selectedStyle={style}
+                            mode={mode}
+                            onSelect={(s) => {
+                                setStyle(s);
+                                // Auto-advance some delay for better feel?
+                                setTimeout(() => setCurrentStep(3), 300);
+                            }}
+                        />
                     </div>
 
                     <div className="flex gap-3">
@@ -291,6 +295,24 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                             <Sparkles className="w-4 h-4" />
                         </div>
                     </div>
+
+                    {/* Magic Quick Actions */}
+                    {mode === 'magic' && (
+                        <div className="flex gap-2 flex-wrap justify-center">
+                            {[
+                                "Hazlo moderno", "Añadir plantas", "Cambiar suelo a madera",
+                                "Paredes azules", "Iluminación de atardecer"
+                            ].map((action) => (
+                                <button
+                                    key={action}
+                                    onClick={() => setPrompt(action)}
+                                    className="px-4 py-2 rounded-full bg-gray-100 hover:bg-purple-100 text-gray-600 hover:text-purple-600 text-xs font-bold transition-all border border-transparent hover:border-purple-200"
+                                >
+                                    {action}
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     <div className="flex gap-3">
                         <Button
