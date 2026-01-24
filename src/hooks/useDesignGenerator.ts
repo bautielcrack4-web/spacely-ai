@@ -101,7 +101,10 @@ export function useDesignGenerator() {
                     finalPrompt = `An ultra-professional interior design modification. ${cleanPrompt}. Integrate the change naturally into the existing room structure, maintaining lighting and perspective. Photorealistic, 8k, high-end furniture and materials, ${style} aesthetic.`;
                     break;
                 case "floorplan":
-                    finalPrompt = `2D architectural floor plan, ${style} style, clean lines, professional CAD rendering, bird's eye view, high quality. ${cleanPrompt}`;
+                    finalPrompt = `Professional architectural 2D floor plan drawing. ${cleanPrompt}. Black and white CAD style, clean lines, bird's eye view, high resolution, precise details. NO furniture unless specified.`;
+                    if (style === "2D to 3D") {
+                        finalPrompt = `Convert this 2D floor plan into a professional 3D isometric architectural render. ${cleanPrompt}. High-end lighting, photorealistic materials, bird's eye view, 8k resolution.`;
+                    }
                     break;
                 default: // interior
                     finalPrompt = cleanPrompt

@@ -627,17 +627,82 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                                 >
                                     {t('dashboard.preview.start_new')}
                                 </Button>
+                                {/* Download Button with Canvas Watermark Logic */}
                                 <Button
-                                    className="bg-black text-white hover:bg-gray-900 border-none shadow-xl rounded-2xl h-11 px-6 font-bold text-xs"
-                                    onClick={() => {
-                                        const a = document.createElement('a');
-                                        a.href = generatedImage;
-                                        a.download = 'roomcraft-app-design.png';
-                                        a.click();
+                                    onClick={async () => {
+                                        if (!isPro && !generatedImage) return;
+
+                                        try {
+                                            // Create a canvas to merge image and watermark
+                                            const canvas = document.createElement('canvas');
+                                            const ctx = canvas.getContext('2d');
+                                            const img = new Image();
+
+                                            // Use proxy or CORS enabled URL if needed, here assuming same-origin or CORS allowed
+                                            img.crossOrigin = "anonymous";
+                                            img.src = preview!;
+
+                                            await new Promise((resolve, reject) => {
+                                                img.onload = resolve;
+                                                img.onerror = reject;
+                                            });
+
+                                            canvas.width = img.width;
+                                            canvas.height = img.height;
+
+                                            if (ctx) {
+                                                // Draw main image
+                                                ctx.drawImage(img, 0, 0);
+
+                                                // Draw Watermark if NOT PRO
+                                                if (!isPro) {
+                                                    const fontSize = Math.max(20, img.width * 0.03); // Responsive font size
+                                                    const padding = Math.max(20, img.width * 0.03);
+
+                                                    ctx.font = `900 ${fontSize}px "Inter", sans-serif`;
+                                                    const text = "ROOMCRAFT.APP";
+                                                    const textWidth = ctx.measureText(text).width;
+
+                                                    // Background for text
+                                                    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+                                                    const bgPadding = fontSize * 0.6;
+                                                    ctx.roundRect(
+                                                        img.width - textWidth - padding - bgPadding * 2,
+                                                        img.height - fontSize - padding - bgPadding,
+                                                        textWidth + bgPadding * 2,
+                                                        fontSize + bgPadding,
+                                                        10
+                                                    );
+                                                    ctx.fill();
+
+                                                    // Text
+                                                    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+                                                    ctx.fillText(
+                                                        text,
+                                                        img.width - textWidth - padding - bgPadding,
+                                                        img.height - padding - bgPadding * 0.5
+                                                    );
+                                                }
+
+                                                // Trigger Download
+                                                const link = document.createElement('a');
+                                                link.download = `roomcraft-${Date.now()}.png`;
+                                                link.href = canvas.toDataURL('image/png');
+                                                link.click();
+                                            }
+                                        } catch (e) {
+                                            console.error("Download failed:", e);
+                                            // Fallback to simple download
+                                            const link = document.createElement('a');
+                                            link.href = preview!;
+                                            link.download = 'roomcraft-design.png';
+                                            link.click();
+                                        }
                                     }}
+                                    className="flex-1 bg-black text-white h-14 rounded-2xl font-bold hover:bg-gray-900 transition-colors"
                                 >
                                     <Download className="w-4 h-4 mr-2" />
-                                    {t('dashboard.preview.download')}
+                                    Download {isPro ? "HQ" : "Watermarked"}
                                 </Button>
                             </div>
                         )}
