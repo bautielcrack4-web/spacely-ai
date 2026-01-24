@@ -1,7 +1,7 @@
 "use client";
 
 import { Sidebar } from "@/components/dashboard/Sidebar";
-import { MobileSidebar } from "@/components/dashboard/MobileSidebar";
+import { MobileDock } from "@/components/dashboard/MobileDock";
 import { PaywallProvider } from "@/contexts/PaywallContext";
 import { PaywallModal } from "@/components/PaywallModal";
 import { usePaywall } from "@/contexts/PaywallContext";
@@ -20,8 +20,8 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 </div>
 
                 <Sidebar />
-                <MobileSidebar />
-                <div className="md:ml-64 flex flex-col min-h-screen relative z-10">
+                <MobileDock />
+                <div className="md:ml-64 flex flex-col min-h-screen relative z-10 pb-24 md:pb-0">
                     <DashboardHeader />
                     <main className="p-4 md:p-6 flex-1">
                         {children}

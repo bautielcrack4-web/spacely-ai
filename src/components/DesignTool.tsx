@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, Wand2, Sparkles, ImageIcon, Download, X, History, Zap, MessageSquare, Lock, Loader2, Settings } from "lucide-react";
+import { Upload, Wand2, Sparkles, ImageIcon, Download, X, History, Zap, MessageSquare, Lock, Loader2, Settings, Camera, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StyleSelector } from "./StyleSelector";
 import { cn } from "@/lib/utils";
@@ -12,11 +12,12 @@ import { PremiumLoader } from "./ui/PremiumLoader";
 import { PremiumLockOverlay } from "./ui/PremiumLockOverlay";
 
 interface DesignToolProps {
-    onGenerate: (image: File | null, prompt: string, style: string, currentPreview?: string) => Promise<void>;
+    onGenerate: (image: File | null, prompt: string, style: string, currentPreview?: string, mode?: string) => Promise<void>;
     onClear?: () => void;
     loading: boolean;
     generatedImage: string | null;
     isLocked?: boolean;
+    mode?: string;
     initialState?: {
         preview: string | null;
         prompt: string;
@@ -26,16 +27,19 @@ interface DesignToolProps {
 
 import { TEMPLATES } from "@/lib/constants";
 import { usePaywall } from "@/contexts/PaywallContext";
+import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 
-export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLocked = false, initialState }: DesignToolProps) {
+export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLocked = false, mode = "interior", initialState }: DesignToolProps) {
     const { t } = useLanguage();
     const { openPaywall } = usePaywall();
+    const { isPro } = useSubscriptionStatus();
     const [file, setFile] = useState<File | null>(null);
     // ... existing state ...
     const [preview, setPreview] = useState<string | null>(null);
     const [prompt, setPrompt] = useState("");
     const [style, setStyle] = useState("Modern Minimalist");
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [currentStep, setCurrentStep] = useState(1);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -43,6 +47,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
             setPreview(initialState.preview);
             setPrompt(initialState.prompt);
             setStyle(initialState.style);
+            setCurrentStep(4); // Jump to summary if coming from a template/preset
         }
     }, [initialState]);
 
@@ -76,153 +81,305 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
     };
 
 
-    const ControlContent = () => (
-        <div className="flex flex-col gap-6">
-            {/* Upload Section */}
-            <div
-                className="relative group cursor-pointer apple-card p-1 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden"
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={handleDrop}
-                onClick={() => {
-                    fileInputRef.current?.click();
-                    // Close drawer on mobile after clicking change if preview exists
-                    if (preview && window.innerWidth < 1024) setIsDrawerOpen(false);
-                }}
+    const renderControlContent = () => (
+        <div className="flex flex-col gap-8 relative">
+            {/* Close Button */}
+            <button
+                onClick={() => window.location.href = '/dashboard'}
+                className="absolute -top-12 right-0 p-2 text-gray-400 hover:text-black transition-colors"
             >
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    className="hidden"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                />
+                <X className="w-6 h-6" />
+            </button>
 
-                <div className={cn(
-                    "aspect-[4/3] rounded-[2.3rem] border-2 border-dashed flex flex-col items-center justify-center transition-all duration-500",
-                    preview ? "border-purple-200 bg-purple-50/10" : "border-gray-100 bg-gray-50/50 hover:bg-gray-50/80"
-                )}>
-                    {preview ? (
-                        <div className="relative w-full h-full rounded-[2.3rem] overflow-hidden group/img">
-                            <img src={preview} alt="Upload" className="w-full h-full object-cover" />
-                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-all duration-500">
-                                <div className="bg-white/95 backdrop-blur-md px-8 py-3.5 rounded-2xl flex items-center gap-3 transform translate-y-4 group-hover/img:translate-y-0 transition-all duration-500 shadow-xl text-gray-900 font-bold text-sm">
-                                    <Upload className="w-4 h-4 text-purple-600" />
-                                    {t('dashboard.upload.change')}
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="text-center p-8">
-                            <div className="w-16 h-16 rounded-3xl bg-white shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-6 text-gray-400 group-hover:scale-110 group-hover:text-purple-600 transition-all duration-500">
-                                <Upload className="w-6 h-6" />
-                            </div>
-                            <h3 className="text-lg font-bold text-gray-900 mb-1">{t('dashboard.upload.click')}</h3>
-                            <p className="text-sm text-gray-500 max-w-[200px] mx-auto leading-relaxed">{t('dashboard.upload.drag')}</p>
-                        </div>
-                    )}
+            {/* Step Indicator */}
+            <div className="space-y-4">
+                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 px-1">
+                    <span>{t('dashboard.form.step')} {currentStep} / 4</span>
+                    <span className="text-purple-600">
+                        {currentStep === 1 && "Imagen"}
+                        {currentStep === 2 && "Estilo"}
+                        {currentStep === 3 && "Detalles"}
+                        {currentStep === 4 && "Generar"}
+                    </span>
+                </div>
+                <div className="flex gap-2 h-1.5 px-1">
+                    {[1, 2, 3, 4].map((s) => (
+                        <div
+                            key={s}
+                            className={cn(
+                                "flex-1 rounded-full transition-all duration-500",
+                                s <= currentStep ? "bg-purple-600 shadow-sm shadow-purple-200" : "bg-gray-100"
+                            )}
+                        />
+                    ))}
                 </div>
             </div>
 
-            {/* Settings Panel - Glassmorphism Ultra */}
-            <div className="bg-white/70 backdrop-blur-2xl rounded-[2.5rem] p-6 lg:p-8 border border-white shadow-xl shadow-gray-200/30 flex flex-col gap-8 lg:gap-10 transition-all duration-500">
-                {/* Templates Section */}
-                <div className="space-y-4 lg:space-y-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-2xl bg-indigo-50 text-indigo-600 shadow-sm border border-indigo-100/50">
-                                <ImageIcon className="w-4 h-4 lg:w-5 lg:h-5" />
-                            </div>
-                            <label className="text-xs font-black text-gray-900 uppercase tracking-[0.15em]">{t('dashboard.templates.or_start')}</label>
+            {/* STEP 1: UPLOAD */}
+            {currentStep === 1 && (
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="space-y-8"
+                >
+                    <div className="space-y-2 px-1">
+                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Añadir una foto</h3>
+                        <p className="text-gray-500 text-xs font-medium">Comienza subiendo o tomando una foto de tu espacio.</p>
+                    </div>
+
+                    <div
+                        className="relative group cursor-pointer apple-card p-1 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden"
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={handleDrop}
+                        onClick={() => fileInputRef.current?.click()}
+                    >
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            accept="image/*"
+                            onChange={(e) => {
+                                handleFileChange(e);
+                                if (e.target.files?.[0]) setCurrentStep(2);
+                            }}
+                        />
+
+                        <div className={cn(
+                            "aspect-[4/3] rounded-[2.3rem] border-2 border-dashed flex flex-col items-center justify-center transition-all duration-500",
+                            preview ? "border-purple-200 bg-purple-50/10" : "border-gray-100 bg-gray-50/50 hover:bg-gray-50/80"
+                        )}>
+                            {preview ? (
+                                <div className="relative w-full h-full rounded-[2.3rem] overflow-hidden group/img">
+                                    <img src={preview} alt="Upload" className="w-full h-full object-cover" />
+                                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-all duration-500">
+                                        <div className="bg-white/95 backdrop-blur-md px-8 py-3.5 rounded-2xl flex items-center gap-3 shadow-xl text-gray-900 font-bold text-sm">
+                                            <Upload className="w-4 h-4 text-purple-600" />
+                                            {t('dashboard.upload.change')}
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center p-8">
+                                    <div className="w-16 h-16 rounded-3xl bg-white shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-6 text-gray-400 group-hover:scale-110 group-hover:text-purple-600 transition-all duration-500">
+                                        <Upload className="w-6 h-6" />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-1">{t('dashboard.upload.click')}</h3>
+                                    <p className="text-sm text-gray-500 max-w-[200px] mx-auto leading-relaxed">{t('dashboard.upload.drag')}</p>
+                                </div>
+                            )}
                         </div>
                     </div>
-                    <div className="flex gap-3 lg:gap-4 overflow-x-auto pb-2 scrollbar-none snap-x">
-                        {TEMPLATES.map((tmpl) => (
+
+                    {/* Source Selector (Buttons) */}
+                    {!preview && (
+                        <div className="grid grid-cols-1 gap-3">
                             <button
-                                key={tmpl.id}
-                                onClick={() => handleTemplateSelect(tmpl.image)}
-                                className={cn(
-                                    "flex-shrink-0 w-28 lg:w-32 h-16 lg:h-20 rounded-xl lg:rounded-2xl overflow-hidden border-2 transition-all duration-500 relative group snap-start",
-                                    preview === tmpl.image
-                                        ? "border-purple-600 scale-[1.05] shadow-xl shadow-purple-200"
-                                        : "border-gray-100 hover:border-purple-300 hover:scale-[1.02]"
-                                )}
+                                onClick={() => fileInputRef.current?.click()}
+                                className="w-full flex items-center gap-4 p-5 bg-white border border-gray-100 rounded-[1.8rem] hover:bg-gray-50 transition-all group"
                             >
-                                <img src={tmpl.image} alt={t(tmpl.labelKey)} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                <div className="absolute inset-x-0 bottom-0 bg-black/40 backdrop-blur-md text-[8px] lg:text-[10px] text-white py-1 lg:py-1.5 text-center font-black uppercase tracking-widest leading-none transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                    {t(tmpl.labelKey)}
+                                <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl group-hover:scale-110 transition-transform">
+                                    <ImageIcon className="w-5 h-5" />
+                                </div>
+                                <div className="text-left">
+                                    <p className="text-sm font-black text-gray-900 uppercase tracking-widest leading-none mb-1">Galería</p>
+                                    <p className="text-[10px] font-bold text-gray-400">Seleccionar de tu carrete</p>
                                 </div>
                             </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Style Selector */}
-                <div className="space-y-4 lg:space-y-6">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-2xl bg-pink-50 text-pink-600 shadow-sm border border-pink-100/50">
-                            <Wand2 className="w-4 h-4 lg:w-5 lg:h-5" />
+                            <button
+                                onClick={() => fileInputRef.current?.click()} // Camera fallback for now
+                                className="w-full flex items-center gap-4 p-5 bg-white border border-gray-100 rounded-[1.8rem] hover:bg-gray-50 transition-all group"
+                            >
+                                <div className="p-3 bg-pink-50 text-pink-600 rounded-2xl group-hover:scale-110 transition-transform">
+                                    <Maximize2 className="w-5 h-5" />
+                                </div>
+                                <div className="text-left">
+                                    <p className="text-sm font-black text-gray-900 uppercase tracking-widest leading-none mb-1">Hacer Foto</p>
+                                    <p className="text-[10px] font-bold text-gray-400">Tomar con la cámara</p>
+                                </div>
+                            </button>
                         </div>
-                        <label className="text-xs font-black text-gray-900 uppercase tracking-[0.15em]">{t('dashboard.styles.choose_title')}</label>
+                    )}
+
+                    {!preview && (
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-3 px-1">
+                                <label className="text-xs font-black text-gray-900 uppercase tracking-widest">{t('dashboard.templates.or_start')}</label>
+                            </div>
+                            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none snap-x">
+                                {TEMPLATES.map((tmpl) => (
+                                    <button
+                                        key={tmpl.id}
+                                        onClick={() => {
+                                            handleTemplateSelect(tmpl.image);
+                                            setCurrentStep(2);
+                                        }}
+                                        className={cn(
+                                            "flex-shrink-0 w-24 h-16 rounded-2xl overflow-hidden border-2 transition-all duration-500 relative group snap-start",
+                                            preview === tmpl.image ? "border-purple-600 scale-[1.05]" : "border-gray-50"
+                                        )}
+                                    >
+                                        <img src={tmpl.image} alt={t(tmpl.labelKey)} className="w-full h-full object-cover" />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {preview && (
+                        <Button
+                            onClick={() => setCurrentStep(2)}
+                            className="w-full h-16 rounded-[1.8rem] bg-black text-white font-black uppercase tracking-widest"
+                        >
+                            Continuar
+                        </Button>
+                    )}
+                </motion.div>
+            )}
+
+            {/* STEP 2: STYLE SELECTION */}
+            {currentStep === 2 && (
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="space-y-8"
+                >
+                    <div className="space-y-2 px-1">
+                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Elige el estilo</h3>
+                        <p className="text-gray-500 text-xs font-medium">¿Qué vibra quieres darle a tu habitación?</p>
                     </div>
-                    <div className="max-h-[300px] lg:max-h-[400px] overflow-y-auto pr-2 scrollbar-none">
+
+                    <div className="max-h-[450px] overflow-y-auto pr-2 scrollbar-none">
                         <StyleSelector selectedStyle={style} onSelect={(s) => {
                             setStyle(s);
+                            // Auto-advance some delay for better feel?
+                            setTimeout(() => setCurrentStep(3), 300);
                         }} />
                     </div>
-                </div>
 
-                {/* Input Prompt */}
-                <div className="flex flex-col gap-4 lg:gap-6">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-2xl bg-purple-50 text-purple-600 shadow-sm border border-purple-100/50">
-                            <MessageSquare className="w-4 h-4 lg:w-5 lg:h-5" />
-                        </div>
-                        <label className="text-xs font-black text-gray-900 uppercase tracking-[0.15em]">{t('dashboard.form.prompt_label')}</label>
+                    <div className="flex gap-3">
+                        <Button
+                            variant="outline"
+                            onClick={() => setCurrentStep(1)}
+                            className="flex-1 h-14 rounded-2xl text-xs font-black uppercase tracking-widest"
+                        >
+                            Atrás
+                        </Button>
                     </div>
+                </motion.div>
+            )}
+
+            {/* STEP 3: PROMPT MAGIC */}
+            {currentStep === 3 && (
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="space-y-8"
+                >
+                    <div className="space-y-2 px-1">
+                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Describe el cambio</h3>
+                        <p className="text-gray-500 text-xs font-medium">Opcional: puedes ser específico sobre colores o muebles.</p>
+                    </div>
+
                     <div className="relative group">
                         <textarea
                             value={prompt}
                             onChange={(e) => setPrompt(e.target.value)}
                             placeholder={t('dashboard.form.prompt_placeholder')}
-                            className="w-full h-28 lg:h-32 p-5 rounded-3xl bg-gray-50/50 border border-gray-100 focus:bg-white focus:ring-4 focus:ring-purple-500/5 focus:border-purple-300 outline-none transition-all duration-500 resize-none text-sm lg:text-base text-gray-700 font-medium placeholder:text-gray-400"
+                            className="w-full h-40 p-6 rounded-[2.5rem] bg-gray-50/50 border border-gray-100 focus:bg-white focus:ring-4 focus:ring-purple-500/5 focus:border-purple-300 outline-none transition-all duration-500 resize-none text-gray-700 font-medium placeholder:text-gray-400"
                         />
+                        <div className="absolute bottom-6 right-6 p-2 rounded-xl bg-purple-50 text-purple-600 border border-purple-100">
+                            <Sparkles className="w-4 h-4" />
+                        </div>
                     </div>
-                </div>
 
-                {/* Generate Action */}
-                <div className="mt-4">
-                    <Button
-                        onClick={() => {
-                            if (file || preview) {
-                                onGenerate(file, prompt, style, preview || undefined);
-                                if (window.innerWidth < 1024) setIsDrawerOpen(false);
-                            }
-                        }}
-                        disabled={(!file && !preview) || loading}
-                        className={cn(
-                            "w-full h-16 lg:h-20 rounded-[2rem] text-lg font-black tracking-widest uppercase shadow-xl transition-all duration-700 border-none relative overflow-hidden group",
-                            loading
-                                ? "bg-gray-100 text-gray-400"
-                                : "bg-gray-900 hover:bg-black text-white active:scale-[0.98] shadow-gray-200"
-                        )}
-                    >
-                        <span className="relative z-10 flex items-center justify-center gap-3">
-                            {loading ? (
-                                <>
-                                    <Loader2 className="w-5 h-5 animate-spin" />
-                                    {t('dashboard.form.analyzing')}
-                                </>
-                            ) : (
-                                <>
-                                    <Sparkles className="w-5 h-5 lg:w-6 lg:h-6" />
-                                    {t('dashboard.form.generate_btn')}
-                                </>
+                    <div className="flex gap-3">
+                        <Button
+                            variant="outline"
+                            onClick={() => setCurrentStep(2)}
+                            className="flex-1 h-16 rounded-[1.8rem] text-xs font-black uppercase tracking-widest"
+                        >
+                            Atrás
+                        </Button>
+                        <Button
+                            onClick={() => setCurrentStep(4)}
+                            className="flex-[2] h-16 rounded-[1.8rem] bg-black text-white font-black uppercase tracking-widest"
+                        >
+                            Ver Resumen
+                        </Button>
+                    </div>
+                </motion.div>
+            )}
+
+            {/* STEP 4: GENERATE AND SUMMARY */}
+            {currentStep === 4 && (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="space-y-8"
+                >
+                    <div className="space-y-2 px-1">
+                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Todo listo</h3>
+                        <p className="text-gray-500 text-xs font-medium">Revisa tu configuración antes de transformar el espacio.</p>
+                    </div>
+
+                    {/* Summary Cards */}
+                    <div className="space-y-3">
+                        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                            <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
+                                <img src={preview!} alt="Original" className="w-full h-full object-cover" />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Imagen base</span>
+                                <span className="font-bold text-gray-700">Tu habitación</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                                <Wand2 className="w-5 h-5 text-purple-600" />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Estilo seleccionado</span>
+                                <span className="font-bold text-gray-700">{style}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                        <Button
+                            onClick={() => onGenerate(file, prompt, style, preview || undefined, mode)}
+                            disabled={loading}
+                            className={cn(
+                                "w-full h-20 rounded-[2rem] text-lg font-black tracking-widest uppercase shadow-xl transition-all duration-700 border-none relative overflow-hidden group",
+                                loading
+                                    ? "bg-gray-100 text-gray-400"
+                                    : "bg-black hover:bg-black/90 text-white active:scale-[0.98]"
                             )}
-                        </span>
-                    </Button>
-                </div>
-            </div>
+                        >
+                            <span className="relative z-10 flex items-center justify-center gap-3">
+                                {loading ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                        {t('dashboard.form.analyzing')}
+                                    </>
+                                ) : (
+                                    <>
+                                        <Sparkles className="w-6 h-6" />
+                                        Generar Cambio
+                                    </>
+                                )}
+                            </span>
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            disabled={loading}
+                            onClick={() => setCurrentStep(3)}
+                            className="h-14 font-bold text-gray-400"
+                        >
+                            Ajustar detalles
+                        </Button>
+                    </div>
+                </motion.div>
+            )}
         </div>
     );
 
@@ -234,7 +391,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                 animate={{ x: 0, opacity: 1 }}
                 className="hidden lg:flex w-[420px] shrink-0 flex-col gap-6 h-full overflow-y-auto pb-10 scrollbar-none"
             >
-                <ControlContent />
+                {renderControlContent()}
             </motion.div>
 
             {/* MOBILE FLOATING ACTION BUTTON */}
@@ -267,7 +424,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                             className="lg:hidden fixed inset-x-0 bottom-0 z-[80] bg-white rounded-t-[3rem] p-6 pb-20 max-h-[90vh] overflow-y-auto shadow-2xl shadow-black/30"
                         >
                             <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-8" />
-                            <ControlContent />
+                            {renderControlContent()}
                         </motion.div>
                     </>
                 )}
@@ -278,10 +435,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
             <div className="w-full lg:flex-1 min-h-[500px] lg:h-full bg-slate-50/50 rounded-[3rem] border border-gray-100/50 overflow-hidden relative shadow-sm group">
                 <div className="absolute inset-0 bg-[#FAFBFC] z-0" />
 
-                {/* Background Text Label (Apple Style) */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none uppercase font-black text-[12vw] tracking-tighter z-0">
-                    Artboard
-                </div>
+                {/* Background Text Label (Apple Style) - REMOVED per user request */}
 
                 {generatedImage && preview ? (
                     <div className="w-full h-full p-4 md:p-8 lg:p-12 relative z-10">
@@ -301,6 +455,26 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                                 className="w-full h-full"
                                 priority={true}
                             />
+
+                            {/* Watermark for Free Users */}
+                            {(!isPro || isLocked) && (
+                                <div className="absolute bottom-6 right-6 z-20 pointer-events-auto">
+                                    <div className="relative group/watermark">
+                                        <div className="bg-black/40 backdrop-blur-md text-white/50 text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-lg border border-white/10 select-none">
+                                            RoomCraft.app
+                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                openPaywall();
+                                            }}
+                                            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover/watermark:scale-100 transition-all duration-200 cursor-pointer"
+                                        >
+                                            <X className="w-3 h-3" />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </motion.div>
 
                         {/* Teaser Overlay (Locked State) */}

@@ -5,19 +5,15 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 import {
-    CreditCard,
-    HelpCircle,
-    Globe,
-    Crown,
-    Zap,
-    Image as ImageIcon,
-    Brush,
-    Maximize2,
-    Armchair,
-    Palette,
-    Wand2,
     LogOut,
-    Settings
+    Settings,
+    LayoutGrid,
+    PlusCircle,
+    Compass,
+    User,
+    Zap,
+    Crown,
+    HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
@@ -25,6 +21,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePaywall } from "@/contexts/PaywallContext";
+import { useSupport } from "@/contexts/SupportContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Sidebar() {
@@ -33,6 +30,7 @@ export function Sidebar() {
     const { openPaywall } = usePaywall();
     const { t, language, setLanguage } = useLanguage();
     const { isPro } = useSubscriptionStatus();
+    const { openSupport } = useSupport();
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -40,13 +38,10 @@ export function Sidebar() {
     };
 
     const navItems = [
-        { icon: ImageIcon, label: t("nav.render"), href: "/dashboard", active: pathname === "/dashboard" },
-        { icon: Armchair, label: t("nav.furniture"), href: "/dashboard/furniture", active: pathname === "/dashboard/furniture" },
-        { icon: Palette, label: t("nav.color"), href: "/dashboard/color", active: pathname === "/dashboard/color" },
-        { icon: Wand2, label: t("nav.magic"), href: "/dashboard/edit", active: pathname === "/dashboard/edit" },
-        ...(isPro ? [{ icon: CreditCard, label: "Subscription", href: "/dashboard/subscription", active: pathname === "/dashboard/subscription" }] : []),
-        { icon: CreditCard, label: t("nav.pricing"), href: "/#pricing", active: false },
-        { icon: HelpCircle, label: t("nav.faq"), href: "/#faq", active: false },
+        { icon: LayoutGrid, label: "Herramientas", href: "/dashboard", active: pathname === "/dashboard" },
+        { icon: PlusCircle, label: "Crear", href: "/dashboard/create", active: pathname === "/dashboard/create" },
+        { icon: Compass, label: "Descubrir", href: "/dashboard/discover", active: pathname === "/dashboard/discover" },
+        { icon: User, label: "Mi Perfil", href: "/dashboard/profile", active: pathname === "/dashboard/profile" },
     ];
 
     return (
@@ -111,12 +106,21 @@ export function Sidebar() {
                     </div>
                 )}
 
-                <div className="flex items-center justify-between px-2 bg-gray-50/50 rounded-2xl p-2 border border-gray-100/50">
+                <div className="flex items-center justify-between px-2 bg-white rounded-2xl p-2 border border-gray-100 shadow-sm relative z-[60]">
                     <div className="flex gap-1">
-                        <button className="p-2 text-gray-400 hover:text-gray-900 transition-colors rounded-xl hover:bg-white">
+                        <Link
+                            href="/dashboard/profile"
+                            className="p-2 text-gray-400 hover:text-purple-600 transition-colors rounded-xl hover:bg-purple-50 cursor-pointer"
+                        >
                             <Settings className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 text-gray-400 hover:text-gray-900 transition-colors rounded-xl hover:bg-white">
+                        </Link>
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                openSupport("Other", "Support request from Sidebar Footer");
+                            }}
+                            className="p-2 text-gray-400 hover:text-purple-600 transition-colors rounded-xl hover:bg-purple-50 cursor-pointer"
+                        >
                             <HelpCircle className="w-4 h-4" />
                         </button>
                     </div>
@@ -132,8 +136,16 @@ export function Sidebar() {
                         </select>
                         <div className="w-[1px] h-3 bg-gray-200" />
                         <button
-                            onClick={handleLogout}
-                            className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-xl hover:bg-red-50"
+                            onClick={async (e) => {
+                                e.preventDefault();
+                                try {
+                                    await handleLogout();
+                                } catch (err) {
+                                    console.error("Logout failed", err);
+                                    window.location.href = "/login";
+                                }
+                            }}
+                            className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-xl hover:bg-red-50 cursor-pointer"
                         >
                             <LogOut className="w-4 h-4" />
                         </button>

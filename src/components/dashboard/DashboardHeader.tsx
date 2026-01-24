@@ -4,9 +4,19 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Sparkles, Coins, Crown } from "lucide-react";
 import { useSubscriptionStatus } from "@/hooks/useSubscriptionStatus";
 
+import { usePathname } from "next/navigation";
+
 export function DashboardHeader() {
     const { t } = useLanguage();
     const { isPro, credits } = useSubscriptionStatus();
+    const pathname = usePathname();
+
+    const getTitle = () => {
+        if (pathname === "/dashboard/create") return "Crear Diseño";
+        if (pathname === "/dashboard/discover") return "Descubrir";
+        if (pathname === "/dashboard/profile") return "Tu Perfil";
+        return "Herramientas";
+    };
 
     return (
         <header className="h-16 flex items-center justify-between px-8 bg-white/50 backdrop-blur-md border-b border-gray-100 sticky top-0 z-30">
@@ -14,8 +24,8 @@ export function DashboardHeader() {
                 <div className="p-2 rounded-xl bg-purple-50 text-purple-600">
                     <Sparkles className="w-5 h-5" />
                 </div>
-                <h1 className="text-lg font-bold text-gray-900 tracking-tight">
-                    {t("nav.render")} Workspace
+                <h1 className="text-[15px] font-black text-gray-900 uppercase tracking-widest">
+                    {getTitle()}
                 </h1>
             </div>
 

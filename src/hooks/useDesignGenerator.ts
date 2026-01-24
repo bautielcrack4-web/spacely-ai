@@ -11,7 +11,7 @@ export function useDesignGenerator() {
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
     const { openPaywall } = usePaywall();
 
-    const generateDesign = async (file: File | null, prompt: string, style: string, currentPreview?: string) => {
+    const generateDesign = async (file: File | null, prompt: string, style: string, currentPreview?: string, mode: string = "interior") => {
         setLoading(true);
         setGeneratedImage(null);
         setIsLocked(false);
@@ -82,10 +82,29 @@ export function useDesignGenerator() {
                 }
             }
 
-            // Construct prompt
-            const finalPrompt = prompt.trim()
-                ? `${style} style interior, high quality, photorealistic. ${prompt}`
-                : `${style} style interior, high quality, photorealistic, transformation`;
+            // Construct specialized magic prompt
+            let finalPrompt = "";
+            const cleanPrompt = prompt.trim();
+
+            switch (mode) {
+                case "exterior":
+                    finalPrompt = cleanPrompt
+                        ? `Professional architecture photography of a ${style} style home exterior, high quality, photorealistic, 8k resolution. ${cleanPrompt}`
+                        : `Professional architecture photography of a ${style} style home exterior, high quality, photorealistic, cinematic lighting`;
+                    break;
+                case "paint":
+                    finalPrompt = cleanPrompt
+                        ? `A photorealistic interior with walls repainted to: ${cleanPrompt}. Maintain all furniture and structure. ${style} style, high quality.`
+                        : `A photorealistic interior with premium ${style} style wall colors. High quality, elegant lighting.`;
+                    break;
+                case "floorplan":
+                    finalPrompt = `2D architectural floor plan, ${style} style, clean lines, professional CAD rendering, bird's eye view, high quality. ${cleanPrompt}`;
+                    break;
+                default: // interior
+                    finalPrompt = cleanPrompt
+                        ? `${style} style interior design, professional photography, high quality, photorealistic. ${cleanPrompt}`
+                        : `${style} style interior design, high quality, photorealistic, elegant atmosphere`;
+            }
 
             const res = await fetch("/api/generate", {
                 method: "POST",
