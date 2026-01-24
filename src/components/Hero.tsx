@@ -44,8 +44,8 @@ export function Hero() {
                             </span>
                         </div>
 
-                        <h1 className="text-5xl md:text-6xl lg:text-[72px] font-bold tracking-tight text-gray-900 leading-[1.05] mb-6">
-                            {t("hero.new_title_1")} <br />
+                        <h1 className="text-4xl md:text-6xl lg:text-[72px] font-bold tracking-tight text-gray-900 leading-[1.05] mb-6">
+                            {t("hero.new_title_1")} <br className="hidden md:block" />
                             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                                 {t("hero.new_title_2")}
                             </span>

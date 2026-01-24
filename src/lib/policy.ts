@@ -122,6 +122,7 @@ export async function trackGeneration(userId: string, isPro: boolean, data: {
     style: string,
     roomType: string,
     parentId?: string,
+    seed?: number,
     isVariation?: boolean
 }) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -147,19 +148,20 @@ export async function trackGeneration(userId: string, isPro: boolean, data: {
         }
     }
 
-    // Save metadata
-    const { error: dbError } = await adminClient.from('generations').insert({
-        user_id: userId,
-        image_url: data.imageUrl,
-        prompt: data.prompt,
-        style: data.style,
-        room_type: data.roomType,
-        parent_id: data.parentId,
-        is_variation: data.isVariation || false
+    // Save metadata using security definer RPC to bypass RLS issues in production
+    const { error: dbError } = await adminClient.rpc('save_generation', {
+        p_user_id: userId,
+        p_image_url: data.imageUrl,
+        p_prompt: data.prompt,
+        p_style: data.style,
+        p_room_type: data.roomType,
+        p_parent_id: data.parentId,
+        p_seed: data.seed,
+        p_is_variation: data.isVariation || false
     });
 
     if (dbError) {
-        console.error("DB Error (save generation metadata):", dbError);
+        console.error("DB Error (save_generation RPC):", dbError);
         // We throw so the API catch block catches it and reports it to the user
         throw new Error(`Failed to save generation metadata: ${dbError.message}`);
     }

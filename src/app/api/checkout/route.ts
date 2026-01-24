@@ -68,7 +68,7 @@ export async function POST(request: Request) {
                     },
                 },
                 productOptions: {
-                    redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/`,
+                    redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard`,
                     receiptButtonText: 'Go to RoomCraft App',
                     receiptThankYouNote: 'Thank you for subscribing to RoomCraft App!',
                 }
