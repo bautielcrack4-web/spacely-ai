@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSupport } from "@/contexts/SupportContext";
 
 interface FAQItemProps {
     question: string;
@@ -12,6 +13,7 @@ interface FAQItemProps {
 
 export function FAQ() {
     const { t } = useLanguage();
+    const { openSupport } = useSupport();
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     const faqs: FAQItemProps[] = [
@@ -96,12 +98,12 @@ export function FAQ() {
                 <p className="text-gray-600 font-medium mb-4">
                     {t("faq.cta.text")}
                 </p>
-                <a
-                    href="mailto:bagasystudio@gmail.com"
+                <button
+                    onClick={() => openSupport("Other", "Question from FAQ section")}
                     className="inline-flex items-center gap-2 text-purple-600 font-bold hover:text-pink-600 transition-colors"
                 >
                     {t("faq.cta.btn")} →
-                </a>
+                </button>
             </div>
         </section>
     );

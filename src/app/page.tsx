@@ -8,6 +8,7 @@ import { Testimonials } from "@/components/Testimonials";
 import { Sparkles, Check, ArrowRight, Zap, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSupport } from "@/contexts/SupportContext";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -15,6 +16,7 @@ import NextImage from "next/image";
 
 export default function Home() {
   const { t } = useLanguage();
+  const { openSupport } = useSupport();
 
   return (
     <div className="flex flex-col bg-[#F9FAFB] min-h-screen relative overflow-hidden">
@@ -256,9 +258,20 @@ export default function Home() {
 
             <nav className="flex gap-8">
               {['Explorar', 'Precios', 'FAQ', 'Contacto'].map((item) => (
-                <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-semibold text-gray-500 hover:text-purple-600 transition-colors">
+                <button
+                  key={item}
+                  onClick={() => {
+                    if (item === 'Contacto') {
+                      openSupport("Other", "Contact request from Footer");
+                    } else {
+                      const element = document.getElementById(item.toLowerCase());
+                      element?.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="text-sm font-semibold text-gray-500 hover:text-purple-600 transition-colors"
+                >
                   {item}
-                </a>
+                </button>
               ))}
             </nav>
           </div>
