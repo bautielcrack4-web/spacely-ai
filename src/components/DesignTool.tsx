@@ -42,6 +42,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
     const [currentStep, setCurrentStep] = useState(1);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const isDirectMode = mode === 'magic' || mode === 'paint';
+
     useEffect(() => {
         if (initialState) {
             setPreview(initialState.preview);
@@ -91,29 +93,48 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                 <X className="w-6 h-6" />
             </button>
 
-            {/* Step Indicator */}
-            <div className="space-y-4">
-                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 px-1">
-                    <span>{t('dashboard.form.step')} {currentStep} / 4</span>
-                    <span className="text-purple-600">
-                        {currentStep === 1 && "Imagen"}
-                        {currentStep === 2 && "Estilo"}
-                        {currentStep === 3 && "Detalles"}
-                        {currentStep === 4 && "Generar"}
-                    </span>
+            {/* Step Indicator - Only show if NOT in direct mode */}
+            {!isDirectMode && (
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 px-1">
+                        <span>{t('dashboard.form.step')} {currentStep} / 4</span>
+                        <span className="text-purple-600">
+                            {currentStep === 1 && "Imagen"}
+                            {currentStep === 2 && "Estilo"}
+                            {currentStep === 3 && "Detalles"}
+                            {currentStep === 4 && "Generar"}
+                        </span>
+                    </div>
+                    <div className="flex gap-2 h-1.5 px-1">
+                        {[1, 2, 3, 4].map((s) => (
+                            <div
+                                key={s}
+                                className={cn(
+                                    "flex-1 rounded-full transition-all duration-500",
+                                    s <= currentStep ? "bg-purple-600 shadow-sm shadow-purple-200" : "bg-gray-100"
+                                )}
+                            />
+                        ))}
+                    </div>
                 </div>
-                <div className="flex gap-2 h-1.5 px-1">
-                    {[1, 2, 3, 4].map((s) => (
-                        <div
-                            key={s}
-                            className={cn(
-                                "flex-1 rounded-full transition-all duration-500",
-                                s <= currentStep ? "bg-purple-600 shadow-sm shadow-purple-200" : "bg-gray-100"
-                            )}
-                        />
-                    ))}
+            )}
+
+            {/* Custom Header for Direct Mode */}
+            {isDirectMode && (
+                <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                    <div className={cn("p-2.5 rounded-xl text-white", mode === 'paint' ? "bg-pink-500" : "bg-purple-600")}>
+                        {mode === 'paint' ? <Sparkles className="w-5 h-5" /> : <Wand2 className="w-5 h-5" />}
+                    </div>
+                    <div>
+                        <h2 className="font-black text-gray-900 text-xl tracking-tight leading-none">
+                            {mode === 'paint' ? "Pintura Instantánea" : "Edición Mágica"}
+                        </h2>
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1">
+                            {mode === 'paint' ? "Cambia colores en un clic" : "Modifica tu espacio con IA"}
+                        </p>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* STEP 1: UPLOAD */}
             {currentStep === 1 && (
@@ -140,7 +161,16 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                             accept="image/*"
                             onChange={(e) => {
                                 handleFileChange(e);
-                                if (e.target.files?.[0]) setCurrentStep(2);
+                                if (e.target.files?.[0]) {
+                                    if (isDirectMode) {
+                                        // In direct mode, we stay in the same view (conceptually step 1+2 combined)
+                                        // or move to a "ready" state, but we don't need step 2 (styles).
+                                        // Let's toggle to "step 3" directly which is Prompt/Edit for us.
+                                        setCurrentStep(3);
+                                    } else {
+                                        setCurrentStep(2);
+                                    }
+                                }
                             }}
                         />
 
@@ -227,7 +257,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
 
                     {preview && (
                         <Button
-                            onClick={() => setCurrentStep(2)}
+                            onClick={() => setCurrentStep(isDirectMode ? 3 : 2)}
                             className="w-full h-16 rounded-[1.8rem] bg-black text-white font-black uppercase tracking-widest"
                         >
                             Continuar
@@ -326,13 +356,13 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                             onClick={() => setCurrentStep(4)}
                             className="flex-[2] h-16 rounded-[1.8rem] bg-black text-white font-black uppercase tracking-widest"
                         >
-                            Ver Resumen
+                            {isDirectMode ? "Generar Ahora" : "Ver Resumen"}
                         </Button>
                     </div>
                 </motion.div>
             )}
 
-            {/* STEP 4: GENERATE AND SUMMARY */}
+            {/* STEP 4: GENERATE AND SUMMARY (Modified for direct mode to auto-trigger or look different) */}
             {currentStep === 4 && (
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -476,27 +506,27 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                                 modified={generatedImage}
                                 className="w-full h-full"
                                 priority={true}
-                            />
-
-                            {/* Watermark for Free Users */}
-                            {(!isPro || isLocked) && (
-                                <div className="absolute bottom-6 right-6 z-20 pointer-events-auto">
-                                    <div className="relative group/watermark">
-                                        <div className="bg-black/40 backdrop-blur-md text-white/50 text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-lg border border-white/10 select-none">
-                                            RoomCraft.app
+                            >
+                                {/* Watermark for Free Users */}
+                                {(!isPro || isLocked) && (
+                                    <div className="absolute bottom-6 right-6 z-50 pointer-events-auto">
+                                        <div className="relative group/watermark">
+                                            <div className="bg-black/60 backdrop-blur-md text-white/90 text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-lg border border-white/20 select-none shadow-2xl">
+                                                RoomCraft.app
+                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openPaywall();
+                                                }}
+                                                className="absolute -top-3 -right-3 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover/watermark:scale-100 transition-all duration-200 cursor-pointer z-50"
+                                            >
+                                                <X className="w-3 h-3 stroke-[3]" />
+                                            </button>
                                         </div>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                openPaywall();
-                                            }}
-                                            className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover/watermark:scale-100 transition-all duration-200 cursor-pointer"
-                                        >
-                                            <X className="w-3 h-3" />
-                                        </button>
                                     </div>
-                                </div>
-                            )}
+                                )}
+                            </ComparisonSlider>
                         </motion.div>
 
                         {/* Teaser Overlay (Locked State) */}

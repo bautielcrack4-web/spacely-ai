@@ -9,9 +9,10 @@ interface ComparisonSliderProps {
     modified: string;
     className?: string;
     priority?: boolean;
+    children?: React.ReactNode;
 }
 
-export function ComparisonSlider({ original, modified, className, priority }: ComparisonSliderProps) {
+export function ComparisonSlider({ original, modified, className, priority, children }: ComparisonSliderProps) {
     const [sliderPosition, setSliderPosition] = useState(50);
     const [isDragging, setIsDragging] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -105,6 +106,8 @@ export function ComparisonSlider({ original, modified, className, priority }: Co
             <div className="absolute bottom-6 right-6 bg-black/90 backdrop-blur-xl text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl">
                 Redesign
             </div>
+
+            {children}
         </div>
     );
 }
