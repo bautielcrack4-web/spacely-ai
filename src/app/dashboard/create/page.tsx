@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { DesignTool } from "@/components/DesignTool";
 import { supabase } from "@/lib/supabase";
 import { HistoryGallery } from "@/components/dashboard/HistoryGallery";
 import { useDesignGenerator } from "@/hooks/useDesignGenerator";
 import { useSearchParams } from "next/navigation";
 
-export default function DashboardPage() {
+function CreatePageContent() {
     const searchParams = useSearchParams();
     const mode = searchParams.get("mode") || "interior";
     const templateFromUrl = searchParams.get("template");
@@ -75,5 +75,17 @@ export default function DashboardPage() {
                 <HistoryGallery />
             </div>
         </div>
+    );
+}
+
+export default function DashboardPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-[#FAFBFC] flex items-center justify-center">
+                <div className="text-gray-400 font-bold">Loading...</div>
+            </div>
+        }>
+            <CreatePageContent />
+        </Suspense>
     );
 }
