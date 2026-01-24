@@ -109,13 +109,16 @@ export function useDesignGenerator() {
                         : `${style} style interior design, high quality, photorealistic, elegant atmosphere, sharp focus.`;
             }
 
-            const res = await fetch("/api/generate", {
+            // Choose the correct API endpoint based on mode
+            const apiEndpoint = mode === "magic" ? "/api/edit/magic" : "/api/generate";
+            const bodyPayload = mode === "magic"
+                ? { image: base64data, prompt: finalPrompt }
+                : { imageUrl: base64data, prompt: finalPrompt };
+
+            const res = await fetch(apiEndpoint, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    imageUrl: base64data,
-                    prompt: finalPrompt
-                }),
+                body: JSON.stringify(bodyPayload),
             });
 
             // Handle Limits (Teaser Mode)

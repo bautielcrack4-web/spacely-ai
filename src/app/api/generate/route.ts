@@ -137,6 +137,22 @@ export async function POST(request: Request) {
     } catch (error) {
         console.error("Error processing request:", error);
         const message = error instanceof Error ? error.message : "Generation failed";
+
+        // Check for common Replicate errors
+        if (message.includes("Request Entity Too Large") || message.includes("413")) {
+            return NextResponse.json(
+                { error: "Image too large", details: "Please use a smaller image (max 10MB)." },
+                { status: 413 }
+            );
+        }
+
+        if (message.includes("rate limit") || message.includes("429")) {
+            return NextResponse.json(
+                { error: "Rate limit exceeded", details: "Please wait a moment and try again." },
+                { status: 429 }
+            );
+        }
+
         return NextResponse.json(
             { error: "Failed to process image", details: message },
             { status: 500 }
