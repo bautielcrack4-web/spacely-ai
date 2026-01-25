@@ -75,7 +75,25 @@ export async function POST(request: Request) {
             }
         );
 
-        return NextResponse.json({ url: newCheckout.data?.data.attributes.url });
+        // Check for library-level errors
+        if (newCheckout.error) {
+            console.error("LemonSqueezy API Error:", newCheckout.error);
+            return NextResponse.json(
+                { error: `LemonSqueezy API Error: ${newCheckout.error.message}`, details: newCheckout.error },
+                { status: 400 }
+            );
+        }
+
+        // Check if data is missing
+        if (!newCheckout.data || !newCheckout.data.data) {
+            console.error("LemonSqueezy Unknown Error (No Data):", newCheckout);
+            return NextResponse.json(
+                { error: "LemonSqueezy returned no data. Check Store ID and Variant ID.", fullResponse: newCheckout },
+                { status: 500 }
+            );
+        }
+
+        return NextResponse.json({ url: newCheckout.data.data.attributes.url });
 
     } catch (error: any) {
         console.error("Checkout Creation ErrorDetailed:", error);
