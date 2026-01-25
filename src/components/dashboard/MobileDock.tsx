@@ -15,11 +15,16 @@ import { motion } from "framer-motion";
 export function MobileDock() {
     const pathname = usePathname();
 
+    // Hide dock on Editor pages
+    if (pathname.includes('/dashboard/create') || pathname.includes('/dashboard/magic')) {
+        return null;
+    }
+
     const navItems = [
-        { icon: LayoutGrid, label: "Herramientas", href: "/dashboard" },
-        { icon: PlusCircle, label: "Crear", href: "/dashboard/create" },
-        { icon: Compass, label: "Descubrir", href: "/dashboard/discover" },
-        { icon: User, label: "Perfil", href: "/dashboard/profile" },
+        { icon: LayoutGrid, label: "Tools", href: "/dashboard" },
+        { icon: PlusCircle, label: "Create", href: "/dashboard/create" },
+        { icon: Compass, label: "Discover", href: "/dashboard/discover" },
+        { icon: User, label: "Profile", href: "/dashboard/profile" },
     ];
 
     return (
