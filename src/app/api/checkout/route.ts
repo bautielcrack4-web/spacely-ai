@@ -77,10 +77,13 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ url: newCheckout.data?.data.attributes.url });
 
-    } catch (error) {
-        console.error("Checkout Creation Error:", error);
+    } catch (error: any) {
+        console.error("Checkout Creation ErrorDetailed:", error);
         return NextResponse.json(
-            { error: "Failed to create checkout" },
+            {
+                error: `Failed to create checkout: ${error.message || JSON.stringify(error)}`,
+                details: error
+            },
             { status: 500 }
         );
     }
