@@ -21,8 +21,8 @@ export const STYLES = [
     { id: "Pastel Elegance", label: "Pastel", labelKey: "styles.pastel", color: "bg-pink-100", image: "/styles/pastel_room_paint_1769241603911.png", category: "paint" },
 
     // Floor Plan
-    { id: "2D to 3D", label: "2D to 3D render", labelKey: "styles.2dto3d", color: "bg-blue-500", image: "/templates/floor_plan_template_1_1769246648534.png", category: "floorplan" },
-    { id: "Architectural Sketch", label: "Technical Sketch", labelKey: "styles.sketch", color: "bg-slate-300", image: "/templates/floor_plan_template_2_1769246663099.png", category: "floorplan" },
+    { id: "2D to 3D", label: "2D to 3D render", labelKey: "styles.2dto3d", color: "bg-blue-500", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80", category: "floorplan" },
+    { id: "Architectural Sketch", label: "Technical Sketch", labelKey: "styles.sketch", color: "bg-slate-300", image: "https://images.unsplash.com/photo-1596237563267-84ffd99c80e1?w=800&q=80", category: "floorplan" },
 
     // All / General
     { id: "Japanese Zen", label: "Zen", labelKey: "styles.japanese", color: "bg-orange-50", image: "/styles/zen.png", category: "all" },
@@ -45,8 +45,8 @@ export const TEMPLATES = [
     { id: 'pool-area', label: 'Pool Area', labelKey: 'dashboard.templates.pool', image: '/styles/pool_area_style_1769241579294.png', category: 'exterior' },
 
     // Floor Plan
-    { id: 'fp-1', label: 'Modern Flat', labelKey: 'dashboard.templates.flat', image: '/templates/floor_plan_template_1_1769246648534.png', category: 'floorplan' },
-    { id: 'fp-2', label: 'Luxury Villa', labelKey: 'dashboard.templates.villa', image: '/templates/floor_plan_template_2_1769246663099.png', category: 'floorplan' },
+    { id: 'fp-1', label: 'Modern Flat', labelKey: 'dashboard.templates.flat', image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800&q=80', category: 'floorplan' },
+    { id: 'fp-2', label: 'Luxury Villa', labelKey: 'dashboard.templates.villa', image: 'https://images.unsplash.com/photo-1596237563267-84ffd99c80e1?w=800&q=80', category: 'floorplan' },
 
     // Paint / General
     { id: 'room', label: 'Empty Room', labelKey: 'dashboard.templates.room', image: '/examples/assets/habitacion-vacia-casa-nueva.jpg', category: 'all' },
