@@ -515,8 +515,8 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
 
             {/* MOBILE PERSISTENT BOTTOM SHEET */}
             <motion.div
-                initial={{ y: "calc(100% - 100px)" }}
-                animate={{ y: isDrawerOpen ? 0 : "calc(100% - 100px)" }}
+                initial={{ y: "calc(100% - 170px)" }}
+                animate={{ y: isDrawerOpen ? 0 : "calc(100% - 170px)" }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
                 drag="y"
                 dragConstraints={{ top: 0, bottom: 0 }}
