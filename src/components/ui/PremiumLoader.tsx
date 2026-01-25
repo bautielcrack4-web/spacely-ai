@@ -147,7 +147,11 @@ export function PremiumLoader({ className, text }: PremiumLoaderProps) {
                             className="text-center w-64"
                         >
                             <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-2">
-                                {text || t('loader.generating')}
+                                {text || (
+                                    <span>
+                                        Generating on <span className="font-black">RoomCraft.app</span>...
+                                    </span>
+                                )}
                             </h3>
                             {/* Progress Bar */}
                             <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">

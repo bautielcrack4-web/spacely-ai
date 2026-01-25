@@ -89,13 +89,19 @@ export function ComparisonSlider({ original, modified, className, priority, chil
                 />
             </div>
 
-            {/* Slider Handle */}
+            {/* Slider Handle with Branding */}
             <div
                 className="absolute top-0 bottom-0 w-1 bg-white/50 cursor-ew-resize z-20 hover:bg-white transition-colors"
                 style={{ left: `${sliderPosition}%` }}
             >
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-xl flex items-center justify-center text-[#0A0A0A]">
-                    <MoveHorizontal size={20} />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2">
+                    <div className="w-12 h-12 bg-white rounded-full shadow-[0_0_30px_rgba(0,0,0,0.2)] flex items-center justify-center text-[#0A0A0A] border-4 border-white">
+                        <MoveHorizontal size={20} className="text-purple-600" />
+                    </div>
+                    {/* Brand Tag that moves with slider */}
+                    <div className="bg-black/80 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full whitespace-nowrap border border-white/20 shadow-xl pointer-events-none">
+                        RoomCraft.app
+                    </div>
                 </div>
             </div>
 

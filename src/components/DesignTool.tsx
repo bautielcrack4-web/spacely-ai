@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, Wand2, Sparkles, ImageIcon, Download, X, History, Zap, MessageSquare, Lock, Loader2, Settings, Camera, Maximize2 } from "lucide-react";
+import { Upload, Wand2, Sparkles, ImageIcon, Download, X, History, Zap, MessageSquare, Lock, Loader2, Settings, Camera, Maximize2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StyleSelector } from "./StyleSelector";
 import { cn } from "@/lib/utils";
@@ -242,12 +242,19 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                                     </div>
                                 </div>
                             ) : (
-                                <div className="text-center p-8">
-                                    <div className="w-16 h-16 rounded-3xl bg-white shadow-sm border border-gray-100 flex items-center justify-center mx-auto mb-6 text-gray-400 group-hover:scale-110 group-hover:text-purple-600 transition-all duration-500">
-                                        <Upload className="w-6 h-6" />
+                                <div className="text-center p-8 relative z-10">
+                                    <div className="w-20 h-20 rounded-[2rem] bg-gradient-to-br from-purple-500 to-pink-500 shadow-2xl shadow-purple-500/30 flex items-center justify-center mx-auto mb-6 text-white group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                                        <Upload className="w-8 h-8" />
                                     </div>
-                                    <h3 className="text-lg font-bold text-gray-900 mb-1">{t('dashboard.upload.click')}</h3>
-                                    <p className="text-sm text-gray-500 max-w-[200px] mx-auto leading-relaxed">{t('dashboard.upload.drag')}</p>
+                                    <h3 className="text-xl font-black text-gray-900 mb-2 tracking-tight">
+                                        Drop to start with <span className="text-purple-600">RoomCraft.app</span>
+                                    </h3>
+                                    <p className="text-sm text-gray-500 max-w-[220px] mx-auto leading-relaxed font-medium">
+                                        Transform your space instantly with AI.
+                                    </p>
+
+                                    {/* Decorative Elements */}
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-200/20 rounded-full blur-3xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                                 </div>
                             )}
                         </div>
@@ -317,175 +324,182 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                         </Button>
                     )}
                 </motion.div>
-            )}
+            )
+            }
 
             {/* STEP 2: STYLE SELECTION */}
-            {currentStep === 2 && (
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="space-y-8"
-                >
-                    <div className="space-y-2 px-1">
-                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Choose style</h3>
-                        <p className="text-gray-500 text-xs font-medium">What vibe do you want for your room?</p>
-                    </div>
+            {
+                currentStep === 2 && (
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="space-y-8"
+                    >
+                        <div className="space-y-2 px-1">
+                            <h3 className="text-2xl font-black text-gray-900 tracking-tight">Choose style</h3>
+                            <p className="text-gray-500 text-xs font-medium">What vibe do you want for your room?</p>
+                        </div>
 
-                    <div className="max-h-[450px] overflow-y-auto pr-2 scrollbar-none">
-                        <StyleSelector
-                            selectedStyle={style}
-                            mode={mode}
-                            onSelect={(s) => {
-                                setStyle(s);
-                                // Auto-advance some delay for better feel?
-                                setTimeout(() => setCurrentStep(3), 300);
-                            }}
-                        />
-                    </div>
+                        <div className="max-h-[450px] overflow-y-auto pr-2 scrollbar-none">
+                            <StyleSelector
+                                selectedStyle={style}
+                                mode={mode}
+                                onSelect={(s) => {
+                                    setStyle(s);
+                                    // Auto-advance some delay for better feel?
+                                    setTimeout(() => setCurrentStep(3), 300);
+                                }}
+                            />
+                        </div>
 
-                    <div className="flex gap-3">
-                        <Button
-                            variant="outline"
-                            onClick={() => setCurrentStep(1)}
-                            className="flex-1 h-14 rounded-2xl text-xs font-black uppercase tracking-widest"
-                        >
-                            Back
-                        </Button>
-                    </div>
-                </motion.div>
-            )}
+                        <div className="flex gap-3">
+                            <Button
+                                variant="outline"
+                                onClick={() => setCurrentStep(1)}
+                                className="flex-1 h-14 rounded-2xl text-xs font-black uppercase tracking-widest"
+                            >
+                                Back
+                            </Button>
+                        </div>
+                    </motion.div>
+                )
+            }
 
             {/* STEP 3: PROMPT MAGIC */}
-            {currentStep === 3 && (
-                <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="space-y-8"
-                >
-                    <div className="space-y-2 px-1">
-                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Describe the change</h3>
-                        <p className="text-gray-500 text-xs font-medium">Optional: you can be specific about colors or furniture.</p>
-                    </div>
-
-                    <div className="relative group">
-                        <textarea
-                            value={prompt}
-                            onChange={(e) => setPrompt(e.target.value)}
-                            placeholder={t('dashboard.form.prompt_placeholder')}
-                            className="w-full h-40 p-6 rounded-[2.5rem] bg-gray-50/50 border border-gray-100 focus:bg-white focus:ring-4 focus:ring-purple-500/5 focus:border-purple-300 outline-none transition-all duration-500 resize-none text-gray-700 font-medium placeholder:text-gray-400"
-                        />
-                        <div className="absolute bottom-6 right-6 p-2 rounded-xl bg-purple-50 text-purple-600 border border-purple-100">
-                            <Sparkles className="w-4 h-4" />
+            {
+                currentStep === 3 && (
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="space-y-8"
+                    >
+                        <div className="space-y-2 px-1">
+                            <h3 className="text-2xl font-black text-gray-900 tracking-tight">Describe the change</h3>
+                            <p className="text-gray-500 text-xs font-medium">Optional: you can be specific about colors or furniture.</p>
                         </div>
-                    </div>
 
-                    {/* Magic Quick Actions */}
-                    {mode === 'magic' && (
-                        <div className="flex gap-2 flex-wrap justify-center">
-                            {[
-                                "Make it modern", "Add plants", "Change floor to wood",
-                                "Blue walls", "Sunset lighting"
-                            ].map((action) => (
-                                <button
-                                    key={action}
-                                    onClick={() => setPrompt(action)}
-                                    className="px-4 py-2 rounded-full bg-gray-100 hover:bg-purple-100 text-gray-600 hover:text-purple-600 text-xs font-bold transition-all border border-transparent hover:border-purple-200"
-                                >
-                                    {action}
-                                </button>
-                            ))}
+                        <div className="relative group">
+                            <textarea
+                                value={prompt}
+                                onChange={(e) => setPrompt(e.target.value)}
+                                placeholder={t('dashboard.form.prompt_placeholder')}
+                                className="w-full h-40 p-6 rounded-[2.5rem] bg-gray-50/50 border border-gray-100 focus:bg-white focus:ring-4 focus:ring-purple-500/5 focus:border-purple-300 outline-none transition-all duration-500 resize-none text-gray-700 font-medium placeholder:text-gray-400"
+                            />
+                            <div className="absolute bottom-6 right-6 p-2 rounded-xl bg-purple-50 text-purple-600 border border-purple-100">
+                                <Sparkles className="w-4 h-4" />
+                            </div>
                         </div>
-                    )}
 
-                    <div className="flex gap-3">
-                        <Button
-                            variant="outline"
-                            onClick={() => setCurrentStep(isDirectMode ? 1 : 2)}
-                            className="flex-1 h-16 rounded-[1.8rem] text-xs font-black uppercase tracking-widest"
-                        >
-                            Back
-                        </Button>
-                        <Button
-                            onClick={() => setCurrentStep(4)}
-                            className="flex-[2] h-16 rounded-[1.8rem] bg-black text-white font-black uppercase tracking-widest"
-                        >
-                            {isDirectMode ? "Generate Now" : "Review Summary"}
-                        </Button>
-                    </div>
-                </motion.div>
-            )}
+                        {/* Magic Quick Actions */}
+                        {mode === 'magic' && (
+                            <div className="flex gap-2 flex-wrap justify-center">
+                                {[
+                                    "Make it modern", "Add plants", "Change floor to wood",
+                                    "Blue walls", "Sunset lighting"
+                                ].map((action) => (
+                                    <button
+                                        key={action}
+                                        onClick={() => setPrompt(action)}
+                                        className="px-4 py-2 rounded-full bg-gray-100 hover:bg-purple-100 text-gray-600 hover:text-purple-600 text-xs font-bold transition-all border border-transparent hover:border-purple-200"
+                                    >
+                                        {action}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="flex gap-3">
+                            <Button
+                                variant="outline"
+                                onClick={() => setCurrentStep(isDirectMode ? 1 : 2)}
+                                className="flex-1 h-16 rounded-[1.8rem] text-xs font-black uppercase tracking-widest"
+                            >
+                                Back
+                            </Button>
+                            <Button
+                                onClick={() => setCurrentStep(4)}
+                                className="flex-[2] h-16 rounded-[1.8rem] bg-black text-white font-black uppercase tracking-widest"
+                            >
+                                {isDirectMode ? "Generate Now" : "Review Summary"}
+                            </Button>
+                        </div>
+                    </motion.div>
+                )
+            }
 
             {/* STEP 4: GENERATE AND SUMMARY (Modified for direct mode to auto-trigger or look different) */}
-            {currentStep === 4 && (
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="space-y-8"
-                >
-                    <div className="space-y-2 px-1">
-                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Ready</h3>
-                        <p className="text-gray-500 text-xs font-medium">Review your settings before transforming the space.</p>
-                    </div>
+            {
+                currentStep === 4 && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="space-y-8"
+                    >
+                        <div className="space-y-2 px-1">
+                            <h3 className="text-2xl font-black text-gray-900 tracking-tight">Ready</h3>
+                            <p className="text-gray-500 text-xs font-medium">Review your settings before transforming the space.</p>
+                        </div>
 
-                    {/* Summary Cards */}
-                    <div className="space-y-3">
-                        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                            <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
-                                <img src={preview!} alt="Original" className="w-full h-full object-cover" />
+                        {/* Summary Cards */}
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm">
+                                    <img src={preview!} alt="Original" className="w-full h-full object-cover" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Imagen base</span>
+                                    <span className="font-bold text-gray-700">Tu habitación</span>
+                                </div>
                             </div>
-                            <div className="flex flex-col">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Imagen base</span>
-                                <span className="font-bold text-gray-700">Tu habitación</span>
+                            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                                    <Wand2 className="w-5 h-5 text-purple-600" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Estilo seleccionado</span>
+                                    <span className="font-bold text-gray-700">{style}</span>
+                                </div>
                             </div>
                         </div>
-                        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
-                                <Wand2 className="w-5 h-5 text-purple-600" />
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Estilo seleccionado</span>
-                                <span className="font-bold text-gray-700">{style}</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div className="flex flex-col gap-3">
-                        <Button
-                            onClick={() => onGenerate(file, prompt, style, preview || undefined, mode)}
-                            disabled={loading}
-                            className={cn(
-                                "w-full h-20 rounded-[2rem] text-lg font-black tracking-widest uppercase shadow-xl transition-all duration-700 border-none relative overflow-hidden group",
-                                loading
-                                    ? "bg-gray-100 text-gray-400"
-                                    : "bg-black hover:bg-black/90 text-white active:scale-[0.98]"
-                            )}
-                        >
-                            <span className="relative z-10 flex items-center justify-center gap-3">
-                                {loading ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                        {t('dashboard.form.analyzing')}
-                                    </>
-                                ) : (
-                                    <>
-                                        <Sparkles className="w-6 h-6" />
-                                        Generar Cambio
-                                    </>
+                        <div className="flex flex-col gap-3">
+                            <Button
+                                onClick={() => onGenerate(file, prompt, style, preview || undefined, mode)}
+                                disabled={loading}
+                                className={cn(
+                                    "w-full h-20 rounded-[2rem] text-lg font-black tracking-widest uppercase shadow-xl transition-all duration-700 border-none relative overflow-hidden group",
+                                    loading
+                                        ? "bg-gray-100 text-gray-400"
+                                        : "bg-black hover:bg-black/90 text-white active:scale-[0.98]"
                                 )}
-                            </span>
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            disabled={loading}
-                            onClick={() => setCurrentStep(3)}
-                            className="h-14 font-bold text-gray-400"
-                        >
-                            Ajustar detalles
-                        </Button>
-                    </div>
-                </motion.div>
-            )}
-        </div>
+                            >
+                                <span className="relative z-10 flex items-center justify-center gap-3">
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                            {t('dashboard.form.analyzing')}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Sparkles className="w-6 h-6" />
+                                            Generar Cambio
+                                        </>
+                                    )}
+                                </span>
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                disabled={loading}
+                                onClick={() => setCurrentStep(3)}
+                                className="h-14 font-bold text-gray-400"
+                            >
+                                Ajustar detalles
+                            </Button>
+                        </div>
+                    </motion.div>
+                )
+            }
+        </div >
     );
 
     return (
@@ -610,6 +624,23 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                                             </button>
                                         </div>
                                     </div>
+                                )}
+
+                                {/* Success Reveal Badge (Appears briefly after generation) */}
+                                {!loading && generatedImage && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -20, scale: 0.9 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        transition={{ delay: 0.5, duration: 0.5 }}
+                                        className="absolute top-6 left-6 z-40 pointer-events-none"
+                                    >
+                                        <div className="bg-white/90 backdrop-blur-xl text-purple-900 px-4 py-2 rounded-xl shadow-2xl border border-white/50 flex items-center gap-2">
+                                            <div className="bg-green-500 rounded-full p-0.5">
+                                                <CheckCircle2 className="w-3 h-3 text-white" />
+                                            </div>
+                                            <span className="text-xs font-bold">Designed with <span className="font-black text-purple-600">RoomCraft AI</span></span>
+                                        </div>
+                                    </motion.div>
                                 )}
                             </ComparisonSlider>
                         </motion.div>
