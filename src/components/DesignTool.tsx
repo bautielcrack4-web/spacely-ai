@@ -503,7 +503,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
     );
 
     return (
-        <div className="flex flex-col lg:flex-row h-full min-h-screen lg:h-[calc(100vh-80px)] gap-0 lg:gap-8 p-4 md:p-6 lg:p-8 max-w-[1700px] mx-auto overflow-y-auto lg:overflow-hidden relative">
+        <div className="flex flex-col lg:flex-row h-full min-h-screen lg:h-[calc(100vh-80px)] gap-0 lg:gap-8 p-4 md:p-6 lg:p-8 pb-32 lg:pb-8 max-w-[1700px] mx-auto overflow-y-auto lg:overflow-hidden relative">
             {/* LEFT CONTROL PANEL (Desktop Only) */}
             <motion.div
                 initial={{ x: -20, opacity: 0 }}
@@ -575,7 +575,7 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
 
 
             {/* RIGHT PREVIEW PANEL (Artboard) */}
-            <div className="w-full lg:flex-1 min-h-[500px] lg:h-full bg-white/40 backdrop-blur-xl rounded-[3rem] border border-white/60 overflow-hidden relative shadow-2xl shadow-purple-500/10 group">
+            <div className="w-full lg:flex-1 h-[40vh] lg:min-h-[500px] lg:h-full bg-white/40 backdrop-blur-xl rounded-[3rem] border border-white/60 overflow-hidden relative shadow-2xl shadow-purple-500/10 group mb-4 lg:mb-0">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-purple-50/30 to-pink-50/20 z-0" />
 
                 {/* Background Text Label (Apple Style) - REMOVED per user request */}
