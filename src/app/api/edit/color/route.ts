@@ -52,7 +52,7 @@ export async function POST(request: Request) {
         }
 
         // 3. Call Replicate (p-image-edit)
-        console.log("Calling p-image-edit for Color Match...");
+
         const QUALITY_SUFFIX = ", photorealistic, 8k, highly detailed, architectural photography";
         const NEGATIVE_PROMPT = "text, watermark, logo, low quality, blurry, distorted";
 

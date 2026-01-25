@@ -42,7 +42,7 @@ export async function POST(request: Request) {
         if (error) return error;
 
         // 2. Call Replicate (p-image-edit)
-        console.log("Calling p-image-edit for Magic Edit...");
+
         const QUALITY_SUFFIX = ", photorealistic, 8k, highly detailed, architectural photography";
         const NEGATIVE_PROMPT = "text, watermark, logo, low quality, blurry, distorted";
 
