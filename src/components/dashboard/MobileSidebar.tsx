@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { 
-    Home, 
-    PlusCircle, 
-    Compass, 
-    Wand2, 
+import {
+    Home,
+    PlusCircle,
+    Compass,
+    Wand2,
     User,
-    Sparkles 
+    Sparkles
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -23,14 +23,14 @@ export function MobileSidebar() {
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
-            
+
             // Show if at top or scrolling up
             if (currentScrollY < 50 || currentScrollY < lastScrollY) {
                 setIsVisible(true);
             } else {
                 setIsVisible(false);
             }
-            
+
             setLastScrollY(currentScrollY);
         };
 
@@ -38,38 +38,41 @@ export function MobileSidebar() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [lastScrollY]);
 
+    // Hide dock on Create/Editor pages to prevent overlap with bottom sheet controls
+    const isEditor = pathname.includes('/dashboard/create') || pathname.includes('/dashboard/magic');
+
     const navItems = [
         { icon: Home, label: "Home", href: "/dashboard", active: pathname === "/dashboard" },
         { icon: Compass, label: "Explore", href: "/dashboard/discover", active: pathname.includes("/discover") },
-        { 
-            icon: PlusCircle, 
-            label: "Create", 
-            href: "/dashboard/create", 
+        {
+            icon: PlusCircle,
+            label: "Create",
+            href: "/dashboard/create",
             active: pathname === "/dashboard/create" && !pathname.includes("mode="),
-            highlight: true 
+            highlight: true
         },
-        { icon: Wand2, label: "Magic", href: "/dashboard/magic", active: pathname.includes("/magic") },
-        // { icon: User, label: "Profile", href: "/dashboard/profile", active: pathname.includes("/profile") },
+        // { icon: Wand2, label: "Magic", href: "/dashboard/magic", active: pathname.includes("/magic") },
+        { icon: User, label: "Profile", href: "/dashboard/profile", active: pathname.includes("/profile") },
     ];
 
     return (
         <div className="md:hidden">
-            {/* Mobile Top Header (Minimal) */}
+            {/* Mobile Top Header (Minimal) - Hide on Editor too for immersion? No, keep context */}
             <div className="fixed top-0 left-0 right-0 h-14 bg-white/80 backdrop-blur-md z-30 flex items-center justify-center border-b border-gray-100/50">
-             <div className="flex items-center gap-2">
-                 <div className="w-6 h-6 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-lg flex items-center justify-center text-white">
-                     <Sparkles className="w-3 h-3 is-filled" />
-                 </div>
-                 <span className="font-black text-sm tracking-widest uppercase">RoomCraft</span>
-             </div>
+                <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-lg flex items-center justify-center text-white">
+                        <Sparkles className="w-3 h-3 is-filled" />
+                    </div>
+                    <span className="font-black text-sm tracking-widest uppercase">RoomCraft</span>
+                </div>
             </div>
 
             {/* Spacer for Top Header */}
             <div className="h-14" />
 
-            {/* Floating Glass Dock */}
+            {/* Floating Glass Dock - HIDDEN ON EDITOR */}
             <AnimatePresence>
-                {isVisible && (
+                {isVisible && !isEditor && (
                     <motion.div
                         initial={{ y: 100, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
@@ -96,17 +99,17 @@ export function MobileSidebar() {
                                     <>
                                         <div className={cn(
                                             "p-2 rounded-xl transition-all duration-300",
-                                            item.active 
-                                                ? "bg-white/10 text-white" 
+                                            item.active
+                                                ? "bg-white/10 text-white"
                                                 : "text-white/40 group-active:text-white/80"
                                         )}>
-                                            <item.icon 
-                                                className="w-6 h-6" 
-                                                strokeWidth={item.active ? 2.5 : 2} 
+                                            <item.icon
+                                                className="w-6 h-6"
+                                                strokeWidth={item.active ? 2.5 : 2}
                                             />
                                         </div>
                                         {item.active && (
-                                            <motion.div 
+                                            <motion.div
                                                 layoutId="activeTab"
                                                 className="absolute -bottom-2 w-1 h-1 bg-white rounded-full"
                                             />
