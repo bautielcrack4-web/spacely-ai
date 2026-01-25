@@ -48,13 +48,35 @@ export function PaywallModal({ isOpen, onClose }: PaywallModalProps) {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ plan }),
             });
+
             const data = await response.json();
+
+            // Handle authentication error
+            if (response.status === 401) {
+                alert("Please log in first to subscribe.");
+                router.push("/login");
+                setLoading(null);
+                return;
+            }
+
+            // Handle other errors
+            if (!response.ok || data.error) {
+                console.error("Checkout error:", data);
+                alert(data.error || "Failed to create checkout. Please try again.");
+                setLoading(null);
+                return;
+            }
+
+            // Redirect to checkout
             if (data.url) {
                 window.location.href = data.url;
+            } else {
+                alert("Failed to get checkout URL. Please contact support.");
+                setLoading(null);
             }
         } catch (error) {
             console.error("Checkout error:", error);
-        } finally {
+            alert("An error occurred. Please try again.");
             setLoading(null);
         }
     };
