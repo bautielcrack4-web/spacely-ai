@@ -26,6 +26,10 @@ export const metadata: Metadata = {
   },
   description: "Rediseña tu casa o jardín en segundos con inteligencia artificial. Sube una foto y transforma tu espacio al instante. Pruébalo gratis.",
   metadataBase: new URL('https://roomcraft.app'),
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+  },
   openGraph: {
     title: "RoomCraft.app - Diseña tu hogar con IA",
     description: "Sube una foto y mira cómo la IA transforma tu habitación, jardín o fachada en segundos.",
@@ -33,7 +37,7 @@ export const metadata: Metadata = {
     siteName: 'RoomCraft',
     images: [
       {
-        url: '/og-image.jpg', // Ensure you have an image at this path later or use a generic one
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'RoomCraft AI Interior Design Preview',
