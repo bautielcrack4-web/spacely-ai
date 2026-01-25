@@ -52,10 +52,3 @@ export const TEMPLATES = [
     { id: 'room', label: 'Empty Room', labelKey: 'dashboard.templates.room', image: '/examples/assets/habitacion-vacia-casa-nueva.jpg', category: 'all' },
     { id: 'wall-accent', label: 'Accent Wall', labelKey: 'dashboard.templates.accent', image: '/styles/accent_wall_paint_1769241591177.png', category: 'paint' },
 ];
-
-export const COMMUNITY_GALLERY = [
-    { id: 'c1', prompt: 'Modern Minimalist living room', image_url: '/styles/minimalist.png' },
-    { id: 'c2', prompt: 'Cozy Bohemian bedroom', image_url: '/styles/bohemian.png' },
-    { id: 'c3', prompt: 'High-tech Cyberpunk setup', image_url: '/styles/cyberpunk.png' },
-    { id: 'c4', prompt: 'Bright Scandinavian kitchen', image_url: '/styles/scandinavian.png' },
-];
