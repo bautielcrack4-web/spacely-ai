@@ -543,11 +543,26 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                                 {currentStep === 1 ? "Upload Photo" : isDrawerOpen ? "Customize Design" : "Swipe to Edit"}
                             </h3>
                         </div>
-                        <div className={cn(
-                            "w-10 h-10 rounded-full flex items-center justify-center transition-all bg-gray-100 text-gray-600",
-                            isDrawerOpen ? "rotate-180 bg-gray-200" : ""
-                        )}>
-                            <Settings className="w-5 h-5" />
+                        <div className="flex items-center gap-3">
+                            {currentStep === 1 && !isDrawerOpen && (
+                                <Button
+                                    size="sm"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        fileInputRef.current?.click();
+                                    }}
+                                    className="h-9 px-4 rounded-full bg-black text-white text-xs font-bold shadow-lg active:scale-95 transition-transform"
+                                >
+                                    <Upload className="w-3 h-3 mr-2" />
+                                    Upload
+                                </Button>
+                            )}
+                            <div className={cn(
+                                "w-10 h-10 rounded-full flex items-center justify-center transition-all bg-gray-100 text-gray-600",
+                                isDrawerOpen ? "rotate-180 bg-gray-200" : ""
+                            )}>
+                                <Settings className="w-5 h-5" />
+                            </div>
                         </div>
                     </div>
                 </div>
