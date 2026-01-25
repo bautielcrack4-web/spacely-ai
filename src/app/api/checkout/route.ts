@@ -9,11 +9,11 @@ lemonSqueezySetup({
     onError: (error) => console.error("Lemon Squeezy Error:", error),
 });
 
-// Configure these with your actual Variant IDs from Lemon Squeezy (LIVE MODE)
+// Configure these with your actual Variant IDs from Lemon Squeezy (LIVE MODE - UPDATED)
 const PLANS = {
-    weekly: "790667",   // RoomCraft App - Weekly Live
-    monthly: "790666", // RoomCraft App - Monthly Live
-    yearly: "790668",   // RoomCraft App - Yearly Live
+    weekly: "1247079",   // RoomCraft App - Weekly Live
+    monthly: "1247078", // RoomCraft App - Monthly Live
+    yearly: "1247080",   // RoomCraft App - Yearly Live
 };
 
 export async function POST(request: Request) {
