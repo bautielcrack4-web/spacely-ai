@@ -513,41 +513,50 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                 {renderControlContent()}
             </motion.div>
 
-            {/* MOBILE FLOATING ACTION BUTTON */}
-            <div className="lg:hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-[60]">
-                <Button
-                    onClick={() => setIsDrawerOpen(true)}
-                    className="h-14 px-8 rounded-full bg-black text-white shadow-2xl shadow-black/20 flex items-center gap-3 font-bold active:scale-95 transition-transform"
+            {/* MOBILE PERSISTENT BOTTOM SHEET */}
+            <motion.div
+                initial={{ y: "calc(100% - 100px)" }}
+                animate={{ y: isDrawerOpen ? 0 : "calc(100% - 100px)" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                drag="y"
+                dragConstraints={{ top: 0, bottom: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                    if (info.offset.y < -50) setIsDrawerOpen(true);
+                    if (info.offset.y > 50) setIsDrawerOpen(false);
+                }}
+                className="lg:hidden fixed inset-x-0 bottom-0 z-[80] bg-white rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] flex flex-col h-[85vh]"
+            >
+                {/* Drag Handle & Header */}
+                <div
+                    className="flex-shrink-0 pt-4 pb-6 px-6 bg-white rounded-t-[2.5rem] cursor-grab active:cursor-grabbing border-b border-gray-50"
+                    onClick={() => setIsDrawerOpen(!isDrawerOpen)}
                 >
-                    <Settings className="w-5 h-5" />
-                    {t('dashboard.form.customize')}
-                </Button>
-            </div>
+                    <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6" />
 
-            {/* MOBILE DRAWER (Bottom Sheet) */}
-            <AnimatePresence>
-                {isDrawerOpen && (
-                    <>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setIsDrawerOpen(false)}
-                            className="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[70]"
-                        />
-                        <motion.div
-                            initial={{ y: "100%" }}
-                            animate={{ y: 0 }}
-                            exit={{ y: "100%" }}
-                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                            className="lg:hidden fixed inset-x-0 bottom-0 z-[80] bg-white rounded-t-[3rem] p-6 pb-20 max-h-[90vh] overflow-y-auto shadow-2xl shadow-black/30"
-                        >
-                            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-8" />
-                            {renderControlContent()}
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <span className="text-xs font-black uppercase tracking-widest text-gray-400">
+                                {currentStep === 1 ? "Start Here" : `Step ${currentStep} of 4`}
+                            </span>
+                            <h3 className="text-xl font-bold text-gray-900 mt-1">
+                                {currentStep === 1 ? "Upload Photo" : isDrawerOpen ? "Customize Design" : "Swipe to Edit"}
+                            </h3>
+                        </div>
+                        <div className={cn(
+                            "w-10 h-10 rounded-full flex items-center justify-center transition-all bg-gray-100 text-gray-600",
+                            isDrawerOpen ? "rotate-180 bg-gray-200" : ""
+                        )}>
+                            <Settings className="w-5 h-5" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Content Area (Scrollable) */}
+                <div className="flex-1 overflow-y-auto p-6 pb-24 bg-white">
+                    {renderControlContent()}
+                </div>
+            </motion.div>
 
 
             {/* RIGHT PREVIEW PANEL (Artboard) */}

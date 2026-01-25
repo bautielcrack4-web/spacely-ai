@@ -76,8 +76,8 @@ export default function ToolsPage() {
                 <p className="text-gray-500 font-medium">Choose how you want to transform your space today.</p>
             </div>
 
-            {/* Tools Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Tools Grid (Desktop) */}
+            <div className="hidden md:grid grid-cols-1 md:grid-cols-2 gap-8">
                 {TOOLS.map((tool, index) => (
                     <motion.div
                         key={tool.id}
@@ -121,9 +121,66 @@ export default function ToolsPage() {
                                         Try it!
                                         <ArrowRight className="w-4 h-4" />
                                     </div>
-
                                     <div className="w-12 h-12 rounded-full border border-white/20 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                                         <Sparkles className="w-5 h-5" />
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    </motion.div>
+                ))}
+            </div>
+
+            {/* Tools Carousel (Mobile - Stories Style) */}
+            <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-4 px-4 scrollbar-none">
+                {TOOLS.map((tool, index) => (
+                    <motion.div
+                        key={tool.id}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="snap-center shrink-0 w-[85vw] first:pl-2 last:pr-2"
+                    >
+                        <Link
+                            href={tool.href}
+                            className="relative flex flex-col h-[65vh] overflow-hidden rounded-[2.5rem] bg-white border border-gray-100 shadow-2xl active:scale-[0.98] transition-transform duration-300"
+                        >
+                            {/* Image Background */}
+                            <div className="absolute inset-0 z-0">
+                                <img
+                                    src={tool.image}
+                                    alt={tool.title}
+                                    className="h-full w-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-90" />
+                            </div>
+
+                            {/* Badge */}
+                            <div className="absolute top-6 left-6 z-10">
+                                <span className={cn(
+                                    "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest text-white shadow-lg backdrop-blur-md bg-white/10",
+                                    "border border-white/20"
+                                )}>
+                                    {tool.tag}
+                                </span>
+                            </div>
+
+                            {/* Content (Bottom aligned) */}
+                            <div className="relative z-10 mt-auto p-8 flex flex-col gap-4">
+                                <div>
+                                    <h3 className="text-4xl font-black text-white tracking-tighter leading-[0.9] mb-2">{tool.title}</h3>
+                                    <p className="text-white/70 text-sm font-medium leading-relaxed line-clamp-2">
+                                        {tool.description}
+                                    </p>
+                                </div>
+
+                                <div className="mt-2 flex items-center justify-between">
+                                    <div className={cn(
+                                        "flex items-center gap-2 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl text-white",
+                                        "bg-gradient-to-r", tool.color
+                                    )}>
+                                        Start Creating
+                                        <ArrowRight className="w-4 h-4 ml-1" />
                                     </div>
                                 </div>
                             </div>

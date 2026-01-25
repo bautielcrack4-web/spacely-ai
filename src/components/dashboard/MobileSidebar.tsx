@@ -1,105 +1,123 @@
 "use client";
 
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import { Sidebar } from "./Sidebar"; // Resusing the sidebar content structure if possible, but Sidebar is fixed.
-// Since Sidebar has fixed positioning, we might need to duplicate the content structure slightly or refactor. 
-// For speed/safety, I'll reimplement the simple nav list here or conditionally render Sidebar.
-// Actually, I can wrap Sidebar in a way, but Sidebar has "fixed" class. 
-// Let's create a dedicated MobileSidebar that renders a Header + An overlay menu.
-
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutGrid, Brush, Maximize2, Image as ImageIcon, Sparkles } from "lucide-react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { 
+    Home, 
+    PlusCircle, 
+    Compass, 
+    Wand2, 
+    User,
+    Sparkles 
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function MobileSidebar() {
-    const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
-    const { t } = useLanguage();
+    const [isVisible, setIsVisible] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
+
+    // Auto-hide dock on scroll down, show on scroll up
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            
+            // Show if at top or scrolling up
+            if (currentScrollY < 50 || currentScrollY < lastScrollY) {
+                setIsVisible(true);
+            } else {
+                setIsVisible(false);
+            }
+            
+            setLastScrollY(currentScrollY);
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [lastScrollY]);
 
     const navItems = [
-        { icon: ImageIcon, label: t("nav.render"), href: "/dashboard", active: pathname === "/dashboard" },
-        { icon: LayoutGrid, label: t("nav.pricing"), href: "/#pricing", active: false },
-        { icon: LayoutGrid, label: t("nav.faq"), href: "/#faq", active: false },
+        { icon: Home, label: "Home", href: "/dashboard", active: pathname === "/dashboard" },
+        { icon: Compass, label: "Explore", href: "/dashboard/discover", active: pathname.includes("/discover") },
+        { 
+            icon: PlusCircle, 
+            label: "Create", 
+            href: "/dashboard/create", 
+            active: pathname === "/dashboard/create" && !pathname.includes("mode="),
+            highlight: true 
+        },
+        { icon: Wand2, label: "Magic", href: "/dashboard/magic", active: pathname.includes("/magic") },
+        // { icon: User, label: "Profile", href: "/dashboard/profile", active: pathname.includes("/profile") },
     ];
 
     return (
-        <div className="md:hidden flex flex-col">
-            {/* Mobile Header */}
-            <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100 bg-white fixed top-0 w-full z-40 shadow-sm">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 relative">
-                        <Image src="/logo-pixel.png" alt="Logo" fill className="object-contain" />
-                    </div>
-                    <span className="font-bold text-gray-900 uppercase tracking-tighter">RoomCraft App</span>
-                </div>
-                <button onClick={() => setIsOpen(true)} className="p-2 text-gray-400 hover:text-purple-600 transition-colors">
-                    <Menu className="w-6 h-6" />
-                </button>
+        <div className="md:hidden">
+            {/* Mobile Top Header (Minimal) */}
+            <div className="fixed top-0 left-0 right-0 h-14 bg-white/80 backdrop-blur-md z-30 flex items-center justify-center border-b border-gray-100/50">
+             <div className="flex items-center gap-2">
+                 <div className="w-6 h-6 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-lg flex items-center justify-center text-white">
+                     <Sparkles className="w-3 h-3 is-filled" />
+                 </div>
+                 <span className="font-black text-sm tracking-widest uppercase">RoomCraft</span>
+             </div>
             </div>
 
-            {/* Spacer for Header */}
-            <div className="h-16" />
+            {/* Spacer for Top Header */}
+            <div className="h-14" />
 
-            {/* Overlay Drawer */}
-            {isOpen && (
-                <div className="fixed inset-0 z-50 flex">
-                    {/* Backdrop */}
-                    <div
-                        className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm"
-                        onClick={() => setIsOpen(false)}
-                    />
-
-                    {/* Sidebar Content */}
-                    <div className="relative w-72 bg-white h-full flex flex-col p-6 shadow-2xl animate-in slide-in-from-left duration-300">
-                        <div className="flex items-center justify-between mb-10">
-                            <span className="font-bold text-gray-900 text-xl tracking-tight uppercase">Menu</span>
-                            <button onClick={() => setIsOpen(false)} className="bg-gray-50 p-2 rounded-xl text-gray-400 hover:text-red-500 transition-colors">
-                                <X className="w-6 h-6" />
-                            </button>
-                        </div>
-
-                        <div className="space-y-4 flex-1">
-                            {navItems.map((item) => (
-                                <Link
-                                    key={item.label}
-                                    href={item.href}
-                                    onClick={() => setIsOpen(false)}
-                                    className={cn(
-                                        "flex items-center gap-3 p-4 rounded-2xl transition-all duration-300 font-semibold text-sm border border-transparent",
-                                        item.active
-                                            ? "bg-gradient-to-r from-purple-50 to-pink-50 text-purple-600 border-purple-100 shadow-sm"
-                                            : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
-                                    )}
-                                >
-                                    <item.icon className={cn(
-                                        "w-5 h-5",
-                                        item.active ? "text-purple-600" : "text-gray-400"
-                                    )} />
-                                    <span>{item.label}</span>
-                                </Link>
-                            ))}
-                        </div>
-
-                        <div className="pt-6 border-t border-gray-100">
-                            <div className="p-6 rounded-3xl bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-100/50 shadow-inner">
-                                <div className="flex items-center gap-2 mb-2 text-purple-600">
-                                    <Sparkles className="w-4 h-4" />
-                                    <span className="text-[10px] font-bold uppercase tracking-widest">PRO MEMBER</span>
-                                </div>
-                                <p className="text-xs text-gray-500 font-medium mb-4 leading-relaxed">{t("nav.upgrade")}</p>
-                                <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold h-10 rounded-xl shadow-lg shadow-purple-200">
-                                    {t("nav.upgrade")}
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {/* Floating Glass Dock */}
+            <AnimatePresence>
+                {isVisible && (
+                    <motion.div
+                        initial={{ y: 100, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: 100, opacity: 0 }}
+                        transition={{ type: "spring", damping: 20, stiffness: 300 }}
+                        className="fixed bottom-6 left-4 right-4 z-50 py-3 px-6 bg-black/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.3)] border border-white/10 flex items-center justify-between"
+                    >
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.label}
+                                href={item.href}
+                                className={cn(
+                                    "flex flex-col items-center gap-1 relative group p-2 transition-all duration-300",
+                                    item.highlight ? "-mt-8" : ""
+                                )}
+                            >
+                                {item.highlight ? (
+                                    // Highlighted 'Create' Button
+                                    <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 shadow-[0_4px_16px_rgba(168,85,247,0.5)] flex items-center justify-center text-white border-[4px] border-[#121212] transform active:scale-90 transition-transform">
+                                        <item.icon className="w-6 h-6" strokeWidth={2.5} />
+                                    </div>
+                                ) : (
+                                    // Standard Icon
+                                    <>
+                                        <div className={cn(
+                                            "p-2 rounded-xl transition-all duration-300",
+                                            item.active 
+                                                ? "bg-white/10 text-white" 
+                                                : "text-white/40 group-active:text-white/80"
+                                        )}>
+                                            <item.icon 
+                                                className="w-6 h-6" 
+                                                strokeWidth={item.active ? 2.5 : 2} 
+                                            />
+                                        </div>
+                                        {item.active && (
+                                            <motion.div 
+                                                layoutId="activeTab"
+                                                className="absolute -bottom-2 w-1 h-1 bg-white rounded-full"
+                                            />
+                                        )}
+                                    </>
+                                )}
+                            </Link>
+                        ))}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
