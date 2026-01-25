@@ -20,8 +20,34 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RoomCraft App - Interior Design",
-  description: "Rediseña tu casa o jardín en segundos con inteligencia artificial.",
+  title: {
+    default: "RoomCraft.app - AI Interior Design",
+    template: "%s | RoomCraft.app"
+  },
+  description: "Rediseña tu casa o jardín en segundos con inteligencia artificial. Sube una foto y transforma tu espacio al instante. Pruébalo gratis.",
+  metadataBase: new URL('https://roomcraft.app'),
+  openGraph: {
+    title: "RoomCraft.app - Diseña tu hogar con IA",
+    description: "Sube una foto y mira cómo la IA transforma tu habitación, jardín o fachada en segundos.",
+    url: 'https://roomcraft.app',
+    siteName: 'RoomCraft',
+    images: [
+      {
+        url: '/og-image.jpg', // Ensure you have an image at this path later or use a generic one
+        width: 1200,
+        height: 630,
+        alt: 'RoomCraft AI Interior Design Preview',
+      },
+    ],
+    locale: 'es_ES',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "RoomCraft.app - AI Interior Design",
+    description: "Transforma tu espacio en segundos con IA.",
+    images: ['/og-image.jpg'],
+  },
 };
 
 export default function RootLayout({
