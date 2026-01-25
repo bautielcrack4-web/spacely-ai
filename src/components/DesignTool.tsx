@@ -763,19 +763,33 @@ export function DesignTool({ onGenerate, onClear, loading, generatedImage, isLoc
                         )}
                     </div>
                 ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-gray-300 gap-6 relative z-10">
-                        <div className="w-24 h-24 rounded-[2.5rem] apple-card flex items-center justify-center relative group">
-                            <ImageIcon className="w-10 h-10 opacity-20 group-hover:opacity-40 transition-opacity" />
+                    <div
+                        onClick={() => !preview && fileInputRef.current?.click()}
+                        className={cn(
+                            "w-full h-full flex flex-col items-center justify-center text-gray-300 gap-6 relative z-10 transition-all select-none",
+                            !preview ? "cursor-pointer hover:bg-white/50 active:scale-[0.98]" : ""
+                        )}
+                    >
+                        <div className="w-24 h-24 rounded-[2.5rem] bg-white shadow-xl shadow-purple-100/50 flex items-center justify-center relative group transition-transform duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-purple-200">
+                            <ImageIcon className="w-10 h-10 opacity-20 group-hover:opacity-40 transition-opacity text-purple-500" />
                             {preview && (
                                 <button
-                                    onClick={handleClearLocal}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleClearLocal();
+                                    }}
                                     className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 text-white shadow-lg flex items-center justify-center transition-transform hover:scale-110"
                                 >
-                                    ×
+                                    <X className="w-4 h-4" />
                                 </button>
                             )}
                         </div>
-                        <p className="font-bold text-lg text-gray-400 tracking-tight">{t('dashboard.preview.empty')}</p>
+                        <div className="text-center space-y-2">
+                            <p className="font-bold text-lg text-gray-400 tracking-tight">{t('dashboard.preview.empty')}</p>
+                            {!preview && (
+                                <p className="text-xs font-bold uppercase tracking-widest text-purple-400 opacity-60">Tap to Upload</p>
+                            )}
+                        </div>
                     </div>
                 )}
 
